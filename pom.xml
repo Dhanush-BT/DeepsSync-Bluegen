@@ -72,13 +72,85 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Boot 4 split the test slices out of spring-boot-test-autoconfigure into
+             per-technology modules, so @DataJpaTest, @AutoConfigureTestDatabase and
+             @WebMvcTest each need their own dependency now. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-data-jpa-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-jdbc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Testcontainers 2.x prefixes its module artifact ids; the 1.x names
+             (postgresql, junit-jupiter) no longer resolve. -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--
+                spring-boot-starter-parent sets testcontainers.version but does not
+                manage the individual Testcontainers artifacts, so import their BOM.
+            -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                        Ocean data is timestamped in UTC, and on an Indian-locale host the
+                        JVM default resolves to the legacy "Asia/Calcutta" id, which the
+                        postgres:16 image's tzdata rejects when pgjdbc sends it in the
+                        connection startup packet. DeepsyncAppApplication.main sets this
+                        for the running app; tests never call main, so set it here too.
+                    -->
+                    <argLine>-Duser.timezone=UTC</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
