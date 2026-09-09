@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: deepsync-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: deepsync
+      POSTGRES_USER: deepsync
+      POSTGRES_PASSWORD: deepsync
+    ports:
+      - "5433:5432"
+    volumes:
+      - deepsync-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  deepsync-postgres-data:

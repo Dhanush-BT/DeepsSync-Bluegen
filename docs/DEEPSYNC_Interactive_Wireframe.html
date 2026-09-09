@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEEPSYNC — Wireframe Workspace</title>
+<style>
+  :root{
+    --bg:#e9ebee; --panel:#ffffff; --line:#9aa0a8; --line-soft:#c7cbd1;
+    --ink:#26292e; --ink-dim:#6b7078; --ink-faint:#9aa0a8;
+    --hatch:#d7dade; --accent:#1d6f5c; --note-bg:#fff7d6; --note-line:#c9a227;
+    --sidebar-w:260px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);}
+
+  .shell{display:flex;min-height:100vh;}
+  .sidebar{width:var(--sidebar-w);flex:0 0 var(--sidebar-w);background:#1c2420;color:#dfe2e6;padding:22px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .sidebar h1{font-size:15px;margin:0 0 2px;letter-spacing:.02em;}
+  .sidebar .sub{font-size:11px;color:#9aa0a8;margin-bottom:20px;}
+  .page-list{list-style:none;margin:0;padding:0;}
+  .page-list li{margin-bottom:6px;}
+  .page-btn{width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#c3c8ce;padding:9px 10px;border-radius:6px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:inherit;}
+  .page-btn:hover{background:#28322c;}
+  .page-btn.active{background:#33423b;color:#fff;border-color:#4a5c52;}
+  .lock-badge{font-size:9px;background:#5c2f2f;color:#f0c9c9;padding:1px 6px;border-radius:9px;flex:0 0 auto;}
+  .sidebar-divider{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b7078;margin:18px 0 8px;padding-left:2px;}
+  .sidebar-note{margin-top:24px;padding:12px;border:1px dashed #4a5c52;border-radius:8px;font-size:11.5px;color:#9aa0a8;line-height:1.5;}
+
+  .main{flex:1;min-width:0;padding:28px 32px 60px;}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+  .toolbar h2{margin:0;font-size:20px;}
+  .toolbar .crumb{font-size:12px;color:var(--ink-dim);margin-bottom:4px;}
+  .viewport-toggle{display:flex;gap:6px;background:#fff;border:1px solid var(--line-soft);border-radius:8px;padding:4px;}
+  .viewport-toggle button{border:none;background:transparent;padding:6px 12px;font-size:12px;border-radius:6px;cursor:pointer;color:var(--ink-dim);font-family:inherit;}
+  .viewport-toggle button.active{background:var(--accent);color:#fff;}
+  .anno-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-dim);background:#fff;border:1px solid var(--line-soft);border-radius:8px;padding:6px 12px;cursor:pointer;user-select:none;}
+  .anno-toggle input{cursor:pointer;}
+
+  .canvas-wrap{display:flex;justify-content:center;}
+  .canvas{background:var(--panel);border:1px solid var(--line);position:relative;transition:max-width .2s ease;overflow:hidden;}
+  .canvas.desktop{max-width:1240px;width:100%;}
+  .canvas.tablet{max-width:760px;width:100%;}
+  .canvas.mobile{max-width:380px;width:100%;}
+
+  .wf-box{border:1px dashed var(--line);background:repeating-linear-gradient(135deg, transparent, transparent 8px, var(--hatch) 8px, var(--hatch) 9px);}
+  .x-box{border:1px dashed var(--line);position:relative;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:11px;text-align:center;flex-direction:column;gap:6px;}
+  .x-box::before,.x-box::after{content:"";position:absolute;inset:0;pointer-events:none;}
+  .x-box::before{background:linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--line-soft) 50%, transparent calc(50% + 0.5px));}
+  .x-box::after{background:linear-gradient(to top right, transparent calc(50% - 0.5px), var(--line-soft) 50%, transparent calc(50% + 0.5px));}
+  .field{border:1px solid var(--line);border-radius:5px;background:#fff;padding:9px 11px;font-size:12px;color:var(--ink-faint);}
+  .field-label{font-size:10.5px;color:var(--ink-dim);margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--accent);color:#fff;font-weight:600;cursor:pointer;border:none;font-family:inherit;border-radius:6px;font-size:12.5px;padding:9px 14px;}
+  .btn-secondary{background:#fff;border:1px solid var(--line);color:var(--ink);cursor:pointer;font-family:inherit;border-radius:6px;font-size:12px;padding:8px 13px;}
+  .btn-danger{background:#fff;border:1px solid #c98a8a;color:#a1341c;cursor:pointer;font-family:inherit;border-radius:6px;font-size:11.5px;padding:6px 11px;}
+  .btn-ok{background:#fff;border:1px solid #7fb98a;color:#2c7a39;cursor:pointer;font-family:inherit;border-radius:6px;font-size:11.5px;padding:6px 11px;}
+  .slider-track{height:5px;background:#dfe2e5;border-radius:3px;position:relative;}
+  .slider-track .knob{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 1px var(--accent);transform:translate(-50%,-50%);}
+  .toggle-pill{width:34px;height:18px;border-radius:10px;background:#d4d7db;position:relative;display:inline-block;vertical-align:middle;}
+  .toggle-pill.on{background:var(--accent);}
+  .toggle-pill .knob{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .15s;}
+  .toggle-pill.on .knob{left:18px;}
+
+  /* pins */
+  .pin{display:inline-flex;width:18px;height:18px;border-radius:50%;background:#c9a227;color:#25200a;font-size:10px;font-weight:700;align-items:center;justify-content:center;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px #c9a227;z-index:5;margin-left:6px;position:relative;flex:0 0 auto;vertical-align:middle;}
+  .pin.hidden-anno{display:none;}
+  .pin-note{position:absolute;background:var(--note-bg);border:1px solid var(--note-line);border-radius:6px;padding:9px 11px;font-size:11.5px;line-height:1.45;color:#4a3d05;width:250px;box-shadow:2px 2px 6px rgba(0,0,0,.14);z-index:20;display:none;top:24px;left:0;}
+  .pin-note.show{display:block;}
+  .pin-note .cat{font-weight:700;text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;display:block;margin-bottom:4px;color:#8a6d05;}
+  .pin-wrap{position:relative;display:inline-block;}
+
+  .legend{margin-top:26px;background:#fff;border:1px solid var(--line-soft);border-radius:10px;padding:18px 20px;}
+  .legend h3{margin:0 0 12px;font-size:14px;}
+  .legend-item{display:flex;gap:10px;font-size:12.3px;color:var(--ink);margin-bottom:9px;line-height:1.45;}
+  .legend-num{flex:0 0 auto;width:18px;height:18px;border-radius:50%;background:#c9a227;color:#25200a;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .legend-tag{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 7px;border-radius:9px;margin-left:6px;}
+  .tag-read{background:#e6f0fa;color:#1a5ba8;}
+  .tag-create{background:#e6f4e8;color:#2c7a39;}
+  .tag-update{background:#fff2d9;color:#8a6d05;}
+  .tag-delete{background:#fbe3e0;color:#a1341c;}
+  .tag-client{background:#eef0f3;color:#4a5058;}
+  .tag-nav{background:#f0e9fa;color:#6a3fa0;}
+  .tag-static{background:#f3f4f6;color:#6b7078;}
+  .hidden{display:none !important;}
+
+  /* app shell */
+  .app-topnav{display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;gap:10px;}
+  .app-topnav .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;}
+  .app-topnav .brand .mark{width:26px;height:26px;border-radius:7px;background:#1c2420;color:#8fd3bb;font-size:9px;display:flex;align-items:center;justify-content:center;}
+  .app-topnav .navlinks{display:flex;gap:16px;flex-wrap:wrap;}
+  .app-topnav .navlink{font-size:12.5px;color:var(--ink-dim);cursor:default;}
+  .app-topnav .navlink.active{color:var(--ink);font-weight:600;}
+  .app-topnav .right{display:flex;align-items:center;gap:10px;}
+  .status-badge{font-size:10px;background:#eef7ef;color:#2c7a39;border:1px solid #bfe0c4;padding:3px 9px;border-radius:10px;}
+  .admin-badge{font-size:10px;background:#fdf2e0;color:#8a5a05;border:1px solid #e8cf9a;padding:3px 9px;border-radius:10px;}
+
+  .app-body{display:flex;min-height:520px;}
+  .app-main-col{flex:1;min-width:0;padding:22px 26px;}
+  .app-side-col{width:270px;flex:0 0 270px;border-left:1px solid var(--line-soft);padding:20px;background:#fafbfb;}
+
+  .section{margin-bottom:22px;}
+  .sec-title{font-size:14px;font-weight:700;margin:0 0 3px;display:flex;align-items:center;}
+  .sec-sub{font-size:11.5px;color:var(--ink-dim);margin-bottom:12px;}
+
+  .zone-banner{display:flex;align-items:center;gap:10px;padding:9px 26px;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;}
+  .zone-banner.zone-3d{background:#1d6f5c;}
+  .zone-banner.zone-2d{background:#6a3fa0;}
+  .zone-banner .zone-sub{font-weight:400;text-transform:none;letter-spacing:0;opacity:.85;font-size:11px;}
+
+  .row-flex{display:flex;gap:16px;}
+  .col{flex:1;min-width:0;}
+
+  .wf-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:11.8px;}
+  .wf-row:last-child{border-bottom:none;}
+  .wf-row .c1{flex:0 0 32%;font-weight:600;}
+  .wf-row .c2{flex:0 0 20%;color:var(--ink-dim);}
+  .wf-row .c3{flex:1;color:var(--ink-faint);}
+  .wf-row .c-actions{flex:0 0 auto;display:flex;gap:6px;}
+  .status-chip{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:9px;}
+  .status-chip.ok{background:#e6f4e8;color:#2c7a39;}
+  .status-chip.pending{background:#fff2d9;color:#8a6d05;}
+  .status-chip.error{background:#fbe3e0;color:#a1341c;}
+
+  .feature-card{flex:1;min-width:180px;border:1px solid var(--line-soft);border-radius:10px;padding:16px;background:#fff;}
+  .feature-card .ic{font-size:18px;margin-bottom:8px;}
+  .feature-card .t{font-size:12.5px;font-weight:700;margin-bottom:4px;}
+  .feature-card .d{font-size:11px;color:var(--ink-dim);line-height:1.4;}
+
+  .stat-tile-wf{flex:1;min-width:120px;border:1px solid var(--line-soft);border-radius:8px;padding:14px 8px;background:#fff;font-size:19px;font-weight:700;}
+  .stat-tile-wf .stat-lbl{font-size:10px;font-weight:400;color:var(--ink-dim);margin-top:4px;}
+  .stat-tile-wf .stat-trend{font-size:9px;font-weight:400;color:var(--ink-faint);margin-top:3px;}
+
+  .source-badge{flex:1;min-width:160px;border:1px solid var(--line-soft);border-radius:8px;padding:12px 14px;background:#fff;font-size:12px;}
+  .source-badge .name{font-weight:700;margin-bottom:3px;}
+  .source-badge .meta{font-size:10.5px;color:var(--ink-dim);}
+
+  .activity-item{display:flex;gap:10px;font-size:11.8px;padding:8px 0;border-bottom:1px solid var(--line-soft);}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-item .dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex:0 0 auto;}
+  .activity-item .dot.ok{background:#2c7a39;}
+  .activity-item .dot.warn{background:#8a6d05;}
+  .activity-item .dot.info{background:#1a5ba8;}
+
+  .tab-btn{background:#fff;padding:7px 13px;font-size:11.5px;border-radius:6px;cursor:pointer;color:var(--ink-dim);font-family:inherit;}
+  .tab-btn.active{background:#1c2420;color:#fff;border-color:#1c2420 !important;}
+
+  .chat-window{display:flex;flex-direction:column;gap:14px;padding:24px 30px;min-height:420px;}
+  .chat-msg{display:flex;gap:10px;max-width:78%;}
+  .chat-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+  .chat-avatar{width:26px;height:26px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+  .chat-avatar.user{background:#1c2420;color:#fff;}
+  .chat-avatar.ai{background:#1d6f5c;color:#fff;}
+  .chat-bubble{border-radius:10px;padding:11px 14px;font-size:12.5px;line-height:1.5;}
+  .chat-bubble.user{background:#1c2420;color:#fff;border-top-right-radius:2px;}
+  .chat-bubble.ai{background:#fff;border:1px solid var(--line-soft);border-top-left-radius:2px;}
+  .chat-chip-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 30px 16px;}
+  .chat-chip{border:1px solid var(--line-soft);background:#fff;border-radius:16px;padding:7px 13px;font-size:11.5px;color:var(--ink-dim);cursor:pointer;}
+  .chat-input-row{display:flex;gap:10px;padding:16px 30px;border-top:1px solid var(--line-soft);background:#fafbfb;}
+  .chat-input-field{flex:1;border:1px solid var(--line);border-radius:20px;padding:10px 16px;font-size:12.5px;color:var(--ink-faint);background:#fff;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="sidebar">
+    <h1>DEEPSYNC</h1>
+    <div class="sub">Wireframe workspace — PS 26067 (login/signup excluded)</div>
+    <div class="sidebar-divider">Pages</div>
+    <ul class="page-list" id="pageList"></ul>
+    <div class="sidebar-note">Click the gold pins on any screen to see exactly what that component does — view/read, create, update, delete, client-only, or navigation. Pages marked ADMIN are only reachable by a logged-in admin in the real app.</div>
+  </div>
+
+  <div class="main">
+    <div class="toolbar">
+      <div>
+        <div class="crumb">DEEPSYNC / <span id="crumbPage">Home</span></div>
+        <h2 id="pageTitle">Home</h2>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <label class="anno-toggle"><input type="checkbox" id="annoToggle" checked> Show annotations</label>
+        <div class="viewport-toggle" id="viewportToggle">
+          <button data-vp="desktop" class="active">Desktop</button>
+          <button data-vp="tablet">Tablet</button>
+          <button data-vp="mobile">Mobile</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const pages = [
+  {id:"home", name:"Home"},
+  {id:"dashboard", name:"Dashboard"},
+  {id:"geomap", name:"Geo Map"},
+  {id:"aiassistant", name:"AI Assistant"},
+  {id:"datamanager", name:"Data Manager", locked:true},
+  {id:"profile", name:"Profile & Settings", locked:true}
+];
+let currentPage = "home";
+let currentVP = "desktop";
+let pinCounter = 0;
+
+/* ============================================================
+   PIN / LEGEND HELPERS
+   ============================================================ */
+let legendItems = [];
+function resetPins(){ pinCounter = 0; legendItems = []; }
+function pin(label, type, desc){
+  pinCounter++;
+  const n = pinCounter;
+  legendItems.push({n, label, type, desc});
+  return `<span class="pin-wrap">
+    <span class="pin" onclick="togglePin(event,${n})">${n}</span>
+    <span class="pin-note" id="note-${n}">
+      <span class="cat">${label} — ${typeLabel(type)}</span>
+      ${desc}
+    </span>
+  </span>`;
+}
+function typeLabel(type){
+  return {read:"Read / View", create:"Create", update:"Update", del:"Delete", client:"Client-only", nav:"Navigation", statik:"Static"}[type] || type;
+}
+function tagClass(type){
+  return {read:"tag-read", create:"tag-create", update:"tag-update", del:"tag-delete", client:"tag-client", nav:"tag-nav", statik:"tag-static"}[type] || "tag-static";
+}
+function togglePin(e, n){
+  e.stopPropagation();
+  const note = document.getElementById("note-"+n);
+  const isShown = note.classList.contains("show");
+  document.querySelectorAll(".pin-note").forEach(el=>el.classList.remove("show"));
+  if(!isShown) note.classList.add("show");
+}
+document.addEventListener("click", ()=> document.querySelectorAll(".pin-note").forEach(n=>n.classList.remove("show")));
+
+function legendHTML(){
+  if(legendItems.length===0) return "";
+  return `<div class="legend" id="legendBlock">
+    <h3>Annotation legend — ${legendItems.length} components on this screen</h3>
+    ${legendItems.map(it => `
+      <div class="legend-item">
+        <div class="legend-num">${it.n}</div>
+        <div><b>${it.label}</b><span class="legend-tag ${tagClass(it.type)}">${typeLabel(it.type)}</span><br>${it.desc}</div>
+      </div>`).join("")}
+  </div>`;
+}
+
+/* ============================================================
+   SHARED APP TOP NAV
+   ============================================================ */
+function appTopNav(active, isAdmin){
+  return `
+  <div class="app-topnav">
+    <div class="brand"><div class="mark">DS</div> DEEPSYNC ${pin("Global navbar", "nav", "Persistent across every page. Links: Home, Dashboard, Geo Map, Docs. Data Manager, Profile, and Settings links only render when the logged-in user's role is ADMIN (JWT-decoded client-side, re-checked server-side on every admin API call).")}</div>
+    <div class="navlinks">
+      <span class="navlink ${active==='home'?'active':''}">Home</span>
+      <span class="navlink ${active==='dashboard'?'active':''}">Dashboard</span>
+      <span class="navlink ${active==='geomap'?'active':''}">Geo Map</span>
+      <span class="navlink ${active==='aiassistant'?'active':''}">AI Assistant</span>
+      ${isAdmin ? `<span class="navlink ${active==='datamanager'?'active':''}">Data Manager</span>` : ""}
+      ${isAdmin ? `<span class="navlink ${active==='profile'?'active':''}">Profile &amp; Settings</span>` : ""}
+      <span class="navlink" style="cursor:pointer;" onclick="setPage('home')">Docs ↓</span>
+    </div>
+    <div class="right">
+      <span class="status-badge">● Systems operational</span>
+      ${isAdmin ? `<span class="admin-badge">Admin</span>` : `<span class="btn-secondary" style="cursor:default;">Admin sign in</span>`}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   HOME
+   ============================================================ */
+function homeHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("home", false)}
+
+    <div style="padding:40px 60px 6px;text-align:center;">
+      <div style="font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">
+        ${pin("Hero text", "statik", "Static heading + purpose statement. No interactivity, no data fetch.")}
+        PS 26067 · INCOIS
+      </div>
+      <h1 style="font-size:29px;margin:0 0 14px;">3D Ocean Data Visualization Platform</h1>
+      <p style="max-width:580px;margin:0 auto 24px;color:var(--ink-dim);font-size:13px;">DEEPSYNC integrates ocean model outputs with in-situ instrument observations in one interactive environment — built for Smart India Hackathon 2025 (PS 26067, INCOIS) by Team BLUEGEN_606.</p>
+    </div>
+
+    <div style="padding:0 40px 8px;">
+      <div class="row-flex" style="max-width:520px;margin:0 auto 30px;">
+        <button class="btn-primary" style="flex:1;" onclick="setPage('dashboard')">Open Dashboard</button>
+        <button class="btn-secondary" style="flex:1;" onclick="setPage('geomap')">Open Geo Map</button>
+      </div>
+      ${pin("QuickAccessNav", "nav", "Two buttons directly below the hero — 'Open Dashboard' and 'Open Geo Map'. Plain navigation, not framed as an audience choice (this replaces the earlier 'I'm a Forecaster / I'm exploring' role cards). A third 'Data Manager' button appears here too when the visitor is a logged-in admin.")}
+    </div>
+
+    <div style="padding:0 40px 30px;">
+      <div class="sec-title" style="justify-content:center;">Live system status</div>
+      <div class="sec-sub" style="text-align:center;">Refreshed on load from the live data store — not a static claim.</div>
+      <div class="row-flex" style="max-width:900px;margin:0 auto;flex-wrap:wrap;">
+        <div class="stat-tile-wf">142<div class="stat-lbl">Active floats</div><div class="stat-trend">↑ 4 today</div></div>
+        <div class="stat-tile-wf">18<div class="stat-lbl">Active gliders</div><div class="stat-trend">— steady</div></div>
+        <div class="stat-tile-wf">340K+ km²<div class="stat-lbl">EEZ 3D coverage</div><div class="stat-trend">fixed</div></div>
+        <div class="stat-tile-wf">4<div class="stat-lbl">Data sources connected</div><div class="stat-trend">see below</div></div>
+      </div>
+      <div class="row-flex" style="max-width:900px;margin:12px auto 0;flex-wrap:wrap;">
+        <div class="stat-tile-wf">6h ago<div class="stat-lbl">Last data sync</div><div class="stat-trend">auto every 6h</div></div>
+        <div class="stat-tile-wf">12,480<div class="stat-lbl">Profiles ingested (30d)</div><div class="stat-trend">↑ 320 today</div></div>
+        <div class="stat-tile-wf">6<div class="stat-lbl">Variables tracked</div><div class="stat-trend">temp, sal, U/V, chl, MLD</div></div>
+        <div class="stat-tile-wf">&lt;85ms<div class="stat-lbl">Volumetric slice latency</div><div class="stat-trend">p95, last hour</div></div>
+      </div>
+      ${pin("LiveMetricsPanel", "read", "GET /api/stats/summary. A detailed status panel (2 rows × 4 tiles), each with a value, label, and trend/context line. Positioned below the quick-access buttons.")}
+    </div>
+
+    <div style="padding:0 40px 34px;">
+      <div class="sec-title" style="justify-content:center;">Platform capabilities</div>
+      <div class="row-flex" style="max-width:960px;margin:14px auto 0;flex-wrap:wrap;">
+        <div class="feature-card"><div class="ic">🌐</div><div class="t">3D volumetric rendering</div><div class="d">Depth-slice views, isosurfaces, and full volumetric shading of live model fields.</div></div>
+        <div class="feature-card"><div class="ic">📡</div><div class="t">Multi-instrument overlay</div><div class="d">Argo floats, gliders, CTD and BGC data plotted alongside model output.</div></div>
+        <div class="feature-card"><div class="ic">🧩</div><div class="t">Extensible ingestion</div><div class="d">Plugin-style parser architecture — new formats and sensors need no re-engineering.</div></div>
+        <div class="feature-card"><div class="ic">🛰️</div><div class="t">OGC &amp; CF compliant</div><div class="d">WMS/WCS services and CF-convention validation for national data-portal interoperability.</div></div>
+      </div>
+      ${pin("CapabilitiesGrid", "statik", "Four static feature cards summarizing the platform's core deliverables. No data fetch — descriptive content tied directly to the PS's stated requirements.")}
+    </div>
+
+    <div style="padding:0 40px 34px;">
+      <div class="x-box" style="height:200px;max-width:640px;margin:0 auto;">
+        🌐 live rotating preview of the 3D ocean scene
+        <div style="font-size:10px;">non-interactive</div>
+        ${pin("MiniOceanPreview", "read", "Reuses the Dashboard's 3D scene in a stripped, read-only auto-rotate mode — same GET /api/ocean/grid data, no camera controls exposed.")}
+      </div>
+    </div>
+
+    <div style="padding:0 40px 34px;">
+      <div class="sec-title" style="justify-content:center;">Connected data sources</div>
+      <div class="row-flex" style="max-width:900px;margin:14px auto 0;flex-wrap:wrap;">
+        <div class="source-badge"><div class="name">LAS INCOIS</div><div class="meta">Ocean model output · syncing</div></div>
+        <div class="source-badge"><div class="name">Copernicus Marine</div><div class="meta">GLOBAL_MULTIYEAR_PHY_001_030</div></div>
+        <div class="source-badge"><div class="name">Argo Global</div><div class="meta">ifremer.fr · float profiles</div></div>
+        <div class="source-badge"><div class="name">Glider (v2)</div><div class="meta">ifremer.fr · glider missions</div></div>
+      </div>
+      ${pin("DataSourcesPanel", "statik", "Four static badges naming the platform's real upstream data sources and what each supplies. Builds credibility — shows the platform isn't only synthetic demo data.")}
+    </div>
+
+    <div style="padding:0 40px 34px;">
+      <div class="sec-title" style="justify-content:center;">Recent activity</div>
+      <div style="max-width:640px;margin:14px auto 0;background:#fff;border:1px solid var(--line-soft);border-radius:10px;padding:6px 16px;">
+        <div class="activity-item"><span class="dot ok"></span><span>argo_2900004.nc ingested successfully — 1,204 rows &nbsp;<span style="color:var(--ink-faint);">· 9:14 today</span></span></div>
+        <div class="activity-item"><span class="dot warn"></span><span>New High Wave Advisory issued for Tamil Nadu coast &nbsp;<span style="color:var(--ink-faint);">· 2h ago</span></span></div>
+        <div class="activity-item"><span class="dot info"></span><span>4 new Argo float positions reported &nbsp;<span style="color:var(--ink-faint);">· 6h ago</span></span></div>
+      </div>
+      ${pin("RecentActivityFeed", "read", "GET /api/activity/recent — aggregates the latest ingestion attempts, hazard advisories, and new float reports into one chronological list. Read-only, no actions.")}
+    </div>
+
+    <div class="section" style="border-top:1px solid var(--line-soft);max-width:640px;margin:0 auto;padding:26px 40px;">
+      <div class="sec-title">Documentation ${pin("Documentation section", "nav", "External links: ARCHITECTURE.md, USER_MANUAL_FORECASTER.md, USER_MANUAL_OUTREACH.md. No separate /about route exists — this section is the entirety of what About used to hold.")}</div>
+      <div style="font-size:12.5px;line-height:2;color:var(--ink-dim);">
+        <div>📄 Architecture &amp; API documentation</div>
+        <div>📄 User manual — Forecaster</div>
+        <div>📄 User manual — Geo Map</div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--line-soft);padding:16px 26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--ink-faint);">
+      <span>© 2026 DEEPSYNC · Team BLUEGEN_606 · PS 26067</span>
+      <span style="display:flex;gap:16px;">Bathymetry Registry &nbsp;·&nbsp; Security Architecture &nbsp;·&nbsp; ● Live Model Feeds</span>
+      ${pin("Footer", "statik", "Static credibility links, bottom of the page.")}
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   DASHBOARD — SINGLE PAGE, ZONED (3D ABOVE, 2D BELOW)
+   ============================================================ */
+function dashboardHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("dashboard", false)}
+
+    <div class="zone-banner zone-3d">🌐 3D Volumetric View <span class="zone-sub">— live model + instrument scene</span></div>
+    <div class="app-body">
+      <div class="app-main-col">
+        <div class="x-box" style="height:400px;">
+          3D OCEAN SCENE (WebGL / Three.js)
+          <div style="font-size:10px;">drag = orbit · scroll = zoom · right-drag = pan · click empty water = point query</div>
+          ${pin("OceanScene", "read", "On mount, calls GET /api/ocean/grid and renders the result as a colored WebGL point cloud. Camera orbit/zoom/pan are pure client-side controls — no API call on interaction.")}
+          <div style="position:absolute;top:14px;left:14px;background:#fff;border:1px solid var(--line-soft);border-radius:8px;padding:8px 10px;font-size:10.5px;text-align:left;">
+            <div>Isosurface ${pin("IsosurfaceLayer toggle + threshold", "client", "Overlay panel, top-left of the 3D viewport. Runs marching-cubes client-side over the fetched grid — no backend call.")} <span class="toggle-pill on"><span class="knob"></span></span></div>
+            <div style="margin-top:6px;">Volumetric ${pin("VolumetricLayer toggle + opacity", "client", "Swaps the point-cloud for a ray-marched GLSL shader over the same fetched grid data.")} <span class="toggle-pill"><span class="knob"></span></span></div>
+            <div style="margin-top:6px;">Trajectories ${pin("TrajectoryLayer toggle", "read", "Calls GET /api/instruments/argo/{id}/path and draws each float/glider's stored position history (see FloatPositionEntity) as a connected line in the 3D scene.")} <span class="toggle-pill on"><span class="knob"></span></span></div>
+            <div style="margin-top:6px;">Streamlines ${pin("CurrentStreamlineLayer toggle", "client", "Replaces static current-vector points with animated flow-line particles, computed client-side from the same already-fetched U/V grid data.")} <span class="toggle-pill"><span class="knob"></span></span></div>
+            <div style="margin-top:6px;">Hazard zones ${pin("HazardLayerToggle", "read", "SARAT-inspired. Calls GET /api/hazards/active and draws tsunami/high-wave/PFZ zone outlines directly on the 3D scene.")} <span class="toggle-pill"><span class="knob"></span></span></div>
+          </div>
+          <div style="position:absolute;top:14px;right:14px;background:#fff;border:1px solid var(--line-soft);border-radius:8px;padding:7px 10px;font-size:10.5px;">
+            ⬚ Draw region ${pin("RegionSelector", "client", "Drag a box over the scene to scope it to one area instead of the full EEZ. Filters the in-memory grid client-side.")}
+          </div>
+          <div style="position:absolute;bottom:60px;right:90px;width:14px;height:14px;border-radius:50%;background:#4fa8e0;border:2px solid #fff;cursor:pointer;" title="Argo marker"></div>
+          <div style="position:absolute;bottom:40px;right:60px;">${pin("ArgoMarkers (click)", "read", "Clicking any marker calls GET /api/instruments/argo/{id} and opens a floating quick-glance profile popup right there in the scene.")}</div>
+          <div style="position:absolute;bottom:100px;left:120px;width:8px;height:8px;border-radius:50%;background:#e6a23c;border:2px solid #fff;cursor:crosshair;" title="empty water — click for point query"></div>
+          <div style="position:absolute;bottom:78px;left:80px;">${pin("PointQueryTool", "read", "Clicking anywhere in open water calls a model-interpolation endpoint (GET /api/ocean/point) and opens the same quick-glance popup style — for a location with no physical instrument.")}</div>
+        </div>
+        <div style="margin-top:12px;background:#fff;border:1px solid var(--line-soft);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;">
+          <button class="btn-secondary" style="padding:6px 10px;">▶</button>
+          <div class="slider-track" style="flex:1;"><div class="knob" style="left:30%;"></div></div>
+          <span style="font-size:10.5px;color:var(--ink-dim);white-space:nowrap;">2026-09-08 00:00Z</span>
+          ${pin("TimeSlider", "read", "Full-width scrubber below the 3D viewport. Play button animates through available timestamps; dragging calls GET /api/ocean/grid?timestamp=... for the chosen step.")}
+        </div>
+      </div>
+      <div class="app-side-col">
+        <div class="section">
+          <div class="sec-title">Control panel ${pin("ControlPanel container", "client", "Fixed right-hand sidebar, present for the whole 3D zone.")}</div>
+          <div class="field-label">Variable ${pin("Variable dropdown", "client", "Selects which fetched field recolors the point cloud. Pure client-side recolor, no refetch.")}</div>
+          <div class="field">Temperature (°C) ▾</div>
+          <div class="field-label" style="margin-top:14px;">Colorbar ${pin("Colorbar legend", "statik", "Recomputed client-side from the selected variable's min/max.")}</div>
+          <div style="height:14px;border-radius:4px;background:linear-gradient(to right,#2144a4,#28a0a0,#e6c828,#c82828);"></div>
+          <div class="field-label" style="margin-top:14px;">Depth slice ${pin("Depth-slice toggle + slider", "client", "Filters the already-fetched grid to one depth level, or the full water column.")}</div>
+          <div class="slider-track"><div class="knob" style="left:40%;"></div></div>
+          <div class="field-label" style="margin-top:14px;">Vertical exaggeration ${pin("Vertical exaggeration slider", "client", "Stretches the Y-axis scale of the 3D scene. Cosmetic only.")}</div>
+          <div class="slider-track"><div class="knob" style="left:65%;"></div></div>
+          <div class="field-label" style="margin-top:14px;">Opacity ${pin("Opacity slider", "client", "Adjusts point/volume transparency. Cosmetic only.")}</div>
+          <div class="slider-track"><div class="knob" style="left:80%;"></div></div>
+          <div style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--line-soft);display:flex;gap:8px;">
+            <button class="btn-secondary" style="flex:1;">⬇ CSV</button>
+            <button class="btn-secondary" style="flex:1;">🔗 Copy link</button>
+          </div>
+          ${pin("ExportShareControls", "read", "'CSV' downloads the currently-loaded grid via a backend export endpoint. 'Copy link' encodes the current view state into the URL.")}
+        </div>
+      </div>
+    </div>
+
+    <div class="zone-banner zone-2d">📊 2D Data Analysis <span class="zone-sub">— 8 chart types, one selector</span></div>
+    <div class="app-main-col" style="padding:20px 26px 30px;">
+      <div class="section">
+        <div class="sec-title">Select instrument ${pin("FloatSelector", "read", "Dropdown/search populated from GET /api/instruments/argo. Sets the shared 'selected float' state — the same one ArgoMarkers uses above, and Geo Map uses on its own page.")}</div>
+        <div class="field" style="max-width:320px;">ARGO_2900004 — 12.4°N, 79.1°E ▾</div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title">Chart type</div>
+        <div class="row-flex" style="flex-wrap:wrap;gap:8px;">
+          <button class="tab-btn active" style="border:1px solid var(--line-soft);">Depth Profile</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Correlation</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">T-S Diagram</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Distribution</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Time Series</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Hovmöller</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Along-track</button>
+          <button class="tab-btn" style="border:1px solid var(--line-soft);">Current Rose</button>
+        </div>
+        ${pin("ChartTypeSelector", "client", "Row of pill buttons switching which single chart renders below — Depth Profile, Correlation, T-S Diagram, Distribution/Histogram, Time Series, Hovmöller, Along-track Section, Current Rose. Only the selected chart's container is shown at a time; switching types re-uses already-fetched data where possible (T-S Diagram and Distribution need no new fetch), and triggers a new request only for types needing multi-timestamp history (Time Series, Hovmöller, Current Rose) or position-correlated data (Along-track).")}
+      </div>
+
+      <div class="section">
+        <div class="sec-title">Depth profile <span style="font-size:10px;color:var(--ink-faint);font-weight:400;">(currently selected)</span> ${pin("ProfileChart", "read", "Multi-series depth-vs-value chart for the selected float: temperature, salinity, current U/V, chlorophyll, and a computed MLD reference line. Series checkboxes are client-side only.")}</div>
+        <div class="x-box" style="height:200px;">📈 Multi-series line chart (depth on Y-axis)</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--ink-dim);">☑ Temperature &nbsp; ☑ Salinity &nbsp; ☐ Current U/V &nbsp; ☐ Chlorophyll &nbsp; ☑ MLD reference line</div>
+        <div style="margin-top:10px;"><button class="btn-secondary">⬇ CSV</button></div>
+      </div>
+
+      <div class="section">
+        <div class="sec-sub" style="margin-bottom:14px;">Preview of 3 of the other chart types available behind the selector above — the remaining types (Correlation, Distribution, Time Series) follow the same single-chart-area pattern.</div>
+        <div class="row-flex">
+          <div class="col">
+            <div class="x-box" style="height:160px;">🔵 T-S Diagram <div style="font-size:9px;">(salinity × temp, depth = color)</div></div>
+            ${pin("TSDiagramChart", "read", "Salinity on X, temperature on Y, each point colored by depth. Classic water-mass identification tool — uses the same profile data already fetched for Depth Profile, no new request.")}
+          </div>
+          <div class="col">
+            <div class="x-box" style="height:160px;">📊 Hovmöller <div style="font-size:9px;">(time × depth, color = intensity)</div></div>
+            ${pin("HovmollerChart", "read", "Time on X, depth on Y, color intensity = the selected variable. Calls GET /api/instruments/argo/{id}/profile-history for the multi-timestamp profile series this needs.")}
+          </div>
+          <div class="col">
+            <div class="x-box" style="height:160px;">🧭 Current Rose <div style="font-size:9px;">(direction × magnitude)</div></div>
+            ${pin("CurrentRoseChart", "read", "Radial plot of current direction vs. magnitude at a fixed point over time. Calls GET /api/ocean/point-history?lat=&lon=&depth= for the time series of U/V components.")}
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          ${pin("DistributionHistogramChart (not previewed)", "read", "Frequency histogram of the selected variable's values across the whole currently-loaded grid. Pure client-side computation — no new backend call.")}
+          ${pin("TimeSeriesChart (not previewed)", "read", "Selected variable at a fixed depth, plotted against time. Calls the same profile-history endpoint as Hovmöller, just rendered as a single line instead of a depth × time grid.")}
+          ${pin("AlongTrackSectionChart (not previewed)", "read", "Distance-along-path on X, depth on Y, color = variable — a 'curtain plot' for a glider's whole route. Backed by service.AlongTrackSectionService, which correlates FloatPositionEntity with ProfileSampleEntity by nearest timestamp.")}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title">Correlation analysis <span style="font-size:10px;color:var(--ink-faint);font-weight:400;">(one of the 8 chart types, shown expanded here)</span></div>
+        <div class="row-flex">
+          <div class="col"><div class="x-box" style="height:170px;">🔵 SST × Chlorophyll-a ${pin("CorrelationView — SST × Chl-a", "read", "Scatter plot of surface temperature against chlorophyll across all currently-loaded grid points — supports the PS's fishery-advisory use case.")}</div></div>
+          <div class="col"><div class="x-box" style="height:170px;">🔵 MLD × SST ${pin("CorrelationView — MLD × SST", "read", "MLD is computed server-side by derived.MldCalculatorService, then plotted against surface temperature.")}</div></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   GEO MAP — float / glider path viewer
+   ============================================================ */
+function geoMapHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("geomap", false)}
+    <div class="app-body">
+      <div class="app-side-col" style="order:-1;">
+        <div class="section">
+          <div class="sec-title">Filter ${pin("MapFilterPanel", "client", "Left sidebar. Checkboxes filter which instrument types are plotted on the map; a date range narrows which position-history points are drawn. Filtering happens against already-fetched data — no refetch per checkbox toggle.")}</div>
+          <div style="font-size:11.5px;line-height:2.1;">
+            <div>☑ Argo floats</div>
+            <div>☑ Gliders</div>
+            <div>☐ CTD</div>
+            <div>☐ BGC</div>
+          </div>
+          <div class="field-label" style="margin-top:14px;">Date range</div>
+          <div class="field">Last 30 days ▾</div>
+        </div>
+      </div>
+      <div class="app-main-col">
+        <div class="x-box" style="height:460px;">
+          🗺 2D GEO MAP (tile map — lat/lon)
+          <div style="font-size:10px;">drag = pan · scroll = zoom · click a dot = instrument detail</div>
+          ${pin("GeoMapView", "read", "On mount, calls GET /api/instruments/argo. Renders a standard 2D tile map (pan/zoom) instead of the 3D scene — this page is now a dedicated path-tracking view, not a simplified 3D tour.")}
+          <div style="position:absolute;top:80px;left:120px;width:100px;height:2px;background:#4fa8e0;transform:rotate(15deg);"></div>
+          <div style="position:absolute;top:120px;left:200px;">${pin("GeoTrajectoryLayer", "read", "Calls GET /api/instruments/argo/{id}/path and draws each instrument's historical position fixes as a connected polyline on the map — the 2D equivalent of Dashboard's TrajectoryLayer.")}</div>
+          <div style="position:absolute;top:180px;left:280px;width:12px;height:12px;border-radius:50%;background:#4fa8e0;border:2px solid #fff;cursor:pointer;"></div>
+          <div style="position:absolute;top:220px;left:340px;width:12px;height:12px;border-radius:50%;background:#e07a4f;border:2px solid #fff;cursor:pointer;"></div>
+          <div style="position:absolute;top:210px;left:270px;">${pin("FloatGliderMarkers (click)", "read", "Each dot is one instrument at its most recent known position, color-coded by type (blue = float, orange = glider). Clicking one calls GET /api/instruments/argo/{id} and opens the InstrumentDetailPanel.")}</div>
+        </div>
+      </div>
+      <div class="app-side-col">
+        <div class="section">
+          <div class="sec-title">Instrument detail ${pin("InstrumentDetailPanel", "read", "Right sidebar. Populated only after a marker is clicked: platform ID, type, last position, last reading time, and the same ProfileChart used on Dashboard for its depth-vs-value data.")}</div>
+          <div style="font-size:11.5px;line-height:1.8;color:var(--ink-dim);">
+            <div><b style="color:var(--ink);">ARGO_2900004</b></div>
+            <div>Type: Argo float</div>
+            <div>Last position: 12.4°N, 79.1°E</div>
+            <div>Last reading: 2h ago</div>
+          </div>
+          <div class="x-box" style="height:140px;margin-top:10px;">📈 depth profile</div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   AI ASSISTANT — chat interface
+   ============================================================ */
+function aiAssistantHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("aiassistant", false)}
+
+    <div class="chat-window">
+      <div class="chat-msg user">
+        <div class="chat-avatar user">U</div>
+        <div class="chat-bubble user">What's the temperature trend for ARGO_2900004 over the last 7 days?</div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar ai">AI</div>
+        <div class="chat-bubble ai">
+          Temperature at ARGO_2900004 has cooled slightly from 28.6°C to 27.9°C over the last 7 days.
+          <div class="x-box" style="height:130px;margin-top:10px;">📈 Time Series chart (auto-inserted)</div>
+          ${pin("ChatChartRenderer", "read", "When the assistant's response includes a chart payload, this component renders it inline in the bubble by reusing an existing chart component — here, TimeSeriesChart — rather than drawing anything new. The same dispatcher handles all 8 chart types from the Dashboard's analysis suite.")}
+        </div>
+      </div>
+
+      <div class="chat-msg user">
+        <div class="chat-avatar user">U</div>
+        <div class="chat-bubble user">Any high wave alerts near Chennai right now?</div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar ai">AI</div>
+        <div class="chat-bubble ai">Yes — a High Wave Alert is active for the Tamil Nadu coast for the next 24h. No active tsunami warnings.</div>
+      </div>
+    </div>
+
+    ${pin("ChatMessageList", "read", "The scrollable message history above. Each message is either the user's text or the assistant's response. On load, calls GET /api/assistant/history for the current session; new messages are added optimistically as they're sent.")}
+
+    <div class="chat-chip-row">
+      <div class="chat-chip">Show salinity vs temperature for a float</div>
+      <div class="chat-chip">Compare two regions' chlorophyll</div>
+      <div class="chat-chip">Plot current direction at 12°N, 79°E</div>
+      ${pin("SuggestedQueryChips", "nav", "Example queries shown to guide first-time use. Clicking a chip fills the input field with that text — pure client-side convenience, doesn't send the query automatically.")}
+    </div>
+
+    <div class="chat-input-row">
+      <div class="chat-input-field">Ask about temperature, salinity, currents, floats, or hazards…</div>
+      <button class="btn-primary">Send</button>
+      ${pin("ChatInputBar", "create", "Text input + Send button, fixed at the bottom. Submitting calls POST /api/assistant/query with the raw text. Backend flow: NaturalLanguageQueryService sends the text to an LLM to extract intent (variable, location, instrument, time range, implied chart type), then dispatches to the existing OceanDataController/ArgoController/StatsController to fetch real values — the LLM decides *what* to fetch and how to phrase the answer, but never invents the data itself.")}
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   DATA MANAGER (ADMIN-ONLY)
+   ============================================================ */
+function dataManagerHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("datamanager", true)}
+    <div class="app-main-col" style="padding:22px 26px;">
+      <div class="section">
+        <div class="sec-title">Pending admin approvals ${pin("PendingApprovalsList", "update", "GET /api/admin/users/pending. Approve calls POST /api/admin/users/{id}/approve (sets active=true). Reject calls POST /api/admin/users/{id}/reject (deletes the account).")}</div>
+        <div class="wf-row"><div class="c1">r.kumar@incois.gov.in</div><div class="c2">Signed up 2h ago</div><div class="c3"><span class="status-chip pending">Pending</span></div><div class="c-actions"><button class="btn-ok">Approve</button><button class="btn-danger">Reject</button></div></div>
+        <div class="wf-row"><div class="c1">a.iyer@incois.gov.in</div><div class="c2">Signed up 1d ago</div><div class="c3"><span class="status-chip pending">Pending</span></div><div class="c-actions"><button class="btn-ok">Approve</button><button class="btn-danger">Reject</button></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Upload data ${pin("UploadPanel", "create", "Drag-and-drop or browse a NetCDF/ASCII file, pick its format, click Upload. Calls POST /api/admin/ingest.")}</div>
+        <div class="row-flex" style="align-items:flex-end;">
+          <div class="x-box" style="flex:1;height:90px;">⬆ Drag file here, or browse</div>
+          <div style="width:160px;"><div class="field-label">Format</div><div class="field">NetCDF ▾</div></div>
+          <button class="btn-primary">Upload</button>
+        </div>
+        <div class="slider-track" style="margin-top:10px;"><div class="knob" style="left:55%;background:#2c7a39;box-shadow:0 0 0 1px #2c7a39;"></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Registered parsers ${pin("ParserRegistryList", "read", "GET /api/admin/parsers — lists every registered OceanDataParser by source type.")}</div>
+        <div class="wf-row"><div class="c1">NETCDF</div><div class="c3">Unidata netcdf-java — CF-convention model output</div></div>
+        <div class="wf-row"><div class="c1">ASCII_DELIMITED</div><div class="c3">Apache Commons CSV — CTD casts, delimited logs</div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Ingestion history ${pin("IngestionStatusLog", "read", "GET /api/admin/ingestions — filename, timestamp, status, rows ingested, error if failed.")}</div>
+        <div class="wf-row"><div class="c1">argo_2900004.nc</div><div class="c2">09:14 today</div><div class="c3">1,204 rows</div><div class="c-actions"><span class="status-chip ok">Success</span></div></div>
+        <div class="wf-row"><div class="c1">glider_ariel_v2.nc</div><div class="c2">Yesterday</div><div class="c3">Missing 'depth' variable</div><div class="c-actions"><span class="status-chip error">Failed</span></div></div>
+      </div>
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   PROFILE & SETTINGS (ADMIN-ONLY, single page)
+   ============================================================ */
+function profileHTML(){
+  resetPins();
+  return `
+  <div class="canvas-wrap"><div class="canvas ${currentVP}">
+    ${appTopNav("profile", true)}
+    <div class="app-body">
+      <div class="app-main-col" style="max-width:480px;">
+        <div class="section">
+          <div class="sec-title">Account ${pin("ProfileView — account details", "read", "GET /api/admin/profile on load. Shows the logged-in admin's own full name and email. Read-only display fields.")}</div>
+          <div class="field-label">Full name</div>
+          <div class="field">Dr. R. Kumar</div>
+          <div class="field-label" style="margin-top:12px;">Email</div>
+          <div class="field">r.kumar@incois.gov.in</div>
+        </div>
+        <div class="section">
+          <div class="sec-title">Change password ${pin("ProfileView — password form", "update", "Current password, new password, confirm new password. Submit calls PUT /api/admin/profile/password — updates only the caller's own account, never another user's.")}</div>
+          <div class="field-label">Current password</div>
+          <div class="field">••••••••</div>
+          <div class="field-label" style="margin-top:10px;">New password</div>
+          <div class="field">••••••••</div>
+          <div class="field-label" style="margin-top:10px;">Confirm new password</div>
+          <div class="field">••••••••</div>
+          <button class="btn-primary" style="margin-top:14px;">Save changes</button>
+        </div>
+      </div>
+      <div class="app-side-col" style="width:400px;flex:0 0 400px;">
+        <div class="section">
+          <div class="sec-title">Hazard advisories ${pin("HazardAdvisoryManager", "create", "Full CRUD. 'Add' calls POST /api/admin/hazards. Each row's Edit calls PUT /api/admin/hazards/{id}; Delete calls DELETE /api/admin/hazards/{id}. This is the data source behind Dashboard's HazardLayerToggle.")}</div>
+          <div class="wf-row"><div class="c1">High Wave Alert</div><div class="c2">Tamil Nadu coast</div><div class="c3">Active</div><div class="c-actions"><button class="btn-secondary">Edit</button><button class="btn-danger">Delete</button></div></div>
+          <div class="wf-row"><div class="c1">PFZ Advisory</div><div class="c2">3 zones</div><div class="c3">Active</div><div class="c-actions"><button class="btn-secondary">Edit</button><button class="btn-danger">Delete</button></div></div>
+          <button class="btn-primary" style="margin-top:12px;">+ Add advisory</button>
+        </div>
+        <div class="section">
+          <div class="sec-title">Data source status ${pin("Data source status panel", "read", "Read-only operational view (distinct from Home's public-facing DataSourcesPanel): last successful check-in per source, for admins diagnosing ingestion issues.")}</div>
+          <div class="wf-row"><div class="c1">LAS INCOIS</div><div class="c3">3h ago</div><div class="c-actions"><span class="status-chip ok">OK</span></div></div>
+          <div class="wf-row"><div class="c1">Copernicus Marine</div><div class="c3">3h ago</div><div class="c-actions"><span class="status-chip ok">OK</span></div></div>
+          <div class="wf-row"><div class="c1">Argo Global (FTP)</div><div class="c3">Manual download</div><div class="c-actions"><span class="status-chip pending">Manual</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div style="max-width:1240px;margin:0 auto;">${legendHTML()}</div>`;
+}
+
+/* ============================================================
+   RENDER LOOP
+   ============================================================ */
+function renderSidebar(){
+  const list = document.getElementById("pageList");
+  list.innerHTML = "";
+  pages.forEach(p=>{
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.className = "page-btn" + (p.id===currentPage ? " active":"");
+    btn.innerHTML = `<span>${p.name}</span>${p.locked ? '<span class="lock-badge">ADMIN</span>':''}`;
+    btn.onclick = ()=>{ currentPage = p.id; renderAll(); };
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+function setPage(id){ currentPage = id; renderAll(); }
+
+function renderAll(){
+  renderSidebar();
+  const p = pages.find(x=>x.id===currentPage);
+  document.getElementById("pageTitle").textContent = p.name;
+  document.getElementById("crumbPage").textContent = p.name;
+  const content = document.getElementById("pageContent");
+
+  let html = "";
+  if(currentPage === "home") html = homeHTML();
+  else if(currentPage === "dashboard") html = dashboardHTML();
+  else if(currentPage === "geomap") html = geoMapHTML();
+  else if(currentPage === "aiassistant") html = aiAssistantHTML();
+  else if(currentPage === "datamanager") html = dataManagerHTML();
+  else if(currentPage === "profile") html = profileHTML();
+
+  content.innerHTML = html;
+  applyViewport();
+  applyAnnoVisibility();
+}
+
+function applyViewport(){
+  const canvas = document.querySelector(".canvas");
+  if(!canvas) return;
+  canvas.classList.remove("desktop","tablet","mobile");
+  canvas.classList.add(currentVP);
+}
+function applyAnnoVisibility(){
+  const show = document.getElementById("annoToggle").checked;
+  document.querySelectorAll(".pin").forEach(el=> el.classList.toggle("hidden-anno", !show));
+  document.querySelectorAll(".pin-note").forEach(el=> el.classList.remove("show"));
+  document.getElementById("legendBlock")?.classList.toggle("hidden", !show);
+}
+document.getElementById("viewportToggle").addEventListener("click", (e)=>{
+  if(e.target.tagName !== "BUTTON") return;
+  currentVP = e.target.dataset.vp;
+  document.querySelectorAll("#viewportToggle button").forEach(b=>b.classList.toggle("active", b.dataset.vp===currentVP));
+  applyViewport();
+});
+document.getElementById("annoToggle").addEventListener("change", applyAnnoVisibility);
+
+renderAll();
+</script>
+</body>
+</html>

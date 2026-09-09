@@ -1,0 +1,21 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/frontend-lint.cjs",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/java-compile-check.cjs",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}
