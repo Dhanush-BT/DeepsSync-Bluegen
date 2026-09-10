@@ -7,6 +7,7 @@ import { useAppStore } from '../../store/useAppStore'
 import { generateVolumeSurface } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
 import AutoRotateToggle from './AutoRotateToggle'
+import MeasurementSliders from './MeasurementSliders'
 
 function VolumetricSurface({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
@@ -148,6 +149,7 @@ export default function OceanScene() {
 
   return (
     <div className="w-full h-full relative">
+      <MeasurementSliders />
       <AutoRotateToggle onToggle={setAutoRotate} />
       {loading && (
         <div className="absolute top-4 left-4 bg-white/90 px-4 py-2 rounded-lg text-sm text-slate-700 z-10">
