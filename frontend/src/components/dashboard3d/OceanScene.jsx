@@ -6,6 +6,7 @@ import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 import { generateVolumeSurface } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
+import TextLabels from './TextLabels'
 import AutoRotateToggle from './AutoRotateToggle'
 import MeasurementSliders from './MeasurementSliders'
 import MeasurementPlanes from './MeasurementPlanes'
@@ -91,6 +92,7 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
       />
       <MeasurementPlanes />
       <AxisLabels />
+      <TextLabels />
       <gridHelper args={[4, 8]} position={[0, 0, -2]} />
     </>
   )

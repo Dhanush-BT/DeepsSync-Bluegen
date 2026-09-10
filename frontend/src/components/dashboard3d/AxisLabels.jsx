@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
+import { Billboard } from '@react-three/drei'
 
 export default function AxisLabels() {
   const { scene } = useThree()
