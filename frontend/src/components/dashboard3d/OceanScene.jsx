@@ -72,23 +72,13 @@ function PointCloud({ points, selectedVariable, verticalExaggeration, volumeOpac
   }, [points, selectedVariable, verticalExaggeration])
 
   return (
-    <>
-      <points ref={meshRef}>
-        <bufferGeometry />
-        <pointsMaterial size={0.05} sizeAttenuation vertexColors transparent opacity={volumeOpacity} />
-      </points>
-      <StatsProvider stats={stats} />
-    </>
+    <points ref={meshRef}>
+      <bufferGeometry />
+      <pointsMaterial size={0.05} sizeAttenuation vertexColors transparent opacity={volumeOpacity} />
+    </points>
   )
 }
 
-function StatsProvider({ stats }) {
-  const { setColorbarRange } = useAppStore()
-  useEffect(() => {
-    setColorbarRange(stats.min, stats.max)
-  }, [stats, setColorbarRange])
-  return null
-}
 
 function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const raycasterRef = useRef(new THREE.Raycaster())
@@ -120,7 +110,8 @@ export default function OceanScene() {
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { filter, setSelectedPoint, selectedVariable, verticalExaggeration, volumeOpacity } = useAppStore()
+  const { filter, setSelectedPoint, selectedVariable, verticalExaggeration, volumeOpacity, setColorbarRange } =
+    useAppStore()
 
   useEffect(() => {
     setLoading(true)
@@ -145,6 +136,19 @@ export default function OceanScene() {
       })
       .finally(() => setLoading(false))
   }, [filter])
+
+  useEffect(() => {
+    if (points.length > 0) {
+      const values = points
+        .map((p) => getVariableValue(p, selectedVariable))
+        .filter((v) => v !== null && v !== undefined)
+      if (values.length > 0) {
+        const valueMin = Math.min(...values)
+        const valueMax = Math.max(...values)
+        setColorbarRange(valueMin, valueMax)
+      }
+    }
+  }, [points, selectedVariable, setColorbarRange])
 
   return (
     <div className="w-full h-full relative">
