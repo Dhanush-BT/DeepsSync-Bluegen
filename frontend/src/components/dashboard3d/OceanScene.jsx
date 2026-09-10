@@ -5,45 +5,92 @@ import * as THREE from 'three'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 
-function PointCloud({ points }) {
+function getVariableValue(point, variable) {
+  switch (variable) {
+    case 'temperatureC':
+      return point.temperatureC
+    case 'salinityPsu':
+      return point.salinityPsu
+    case 'currentSpeed':
+      return Math.sqrt((point.currentU || 0) ** 2 + (point.currentV || 0) ** 2)
+    case 'chlorophyll':
+      return point.chlorophyll
+    default:
+      return point.temperatureC
+  }
+}
+
+function getColorForValue(normalized) {
+  // Blue (cold) -> Cyan -> Green -> Orange -> Red (hot)
+  if (normalized < 0.25) {
+    const t = normalized / 0.25
+    return [0.0, 0.3 + t * 0.3, 0.8]
+  } else if (normalized < 0.5) {
+    const t = (normalized - 0.25) / 0.25
+    return [0.0, 0.6 + t * 0.2, 0.8 - t * 0.3]
+  } else if (normalized < 0.75) {
+    const t = (normalized - 0.5) / 0.25
+    return [0.0 + t * 0.5, 0.8 - t * 0.2, 0.5 - t * 0.3]
+  } else {
+    const t = (normalized - 0.75) / 0.25
+    return [0.5 + t * 0.5, 0.6 - t * 0.3, 0.2]
+  }
+}
+
+function PointCloud({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
-  const [hovered, setHovered] = useState(null)
+  const [stats, setStats] = useState({ min: 0, max: 100 })
 
   useEffect(() => {
     if (!meshRef.current || !points.length) return
+
+    const values = points.map((p) => getVariableValue(p, selectedVariable)).filter((v) => v !== null && v !== undefined)
+    const valueMin = Math.min(...values)
+    const valueMax = Math.max(...values)
+    setStats({ min: valueMin, max: valueMax })
 
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(points.length * 3)
     const colors = new Float32Array(points.length * 3)
 
-    const tempMin = Math.min(...points.map((p) => p.temperatureC))
-    const tempMax = Math.max(...points.map((p) => p.temperatureC))
-
     points.forEach((point, i) => {
       positions[i * 3] = point.longitude
       positions[i * 3 + 1] = point.latitude
-      positions[i * 3 + 2] = -point.depthMeters / 1000
+      positions[i * 3 + 2] = -(point.depthMeters / 1000) * verticalExaggeration
 
-      const normalized = (point.temperatureC - tempMin) / (tempMax - tempMin)
-      colors[i * 3] = normalized
-      colors[i * 3 + 1] = 0.5
-      colors[i * 3 + 2] = 1 - normalized
+      const value = getVariableValue(point, selectedVariable)
+      const normalized = (value - valueMin) / (valueMax - valueMin)
+      const [r, g, b] = getColorForValue(normalized)
+      colors[i * 3] = r
+      colors[i * 3 + 1] = g
+      colors[i * 3 + 2] = b
     })
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     meshRef.current.geometry = geometry
-  }, [points])
+  }, [points, selectedVariable, verticalExaggeration])
 
   return (
-    <points ref={meshRef}>
-      <bufferGeometry />
-      <pointsMaterial size={0.05} sizeAttenuation vertexColors />
-    </points>
+    <>
+      <points ref={meshRef}>
+        <bufferGeometry />
+        <pointsMaterial size={0.05} sizeAttenuation vertexColors transparent opacity={volumeOpacity} />
+      </points>
+      <StatsProvider stats={stats} />
+    </>
   )
 }
 
-function Scene({ points, onPointSelect }) {
+function StatsProvider({ stats }) {
+  const { setColorbarRange } = useAppStore()
+  useEffect(() => {
+    setColorbarRange(stats.min, stats.max)
+  }, [stats, setColorbarRange])
+  return null
+}
+
+function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const raycasterRef = useRef(new THREE.Raycaster())
   const mouseRef = useRef(new THREE.Vector2())
 
@@ -58,7 +105,12 @@ function Scene({ points, onPointSelect }) {
       <OrbitControls enableZoom enablePan enableRotate />
       <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 10]} intensity={0.8} />
-      <PointCloud points={points} />
+      <PointCloud
+        points={points}
+        selectedVariable={selectedVariable}
+        verticalExaggeration={verticalExaggeration}
+        volumeOpacity={volumeOpacity}
+      />
       <gridHelper args={[20, 20]} position={[0, 0, -5]} />
     </>
   )
@@ -68,7 +120,7 @@ export default function OceanScene() {
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { filter, setSelectedPoint } = useAppStore()
+  const { filter, setSelectedPoint, selectedVariable, verticalExaggeration, volumeOpacity } = useAppStore()
 
   useEffect(() => {
     setLoading(true)
@@ -99,7 +151,13 @@ export default function OceanScene() {
       {loading && <div className="absolute top-4 left-4 bg-white/90 px-4 py-2 rounded-lg text-sm text-slate-700 z-10">Loading {points.length} points...</div>}
       {error && <div className="absolute top-4 left-4 bg-red-100/90 px-4 py-2 rounded-lg text-sm text-red-700 z-10">Error: {error}</div>}
       <Canvas className="w-full h-full">
-        <Scene points={points} onPointSelect={setSelectedPoint} />
+        <Scene
+          points={points}
+          onPointSelect={setSelectedPoint}
+          selectedVariable={selectedVariable}
+          verticalExaggeration={verticalExaggeration}
+          volumeOpacity={volumeOpacity}
+        />
       </Canvas>
     </div>
   )

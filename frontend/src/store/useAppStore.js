@@ -26,6 +26,22 @@ export const useAppStore = create((set) => ({
   setSelectedFloat: (floatId) => set({ selectedFloat: floatId }),
   setSelectedChartType: (type) => set({ selectedChartType: type }),
 
+  // 3D Dashboard visualization controls
+  selectedVariable: 'temperatureC',
+  setSelectedVariable: (variable) => set({ selectedVariable: variable }),
+
+  colorbarAuto: true,
+  colorbarMin: null,
+  colorbarMax: null,
+  setColorbarAuto: (auto) => set({ colorbarAuto: auto }),
+  setColorbarRange: (min, max) => set({ colorbarMin: min, colorbarMax: max }),
+
+  verticalExaggeration: 1,
+  setVerticalExaggeration: (scale) => set({ verticalExaggeration: scale }),
+
+  volumeOpacity: 0.85,
+  setVolumeOpacity: (opacity) => set({ volumeOpacity: opacity }),
+
   // Data loading states
   loading: false,
   error: null,
