@@ -1,6 +1,7 @@
 package com.bluegen.deepsyncapp.controller;
 
 import com.bluegen.deepsyncapp.model.ApiError;
+import com.bluegen.deepsyncapp.service.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
         String message = "Parameter '%s' has an unusable value: %s"
                 .formatted(exception.getName(), exception.getValue());
         return build(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(NotFoundException exception,
+                                                    HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, exception.getMessage(), request);
     }
 
     private String describe(ObjectError error) {
