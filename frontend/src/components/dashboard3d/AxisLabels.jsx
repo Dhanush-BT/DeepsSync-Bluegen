@@ -118,6 +118,45 @@ export default function AxisLabels() {
     depthTitle.renderOrder = 100
     scene.add(depthTitle)
 
+    // Add detailed rulers with more tick marks
+    const smallTickMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.5 })
+
+    // Longitude ruler (top) - more detailed
+    for (let i = 0; i <= 20; i++) {
+      const pos = -halfSize + (i / 20) * size
+      const tickLength = i % 4 === 0 ? 0.08 : 0.04
+
+      const tickGeometry = new THREE.BufferGeometry()
+      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([pos, halfSize, halfSize, pos, halfSize + tickLength, halfSize]), 3
+      ))
+      scene.add(new THREE.Line(tickGeometry, smallTickMaterial))
+    }
+
+    // Depth ruler (left side) - more detailed
+    for (let i = 0; i <= 20; i++) {
+      const pos = halfSize - (i / 20) * size
+      const tickLength = i % 4 === 0 ? 0.08 : 0.04
+
+      const tickGeometry = new THREE.BufferGeometry()
+      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-halfSize, -0.3, pos, -halfSize - tickLength, -0.3, pos]), 3
+      ))
+      scene.add(new THREE.Line(tickGeometry, smallTickMaterial))
+    }
+
+    // Latitude ruler (front) - more detailed
+    for (let i = 0; i <= 20; i++) {
+      const pos = halfSize - (i / 20) * size
+      const tickLength = i % 4 === 0 ? 0.08 : 0.04
+
+      const tickGeometry = new THREE.BufferGeometry()
+      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-halfSize, pos, halfSize, -halfSize - tickLength, pos, halfSize]), 3
+      ))
+      scene.add(new THREE.Line(tickGeometry, smallTickMaterial))
+    }
+
     // Add grid lines on faces
     const gridMaterial = new THREE.LineBasicMaterial({ color: 0xdddddd, transparent: true, opacity: 0.3 })
 

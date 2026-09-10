@@ -6,6 +6,7 @@ import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 import { generateVolumeSurface } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
+import AutoRotateToggle from './AutoRotateToggle'
 
 function VolumetricSurface({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
@@ -55,11 +56,19 @@ function VolumetricSurface({ points, selectedVariable, verticalExaggeration, vol
   )
 }
 
-function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, volumeOpacity }) {
+function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, volumeOpacity, autoRotate }) {
+  const controlsRef = useRef()
+
+  useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = autoRotate
+    }
+  }, [autoRotate])
+
   return (
     <>
       <PerspectiveCamera position={[2, 2, 2.5]} fov={50} />
-      <OrbitControls enableZoom enablePan enableRotate autoRotate autoRotateSpeed={0.5} />
+      <OrbitControls ref={controlsRef} enableZoom enablePan enableRotate autoRotate={autoRotate} autoRotateSpeed={0.5} />
       <ambientLight intensity={0.9} />
       <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
       <pointLight position={[-5, 5, 5]} intensity={0.6} />
@@ -79,6 +88,7 @@ export default function OceanScene() {
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [autoRotate, setAutoRotate] = useState(true)
   const { filter, setSelectedPoint, selectedVariable, verticalExaggeration, volumeOpacity, setColorbarRange } =
     useAppStore()
 
@@ -138,6 +148,7 @@ export default function OceanScene() {
 
   return (
     <div className="w-full h-full relative">
+      <AutoRotateToggle onToggle={setAutoRotate} />
       {loading && (
         <div className="absolute top-4 left-4 bg-white/90 px-4 py-2 rounded-lg text-sm text-slate-700 z-10">
           Loading ocean data...
@@ -155,6 +166,7 @@ export default function OceanScene() {
           selectedVariable={selectedVariable}
           verticalExaggeration={verticalExaggeration}
           volumeOpacity={volumeOpacity}
+          autoRotate={autoRotate}
         />
       </Canvas>
     </div>
