@@ -1,5 +1,6 @@
 package com.bluegen.deepsyncapp.controller;
 
+import com.bluegen.deepsyncapp.model.OceanDataAxes;
 import com.bluegen.deepsyncapp.model.OceanDataFilter;
 import com.bluegen.deepsyncapp.model.OceanGridPoint;
 import com.bluegen.deepsyncapp.service.OceanDataService;
@@ -81,5 +82,19 @@ class OceanDataControllerTest {
     void rejectsUnparseableTimestampWith400() throws Exception {
         mockMvc.perform(get("/api/ocean-data").param("timestamp", "yesterday"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void exposesTheDistinctDepthAndTimeAxes() throws Exception {
+        when(oceanDataService.findAxes()).thenReturn(new OceanDataAxes(
+                List.of(0.0, 50.0, 100.0),
+                List.of(Instant.parse("2026-09-01T00:00:00Z"))));
+
+        mockMvc.perform(get("/api/ocean-data/axes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.depths.length()").value(3))
+                .andExpect(jsonPath("$.depths[0]").value(0.0))
+                .andExpect(jsonPath("$.timestamps.length()").value(1))
+                .andExpect(jsonPath("$.timestamps[0]").value("2026-09-01T00:00:00Z"));
     }
 }

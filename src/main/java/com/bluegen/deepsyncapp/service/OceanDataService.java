@@ -1,5 +1,6 @@
 package com.bluegen.deepsyncapp.service;
 
+import com.bluegen.deepsyncapp.model.OceanDataAxes;
 import com.bluegen.deepsyncapp.model.OceanDataFilter;
 import com.bluegen.deepsyncapp.model.OceanGridPoint;
 import com.bluegen.deepsyncapp.repository.OceanGridPointRepository;
@@ -24,5 +25,9 @@ public class OceanDataService {
                 .stream()
                 .map(OceanGridPoint::from)
                 .toList();
+    }
+
+    public OceanDataAxes findAxes() {
+        return new OceanDataAxes(repository.findDistinctDepths(), repository.findDistinctTimestamps());
     }
 }

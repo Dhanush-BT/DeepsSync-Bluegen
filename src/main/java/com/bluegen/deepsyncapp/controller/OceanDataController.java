@@ -1,5 +1,6 @@
 package com.bluegen.deepsyncapp.controller;
 
+import com.bluegen.deepsyncapp.model.OceanDataAxes;
 import com.bluegen.deepsyncapp.model.OceanDataFilter;
 import com.bluegen.deepsyncapp.model.OceanGridPoint;
 import com.bluegen.deepsyncapp.service.OceanDataService;
@@ -24,5 +25,10 @@ public class OceanDataController {
     @GetMapping
     public List<OceanGridPoint> gridPoints(@Valid @ModelAttribute OceanDataFilter filter) {
         return oceanDataService.findPoints(filter);
+    }
+
+    @GetMapping("/axes")
+    public OceanDataAxes axes() {
+        return oceanDataService.findAxes();
     }
 }

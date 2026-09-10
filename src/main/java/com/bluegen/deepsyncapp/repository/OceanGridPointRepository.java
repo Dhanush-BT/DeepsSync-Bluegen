@@ -35,4 +35,10 @@ public interface OceanGridPointRepository extends JpaRepository<OceanGridPointEn
                                             @Param("maxLon") Double maxLon,
                                             @Param("depthMeters") Double depthMeters,
                                             @Param("timestamp") Instant timestamp);
+
+    @Query("select distinct p.depthMeters from OceanGridPointEntity p order by p.depthMeters asc")
+    List<Double> findDistinctDepths();
+
+    @Query("select distinct p.timestamp from OceanGridPointEntity p order by p.timestamp asc")
+    List<Instant> findDistinctTimestamps();
 }
