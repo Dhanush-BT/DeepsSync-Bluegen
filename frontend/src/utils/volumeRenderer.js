@@ -1,6 +1,6 @@
 // 3D Grid creation and volumetric surface rendering
 
-export function generateVolumeSurface(points, selectedVariable, gridSize = 10) {
+export function generateVolumeSurface(points, selectedVariable, gridSize = 20) {
   if (!points || points.length === 0) return { positions: [], colors: [] }
 
   // Get bounds

@@ -1,0 +1,908 @@
+{
+  ".claude/.headroom_wrap_marker.json": {
+    "mtime": 1789022521.0211723,
+    "seen": 1789034975.5316238,
+    "ast_hash": "443f39a3ec39ba43bca431f718cec62e",
+    "semantic_hash": ""
+  },
+  ".claude/.headroom_wrap_owners.json": {
+    "mtime": 1789022521.0392342,
+    "seen": 1789034975.5316343,
+    "ast_hash": "8483c1ec5bce614d5d45bb0d49e3ca65",
+    "semantic_hash": ""
+  },
+  ".claude/hooks/frontend-lint.cjs": {
+    "mtime": 1788855650.2232969,
+    "seen": 1789034975.531638,
+    "ast_hash": "fdd3bedab4c69dc5eebdb01fe497ccbc",
+    "semantic_hash": ""
+  },
+  ".claude/hooks/java-compile-check.cjs": {
+    "mtime": 1788855662.3181994,
+    "seen": 1789034975.5316398,
+    "ast_hash": "349d9c2d556d8c33ec03c7c4d352b64a",
+    "semantic_hash": ""
+  },
+  ".claude/settings.json": {
+    "mtime": 1788987606.0865948,
+    "seen": 1789034975.5316422,
+    "ast_hash": "2cdbe2d6b9a85da53c0aa571c489efb4",
+    "semantic_hash": ""
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1789034963.8502562,
+    "seen": 1789034975.5316436,
+    "ast_hash": "9f6ae535e88f33a857aa0e86ff1c0e4a",
+    "semantic_hash": ""
+  },
+  ".mcp.json": {
+    "mtime": 1788855326.84563,
+    "seen": 1789034975.5316455,
+    "ast_hash": "9fb18e46af03d77a7fadedea81851d4f",
+    "semantic_hash": ""
+  },
+  "frontend/.oxlintrc.json": {
+    "mtime": 1788854297.1860757,
+    "seen": 1789034975.531647,
+    "ast_hash": "5e6e3cea3e89137071c142dd7835b0ef",
+    "semantic_hash": ""
+  },
+  "frontend/package.json": {
+    "mtime": 1789031762.8657744,
+    "seen": 1789034975.5316484,
+    "ast_hash": "fb8d69838412c2a485fabd4bc8c12579",
+    "semantic_hash": ""
+  },
+  "frontend/postcss.config.js": {
+    "mtime": 1789031775.1747246,
+    "seen": 1789034975.5316498,
+    "ast_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0",
+    "semantic_hash": ""
+  },
+  "frontend/src/App.jsx": {
+    "mtime": 1789031821.349899,
+    "seen": 1789034975.5316517,
+    "ast_hash": "0cab9990f30ec1ad82c9bffca0598697",
+    "semantic_hash": ""
+  },
+  "frontend/src/api/client.js": {
+    "mtime": 1789031874.0396285,
+    "seen": 1789034975.5316546,
+    "ast_hash": "e56d624070a58f898f0babe381e14f45",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/AlongTrackSectionChart.jsx": {
+    "mtime": 1789034123.4400525,
+    "seen": 1789034975.5316563,
+    "ast_hash": "0199732c34033fe9e4e03f890f0f7194",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/CorrelationView.jsx": {
+    "mtime": 1789033485.253475,
+    "seen": 1789034975.5316577,
+    "ast_hash": "46c5b89158ab0ac501cebff7c068e041",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/CurrentRoseChart.jsx": {
+    "mtime": 1789034099.7579143,
+    "seen": 1789034975.5316591,
+    "ast_hash": "a0164afca8dd30ec2c488c218803255d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/Dashboard2D.jsx": {
+    "mtime": 1789033501.6111338,
+    "seen": 1789034975.5316603,
+    "ast_hash": "b3b8ffbe5f13285638c3e3f803486431",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/DistributionHistogramChart.jsx": {
+    "mtime": 1789033443.8302863,
+    "seen": 1789034975.5316622,
+    "ast_hash": "a6a8ea9c26b5dfec88d764a287e23543",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/FloatSelector.jsx": {
+    "mtime": 1789033384.847969,
+    "seen": 1789034975.5316637,
+    "ast_hash": "63fb631514a7bd4db6f3d23a39d857c9",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/HovmollerChart.jsx": {
+    "mtime": 1789034115.646868,
+    "seen": 1789034975.531665,
+    "ast_hash": "dae3141bf0bbb8b9d6d78da3ead56b2d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/ProfileChart.jsx": {
+    "mtime": 1789033397.7846546,
+    "seen": 1789034975.5316665,
+    "ast_hash": "bfdaa4429acf704063830eef63368bd5",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/TSDiagramChart.jsx": {
+    "mtime": 1789033420.4006615,
+    "seen": 1789034975.531668,
+    "ast_hash": "87a12df26e1dd5fb31f788c97c8ea956",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard2d/TimeSeriesChart.jsx": {
+    "mtime": 1789033409.5828424,
+    "seen": 1789034975.5316691,
+    "ast_hash": "6ead32a50043a11250ef3560743d6e33",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/ColorbarControl.jsx": {
+    "mtime": 1789034726.3816812,
+    "seen": 1789034975.5316718,
+    "ast_hash": "28fd00aa818683ff26484de5761f4978",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/ControlPanel.jsx": {
+    "mtime": 1789034842.805215,
+    "seen": 1789034975.5316737,
+    "ast_hash": "3fbabaa73c26332ee4863bc07ebccef2",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/DepthSlider.jsx": {
+    "mtime": 1789032808.3890557,
+    "seen": 1789034975.5316749,
+    "ast_hash": "bfd0880164af92d70cf50214dfec7f88",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/ExportControls.jsx": {
+    "mtime": 1789034755.7994914,
+    "seen": 1789034975.5316765,
+    "ast_hash": "870dee6620337364eca340b10c526a75",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/OceanScene.jsx": {
+    "mtime": 1789034820.9943664,
+    "seen": 1789034975.531681,
+    "ast_hash": "c8711ab238f60a454b63e5f6f27e2793",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/PointQueryTool.jsx": {
+    "mtime": 1789032940.2418644,
+    "seen": 1789034975.5316823,
+    "ast_hash": "3e6179a086a46bc32d6119ee27f0f248",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/RegionSelector.jsx": {
+    "mtime": 1789032752.5702734,
+    "seen": 1789034975.531684,
+    "ast_hash": "cb736c577c077a7227967c8afe3376f7",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/TimeSlider.jsx": {
+    "mtime": 1789032740.552451,
+    "seen": 1789034975.5316858,
+    "ast_hash": "951e7dd044dc1451fa9f6e5331b6522d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/VariableSelector.jsx": {
+    "mtime": 1789034710.7526543,
+    "seen": 1789034975.5316882,
+    "ast_hash": "82b42cfc6490457ebe8dd109819bb8db",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/VerticalExaggerationSlider.jsx": {
+    "mtime": 1789034734.6387608,
+    "seen": 1789034975.5316906,
+    "ast_hash": "4b85dc779f5184381b75157b67508664",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/dashboard3d/VolumeOpacitySlider.jsx": {
+    "mtime": 1789034745.128794,
+    "seen": 1789034975.5316997,
+    "ast_hash": "fac9085acbaf946c3cbfb00ce2fcae41",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/home/Navbar.jsx": {
+    "mtime": 1789031931.956185,
+    "seen": 1789034975.5317025,
+    "ast_hash": "dfddf269386d25cf92ff865d0bb52aad",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/shared/Layout.jsx": {
+    "mtime": 1789031885.1175148,
+    "seen": 1789034975.5317628,
+    "ast_hash": "1246d5f455b373717a4ae14c9e33aa6b",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/shared/ProtectedRoute.jsx": {
+    "mtime": 1789031897.0486348,
+    "seen": 1789034975.531766,
+    "ast_hash": "be699d44040c68d5e7e3488fec1a0211",
+    "semantic_hash": ""
+  },
+  "frontend/src/main.jsx": {
+    "mtime": 1788854297.247059,
+    "seen": 1789034975.5317683,
+    "ast_hash": "e13723e2574429d9a6d849727e3ff695",
+    "semantic_hash": ""
+  },
+  "frontend/src/store/useAppStore.js": {
+    "mtime": 1789034693.5096643,
+    "seen": 1789034975.531771,
+    "ast_hash": "600f6e60ce222237bfd0919f23fcd9da",
+    "semantic_hash": ""
+  },
+  "frontend/src/store/useAuthStore.js": {
+    "mtime": 1789031848.0323105,
+    "seen": 1789034975.5317733,
+    "ast_hash": "09681b5081fa1ba3ab331d3eb9a66b23",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/AiAssistant.jsx": {
+    "mtime": 1789031904.7899094,
+    "seen": 1789034975.5317762,
+    "ast_hash": "db90816809a3f750905bd2ef395b14dc",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/Dashboard.jsx": {
+    "mtime": 1789033510.7886758,
+    "seen": 1789034975.5317788,
+    "ast_hash": "39c566e07d8ff487da84156a64bdf5ce",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/DataManager.jsx": {
+    "mtime": 1789031904.7334745,
+    "seen": 1789034975.5317812,
+    "ast_hash": "f9e19f460f2dc7b40a56e51bf42af866",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/GeoMap.jsx": {
+    "mtime": 1789031904.707706,
+    "seen": 1789034975.5317843,
+    "ast_hash": "1d44ad8189531ef365a6b8d68d0c7b84",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/Home.jsx": {
+    "mtime": 1789032132.0323272,
+    "seen": 1789034975.5317895,
+    "ast_hash": "f928c0a2720c7c6552c5decfc44e7736",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/Login.jsx": {
+    "mtime": 1789032179.9002829,
+    "seen": 1789034975.5317922,
+    "ast_hash": "3c97fc6078b18162e416d9fb1a7966eb",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/ProfileSettings.jsx": {
+    "mtime": 1789031904.7610157,
+    "seen": 1789034975.5317945,
+    "ast_hash": "bebd4ba7fc50dedeb77a1633ee26516e",
+    "semantic_hash": ""
+  },
+  "frontend/src/views/Signup.jsx": {
+    "mtime": 1789032211.7605174,
+    "seen": 1789034975.5317974,
+    "ast_hash": "48fe52d7700cf628b410dbf3b0abbdde",
+    "semantic_hash": ""
+  },
+  "frontend/tailwind.config.js": {
+    "mtime": 1789031972.1296158,
+    "seen": 1789034975.5317996,
+    "ast_hash": "c0e31b84f094c41e98ea7e5e306f9918",
+    "semantic_hash": ""
+  },
+  "frontend/vite.config.js": {
+    "mtime": 1788854395.199391,
+    "seen": 1789034975.5318027,
+    "ast_hash": "d89a216f883a62605ad2b461430f325c",
+    "semantic_hash": ""
+  },
+  "mvnw": {
+    "mtime": 1788853356.6081223,
+    "seen": 1789034975.5318065,
+    "ast_hash": "ab50dd89da7da2346b28003352eeeeeb",
+    "semantic_hash": ""
+  },
+  "pom.xml": {
+    "mtime": 1788982435.6021702,
+    "seen": 1789034975.531809,
+    "ast_hash": "f4bd255cb5df2222221f1fe2d5182b95",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/DeepsyncAppApplication.java": {
+    "mtime": 1788978689.6567583,
+    "seen": 1789034975.5318112,
+    "ast_hash": "c261fbe39e4e6544980d68e25c6ad21c",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/config/DataSeeder.java": {
+    "mtime": 1788975026.7862794,
+    "seen": 1789034975.5318143,
+    "ast_hash": "131b73fdce4b4b709f1d016912dc8d94",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/ArgoController.java": {
+    "mtime": 1789026800.4254522,
+    "seen": 1789034975.531818,
+    "ast_hash": "58dcb12120c91ecf83c8bbb62c8e0a69",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/GlobalExceptionHandler.java": {
+    "mtime": 1789026210.9355242,
+    "seen": 1789034975.5318205,
+    "ast_hash": "7221d3875fdedb04776f887593d6b16c",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/HazardAdvisoryController.java": {
+    "mtime": 1789027735.320006,
+    "seen": 1789034975.5318227,
+    "ast_hash": "7850d6ac2fedd1ce089eceaeb588f8a6",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/HealthController.java": {
+    "mtime": 1788855988.1200373,
+    "seen": 1789034975.5318253,
+    "ast_hash": "746e630e32b62cee19b22778a7baa100",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/OceanDataController.java": {
+    "mtime": 1789026021.4878452,
+    "seen": 1789034975.5318298,
+    "ast_hash": "de3ec712e6da70c35bc3fa4a4be31567",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/controller/StatsController.java": {
+    "mtime": 1789027698.406049,
+    "seen": 1789034975.5318563,
+    "ast_hash": "20815e5c025dfb68d0bfca386bf81d7b",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/ArgoFloatEntity.java": {
+    "mtime": 1788974649.439996,
+    "seen": 1789034975.5318675,
+    "ast_hash": "550e98afb3e9559360136cfc3d2a5bbe",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/ChatMessageEntity.java": {
+    "mtime": 1788974808.493664,
+    "seen": 1789034975.53187,
+    "ast_hash": "f31243c8dbf42f7586bb4ba4a059733f",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/FloatPositionEntity.java": {
+    "mtime": 1788974714.3001554,
+    "seen": 1789034975.5318727,
+    "ast_hash": "ddf933b69d6f1a4585980968fd30857e",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/HazardAdvisoryEntity.java": {
+    "mtime": 1788974783.0833879,
+    "seen": 1789034975.5318754,
+    "ast_hash": "1903922a6623b2b5244c3dd49e0214c3",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/OceanGridPointEntity.java": {
+    "mtime": 1788974585.2689369,
+    "seen": 1789034975.5318775,
+    "ast_hash": "6c33c6805a8a85410b30f6988a844567",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/ProfileSampleEntity.java": {
+    "mtime": 1788974679.5665033,
+    "seen": 1789034975.53188,
+    "ast_hash": "9281e09776af888c6c4ac40398af06f0",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/entity/UserEntity.java": {
+    "mtime": 1788974759.3446152,
+    "seen": 1789034975.531883,
+    "ast_hash": "be1c1c0b5d383de8fb42708dd096f5c3",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/ApiError.java": {
+    "mtime": 1788982744.8171535,
+    "seen": 1789034975.5318856,
+    "ast_hash": "b25e5327af4ec5219fdaed59d19d8a82",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/ArgoFloat.java": {
+    "mtime": 1789026165.630582,
+    "seen": 1789034975.531887,
+    "ast_hash": "bf9998380d1f1c288426abb6fae911e2",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/CorpusSummary.java": {
+    "mtime": 1789027523.9381995,
+    "seen": 1789034975.531889,
+    "ast_hash": "e97ef4391b2e8fffa93c899308dd41f8",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/DoubleRange.java": {
+    "mtime": 1789027477.1639051,
+    "seen": 1789034975.5318904,
+    "ast_hash": "0e343cefd3a4c8333ea9e4a76dd30e40",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/FloatPosition.java": {
+    "mtime": 1789026710.8790286,
+    "seen": 1789034975.5318923,
+    "ast_hash": "cb4c3617644bbd806ad4fddd1f250e96",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/GridExtent.java": {
+    "mtime": 1789027506.1697407,
+    "seen": 1789034975.5318944,
+    "ast_hash": "7c052dce800fc3406069c3710b05fdb3",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/HazardAdvisory.java": {
+    "mtime": 1789027584.2552142,
+    "seen": 1789034975.5318973,
+    "ast_hash": "fb667ec598466ec8856195c27d578421",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/OceanDataAxes.java": {
+    "mtime": 1789025965.9197578,
+    "seen": 1789034975.5319,
+    "ast_hash": "88f71f73329ad60adb2ecc1929b3a851",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/OceanDataFilter.java": {
+    "mtime": 1788982724.8934593,
+    "seen": 1789034975.5319023,
+    "ast_hash": "c2a5d8fb928a269b3d6433ea72e058c2",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/OceanGridPoint.java": {
+    "mtime": 1788982691.7861302,
+    "seen": 1789034975.531905,
+    "ast_hash": "5144049dad47fc01d05cad2abc966a4a",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/ProfileSample.java": {
+    "mtime": 1789026695.075077,
+    "seen": 1789034975.5319076,
+    "ast_hash": "f471994c9b7ebc6b84dc636ec40c7598",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/TimeRange.java": {
+    "mtime": 1789027490.3234499,
+    "seen": 1789034975.5319102,
+    "ast_hash": "c0c0ea6f63fb305727a70b77fc007870",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/VariableStatistics.java": {
+    "mtime": 1789027568.8178496,
+    "seen": 1789034975.5319133,
+    "ast_hash": "287fb2aece07b5d0adb8e0611f4316d3",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/VariableStatsRow.java": {
+    "mtime": 1789027554.0682554,
+    "seen": 1789034975.5319157,
+    "ast_hash": "0aba933d1ea383bb19a96afefefc053b",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/model/VariableSummary.java": {
+    "mtime": 1789027538.274922,
+    "seen": 1789034975.531918,
+    "ast_hash": "f14a20e5ce52ad467299141765c44f64",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/netcdf/NetcdfReaderService.java": {
+    "mtime": 1788854083.594674,
+    "seen": 1789034975.531921,
+    "ast_hash": "66e2b94167e7553b58da71359d328a41",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/ArgoFloatRepository.java": {
+    "mtime": 1789027635.4070888,
+    "seen": 1789034975.5319233,
+    "ast_hash": "c1ef61e3336919ac658b25a1fcf9cf97",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/ChatMessageRepository.java": {
+    "mtime": 1788974961.5639935,
+    "seen": 1789034975.5319257,
+    "ast_hash": "8c920ae048f78ccdbfb8f611758f5951",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/FloatPositionRepository.java": {
+    "mtime": 1789026765.3308232,
+    "seen": 1789034975.5319273,
+    "ast_hash": "1eed89a241f047c5befd62bd34b0ea6f",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/HazardAdvisoryRepository.java": {
+    "mtime": 1789027657.0725138,
+    "seen": 1789034975.531929,
+    "ast_hash": "ab815dcf1c0934dd492ea170b143ad41",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/OceanGridPointRepository.java": {
+    "mtime": 1789027620.4502833,
+    "seen": 1789034975.531936,
+    "ast_hash": "2fe0a820a911c4faa2fecca7ba3a3b45",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/ProfileSampleRepository.java": {
+    "mtime": 1789029512.864393,
+    "seen": 1789034975.531938,
+    "ast_hash": "3dc0f29145c22c6c2259630bc12fc229",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/repository/UserRepository.java": {
+    "mtime": 1788978766.3177717,
+    "seen": 1789034975.53194,
+    "ast_hash": "d1a186ee0f4df4158c8ec81533ea3345",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/service/ArgoService.java": {
+    "mtime": 1789026782.4945083,
+    "seen": 1789034975.5319421,
+    "ast_hash": "580099d49dec82ab81b9e336714695b9",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/service/HazardAdvisoryService.java": {
+    "mtime": 1789027716.2880912,
+    "seen": 1789034975.5319438,
+    "ast_hash": "9bee89128e81f918da3b718bb3e2a185",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/service/NotFoundException.java": {
+    "mtime": 1789026185.658645,
+    "seen": 1789034975.5319457,
+    "ast_hash": "3bfe3afec4cbcf3ba7881dcaa120f2bf",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/service/OceanDataService.java": {
+    "mtime": 1789025992.6870787,
+    "seen": 1789034975.5319476,
+    "ast_hash": "11248e031d3518267562efc9238ea00e",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/bluegen/deepsyncapp/service/StatsService.java": {
+    "mtime": 1789027680.439976,
+    "seen": 1789034975.5319498,
+    "ast_hash": "38752d70ef2b3f34d3a865c049e9dcf1",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/AbstractPostgresTest.java": {
+    "mtime": 1788981224.4806876,
+    "seen": 1789034975.5319517,
+    "ast_hash": "26f54e9f5d89179461acdde389fa33ff",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/DeepsyncAppApplicationTests.java": {
+    "mtime": 1788853408.754,
+    "seen": 1789034975.5319529,
+    "ast_hash": "bec5a22acdf9d82c6e9f7c3b61eef8b0",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/controller/ArgoControllerTest.java": {
+    "mtime": 1789026852.6472101,
+    "seen": 1789034975.5319548,
+    "ast_hash": "8354af3441a41801067c2187c2f67a9a",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/controller/HazardAdvisoryControllerTest.java": {
+    "mtime": 1789029100.7352371,
+    "seen": 1789034975.5319562,
+    "ast_hash": "0cd1bd64bd9fd35fd580c06b7eb01f1f",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/controller/OceanDataControllerTest.java": {
+    "mtime": 1789026075.1950164,
+    "seen": 1789034975.531958,
+    "ast_hash": "6486ee8ec5ccfb1669ef0adaa279db2c",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/controller/StatsControllerTest.java": {
+    "mtime": 1789027760.9614377,
+    "seen": 1789034975.5319595,
+    "ast_hash": "8c0d2a8a03718b1b877b49d67d24c05a",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/repository/ArgoFloatRepositoryTest.java": {
+    "mtime": 1789026280.0156887,
+    "seen": 1789034975.5319614,
+    "ast_hash": "290d2eb9a2c493fd7f893c55d20848aa",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/bluegen/deepsyncapp/repository/OceanGridPointRepositoryTest.java": {
+    "mtime": 1788980976.6260726,
+    "seen": 1789034975.5319629,
+    "ast_hash": "01f73fba697f4fc09927397d4cb06216",
+    "semantic_hash": ""
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1788987397.1033654,
+    "seen": 1789034975.5319648,
+    "ast_hash": "c232166e6492ba1ed955030b16979b05",
+    "semantic_hash": ""
+  },
+  ".claude/agents/netcdf-ingestion-reviewer.md": {
+    "mtime": 1788855403.1130176,
+    "seen": 1789034975.5319662,
+    "ast_hash": "4da98c68e95df8a8df81566e46f70e38",
+    "semantic_hash": ""
+  },
+  ".claude/skills/cf-convention-check/SKILL.md": {
+    "mtime": 1788855383.9089975,
+    "seen": 1789034975.5319686,
+    "ast_hash": "d99d25c7460179972ea3b9c351c3c748",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/SKILL.md": {
+    "mtime": 1788987397.0985954,
+    "seen": 1789034975.5319703,
+    "ast_hash": "2e223eed9c5bb9ec3999615806cf0681",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/add-watch.md": {
+    "mtime": 1788987175.9916942,
+    "seen": 1789034975.5319724,
+    "ast_hash": "d59d027fe449f06aa03905a01184e779",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/exports.md": {
+    "mtime": 1788987175.9933958,
+    "seen": 1789034975.5319736,
+    "ast_hash": "9da2a2152e60a22f07f05fed5158f287",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1788987175.994896,
+    "seen": 1789034975.531975,
+    "ast_hash": "42fef56a01698118f7fd722acdadea34",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1788987175.9971364,
+    "seen": 1789034975.5319765,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/hooks.md": {
+    "mtime": 1788987176.0269234,
+    "seen": 1789034975.531978,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/query.md": {
+    "mtime": 1788987176.0308766,
+    "seen": 1789034975.5319798,
+    "ast_hash": "3c46f8ad006874260614ed8657d02307",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/transcribe.md": {
+    "mtime": 1788987176.032872,
+    "seen": 1789034975.531981,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/update.md": {
+    "mtime": 1788987176.0362315,
+    "seen": 1789034975.5319827,
+    "ast_hash": "9378bd03d56baaf78bd738ab3848f142",
+    "semantic_hash": ""
+  },
+  ".claude/skills/new-ocean-resource/SKILL.md": {
+    "mtime": 1788855360.854594,
+    "seen": 1789034975.5319839,
+    "ast_hash": "0757cfe980c958e7799bdaf3a8f5a2d7",
+    "semantic_hash": ""
+  },
+  ".playwright-mcp/page-2026-09-10T07-19-45-944Z.yml": {
+    "mtime": 1789024785.9463613,
+    "seen": 1789034975.531986,
+    "ast_hash": "3862ba16703b6755d857f56b3609a0cb",
+    "semantic_hash": ""
+  },
+  ".serena/project.yml": {
+    "mtime": 1788853769.9112225,
+    "seen": 1789034975.5319872,
+    "ast_hash": "c3ec3647c92b934de3a8fe2d8b2e225c",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1788987397.112862,
+    "seen": 1789034975.5319884,
+    "ast_hash": "eeecc4b64b735c6689fd91bdc202101f",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_ai_assistant_oceanographic_query_intelligence/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5319908,
+    "ast_hash": "816a7a2a3e3342fa7bef280f6d388410",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_by_bluegen/DESIGN.md": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5319927,
+    "ast_hash": "255d6416ae4b094617e1f6ff65f1285b",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dashboard_3d_ocean_data_visualization_platform/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5319948,
+    "ast_hash": "dedaf87607dfbc154b6d7556edcef4ac",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_data_manager_ingestion_admin_platform/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5319967,
+    "ast_hash": "abacb2a42f0a5ad6892a1307d47e6636",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dedicated_sign_in_platform/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5319984,
+    "ast_hash": "6256a11b02d4f62e83c4dcf4c34d6f04",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dedicated_sign_up_platform/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320003,
+    "ast_hash": "2da566fda9cae345e669e3ff6854f11c",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_geo_map_in_situ_ocean_tracking/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320017,
+    "ast_hash": "a28126d8d6cedb1e24d0525f174cb379",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_home_3d_ocean_data_visualization_platform/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320034,
+    "ast_hash": "bf733b2b913c253e139ab8523ecc4559",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_profile_settings_administration_hazard_management/code.html": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.532005,
+    "ast_hash": "d4661192c07d2c10aab3cb8bc535aa72",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1788978583.7186623,
+    "seen": 1789034975.5320067,
+    "ast_hash": "e136f129fd97c08097935c55523c1776",
+    "semantic_hash": ""
+  },
+  "docs/CLAUDE.md": {
+    "mtime": 1788972321.7488344,
+    "seen": 1789034975.5320084,
+    "ast_hash": "e0537cd8669ab7d6a8e78d71486f6203",
+    "semantic_hash": ""
+  },
+  "docs/DEEPSYNC_Interactive_Wireframe.html": {
+    "mtime": 1788961720.5110939,
+    "seen": 1789034975.53201,
+    "ast_hash": "38461a7ce7fa1f0f68b3176c4a04979d",
+    "semantic_hash": ""
+  },
+  "docs/DEEPSYNC_PRD.md": {
+    "mtime": 1788965307.4540935,
+    "seen": 1789034975.5320115,
+    "ast_hash": "2070bdf2210267ce508f15cef524b46c",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-09-10-phase2-read-endpoints.md": {
+    "mtime": 1788980766.1717448,
+    "seen": 1789034975.5320127,
+    "ast_hash": "ee438f623bd4660a55d011c04cd0cd95",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-09-10-phase2-read-endpoints-design.md": {
+    "mtime": 1788979663.5511477,
+    "seen": 1789034975.5320146,
+    "ast_hash": "9043ee856bbfeac4dee577c9a991b8fb",
+    "semantic_hash": ""
+  },
+  "frontend/README.md": {
+    "mtime": 1788854297.2540383,
+    "seen": 1789034975.532016,
+    "ast_hash": "75eb386f17caf77fd6fe3ce1d90968ee",
+    "semantic_hash": ""
+  },
+  "frontend/index.html": {
+    "mtime": 1788854297.779024,
+    "seen": 1789034975.5320177,
+    "ast_hash": "89150e536c4a99f73625f46f41f0f437",
+    "semantic_hash": ""
+  },
+  "graphify-out/converted/DEEPSYNC_PRD_6512e276.md": {
+    "mtime": 1789003894.497005,
+    "seen": 1789034975.5320191,
+    "ast_hash": "6d2f41e3c97a3e99e7c16f3c39cc4135",
+    "semantic_hash": ""
+  },
+  "graphify-out/converted/DEEPSYNC_SRS_63128d15.md": {
+    "mtime": 1789003894.5688112,
+    "seen": 1789034975.5320208,
+    "ast_hash": "29cab902bbd81dcf6f9d4a5690258154",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_ai_assistant_oceanographic_query_intelligence/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320225,
+    "ast_hash": "b9262ac58e19f76aa050ca859b236888",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dashboard_3d_ocean_data_visualization_platform/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320241,
+    "ast_hash": "ed3b0a8b91bde91ed53d081be8db7c27",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_data_manager_ingestion_admin_platform/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320258,
+    "ast_hash": "4279dddc2f23ddf5641d0f6b57fb8375",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dedicated_sign_in_platform/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320308,
+    "ast_hash": "ef40ec6676fca9e3a9e71b66f3c44af7",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_dedicated_sign_up_platform/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320323,
+    "ast_hash": "90bd45db641be2a8d2f991ada162abb6",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_geo_map_in_situ_ocean_tracking/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320337,
+    "ast_hash": "f76beed82d987ee1005bf29d6af845f3",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_home_3d_ocean_data_visualization_platform/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.5320356,
+    "ast_hash": "e454346ffc82ec41978e457fffcc6a22",
+    "semantic_hash": ""
+  },
+  "Frontend-stitch-new/stitch_responsive_authentication_form_suite/deepsync_profile_settings_administration_hazard_management/screen.png": {
+    "mtime": 1789011414.0,
+    "seen": 1789034975.532037,
+    "ast_hash": "bfb979593339b7d2707708b9cb6d3832",
+    "semantic_hash": ""
+  },
+  "frontend/public/favicon.svg": {
+    "mtime": 1788854297.3194623,
+    "seen": 1789034975.5320387,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": ""
+  },
+  "frontend/public/icons.svg": {
+    "mtime": 1788854297.3468125,
+    "seen": 1789034975.53204,
+    "ast_hash": "3b4fcfcf393eca4d264dca4a4663bc37",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/hero.png": {
+    "mtime": 1788854297.2805874,
+    "seen": 1789034975.5320418,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/react.svg": {
+    "mtime": 1788854297.3754015,
+    "seen": 1789034975.5320432,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/vite.svg": {
+    "mtime": 1788854297.402642,
+    "seen": 1789034975.532045,
+    "ast_hash": "9960a24288958394ac50e57ff638b036",
+    "semantic_hash": ""
+  },
+  "graph-visualization.png": {
+    "mtime": 1789024791.104191,
+    "seen": 1789034975.5320466,
+    "ast_hash": "efc78f92766fb5d86c2d1d15f62a4b05",
+    "semantic_hash": ""
+  }
+}

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 import { generateVolumeSurface } from '../../utils/volumeRenderer'
+import AxisLabels from './AxisLabels'
 
 function VolumetricSurface({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
@@ -14,7 +15,7 @@ function VolumetricSurface({ points, selectedVariable, verticalExaggeration, vol
     if (!meshRef.current || points.length === 0) return
 
     try {
-      const surfaceData = generateVolumeSurface(points, selectedVariable, 12)
+      const surfaceData = generateVolumeSurface(points, selectedVariable, 20)
       if (!surfaceData || surfaceData.positions.length === 0) return
 
       const geometry = new THREE.BufferGeometry()
@@ -45,8 +46,10 @@ function VolumetricSurface({ points, selectedVariable, verticalExaggeration, vol
         opacity={volumeOpacity}
         wireframe={false}
         side={THREE.DoubleSide}
-        emissive={0x222222}
-        shininess={0}
+        emissive={0x111111}
+        shininess={50}
+        flatShading={false}
+        smoothShading={true}
       />
     </mesh>
   )
@@ -57,16 +60,17 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
     <>
       <PerspectiveCamera position={[2, 2, 2.5]} fov={50} />
       <OrbitControls enableZoom enablePan enableRotate autoRotate autoRotateSpeed={0.5} />
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-      <pointLight position={[-5, 5, 5]} intensity={0.5} />
+      <ambientLight intensity={0.9} />
+      <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+      <pointLight position={[-5, 5, 5]} intensity={0.6} />
       <VolumetricSurface
         points={points}
         selectedVariable={selectedVariable}
         verticalExaggeration={verticalExaggeration}
         volumeOpacity={volumeOpacity}
       />
-      <gridHelper args={[4, 4]} position={[0, 0, -2]} />
+      <AxisLabels />
+      <gridHelper args={[4, 8]} position={[0, 0, -2]} />
     </>
   )
 }
