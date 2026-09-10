@@ -39,15 +39,15 @@ function getColorForValue(normalized) {
 
 function PointCloud({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
-  const [stats, setStats] = useState({ min: 0, max: 100 })
 
   useEffect(() => {
     if (!meshRef.current || !points.length) return
 
-    const values = points.map((p) => getVariableValue(p, selectedVariable)).filter((v) => v !== null && v !== undefined)
+    const values = points.map((p) => getVariableValue(p, selectedVariable)).filter((v) => v !== null && v !== undefined && isFinite(v))
+    if (values.length === 0) return
+
     const valueMin = Math.min(...values)
     const valueMax = Math.max(...values)
-    setStats({ min: valueMin, max: valueMax })
 
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(points.length * 3)
@@ -141,14 +141,16 @@ export default function OceanScene() {
     if (points.length > 0) {
       const values = points
         .map((p) => getVariableValue(p, selectedVariable))
-        .filter((v) => v !== null && v !== undefined)
+        .filter((v) => v !== null && v !== undefined && isFinite(v))
       if (values.length > 0) {
         const valueMin = Math.min(...values)
         const valueMax = Math.max(...values)
-        setColorbarRange(valueMin, valueMax)
+        if (isFinite(valueMin) && isFinite(valueMax)) {
+          setColorbarRange(valueMin, valueMax)
+        }
       }
     }
-  }, [points, selectedVariable, setColorbarRange])
+  }, [points, selectedVariable])
 
   return (
     <div className="w-full h-full relative">
