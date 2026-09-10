@@ -89,7 +89,21 @@ public class ArgoFloatEntity {
         return positions;
     }
 
-    public void addProfileSample(ProfileSampleEntity sample) {
+    public void setProfileSamples(List<ProfileSampleEntity> samples) {
+    this.profileSamples = samples != null ? samples : new ArrayList<>();
+    for (ProfileSampleEntity sample : this.profileSamples) {
+      sample.setArgoFloat(this);
+    }
+  }
+
+  public void setPositions(List<FloatPositionEntity> positions) {
+    this.positions = positions != null ? positions : new ArrayList<>();
+    for (FloatPositionEntity position : this.positions) {
+      position.setArgoFloat(this);
+    }
+  }
+
+  public void addProfileSample(ProfileSampleEntity sample) {
         sample.setArgoFloat(this);
         this.profileSamples.add(sample);
     }
