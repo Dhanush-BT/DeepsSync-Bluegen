@@ -17,7 +17,7 @@ public interface ProfileSampleRepository extends JpaRepository<ProfileSampleEnti
     @Query("""
             select s from ProfileSampleEntity s
             where s.argoFloat.platformId = :platformId
-              and (:timestamp is null or s.timestamp = :timestamp)
+              and (cast(:timestamp as Instant) is null or s.timestamp = :timestamp)
             order by s.timestamp asc, s.depthMeters asc
             """)
     List<ProfileSampleEntity> findByPlatformId(@Param("platformId") String platformId,
