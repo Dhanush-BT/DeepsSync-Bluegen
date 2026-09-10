@@ -1,4 +1,5 @@
 // 3D Grid creation and volumetric surface rendering
+// Axis layout: X=Longitude (left-right), Y=Depth (up-down), Z=Latitude (front-back)
 
 export function generateVolumeSurface(points, selectedVariable, gridSize = 20) {
   if (!points || points.length === 0) return { positions: [], colors: [] }
@@ -32,9 +33,12 @@ export function generateVolumeSurface(points, selectedVariable, gridSize = 20) {
         const value = interpolateValue(points, lat, lon, depth, selectedVariable)
 
         gridPoints.push({
+          // X = Longitude (left-right)
           x: ((lon - lonMin) / lonRange) * 2 - 1,
-          y: ((lat - latMin) / latRange) * 2 - 1,
-          z: -((depth - depthMin) / depthRange) * 2,
+          // Y = Depth (up-down) - inverted so top is positive
+          y: -((depth - depthMin) / depthRange) * 2 + 1,
+          // Z = Latitude (front-back)
+          z: ((lat - latMin) / latRange) * 2 - 1,
           value: value,
           i,
           j,

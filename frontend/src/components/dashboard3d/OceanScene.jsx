@@ -60,6 +60,15 @@ function VolumetricSurface({ points, selectedVariable, verticalExaggeration, vol
 
 function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, volumeOpacity, autoRotate }) {
   const controlsRef = useRef()
+  const { measurementLongitude: lon, measurementLatitude: lat, measurementDepth: depth } = useAppStore()
+
+  // Normalize measurement values for camera positioning
+  const normLon = ((lon - 75) / 20) * 2 - 1
+  const normLat = ((lat + 100) / 110) * 2 - 1
+
+  // Camera positioned to show FRONT face (depth is vertical/tallest)
+  // Facing the depth dimension, with lon left-right, lat front-back
+  const cameraPos = [normLon, -0.5, 3.5 + normLat * 0.5]
 
   useEffect(() => {
     if (controlsRef.current) {
@@ -69,8 +78,8 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
 
   return (
     <>
-      <PerspectiveCamera position={[2, 2, 2.5]} fov={50} />
-      <OrbitControls ref={controlsRef} enableZoom enablePan enableRotate autoRotate={autoRotate} autoRotateSpeed={0.5} />
+      <PerspectiveCamera position={cameraPos} fov={50} lookAt={[normLon, 0.5, 0]} />
+      <OrbitControls ref={controlsRef} enableZoom enablePan enableRotate autoRotate={autoRotate} autoRotateSpeed={0.3} target={[normLon, 0, 0]} />
       <ambientLight intensity={0.9} />
       <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
       <pointLight position={[-5, 5, 5]} intensity={0.6} />
