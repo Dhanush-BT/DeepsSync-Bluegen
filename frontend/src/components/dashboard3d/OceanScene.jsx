@@ -49,14 +49,32 @@ function PointCloud({ points, selectedVariable, verticalExaggeration, volumeOpac
     const valueMin = Math.min(...values)
     const valueMax = Math.max(...values)
 
+    // Normalize coordinates for better 3D visualization
+    const lats = points.map(p => p.latitude)
+    const lons = points.map(p => p.longitude)
+    const depths = points.map(p => p.depthMeters)
+
+    const latMin = Math.min(...lats), latMax = Math.max(...lats)
+    const lonMin = Math.min(...lons), lonMax = Math.max(...lons)
+    const depthMax = Math.max(...depths)
+
+    const latRange = latMax - latMin || 1
+    const lonRange = lonMax - lonMin || 1
+    const depthRange = depthMax || 1000
+
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(points.length * 3)
     const colors = new Float32Array(points.length * 3)
 
     points.forEach((point, i) => {
-      positions[i * 3] = point.longitude
-      positions[i * 3 + 1] = point.latitude
-      positions[i * 3 + 2] = -(point.depthMeters / 1000) * verticalExaggeration
+      // Normalize to -1 to 1 range for better scaling
+      const normLon = ((point.longitude - lonMin) / lonRange - 0.5) * 2
+      const normLat = ((point.latitude - latMin) / latRange - 0.5) * 2
+      const normDepth = -(point.depthMeters / depthRange) * 2 * verticalExaggeration
+
+      positions[i * 3] = normLon
+      positions[i * 3 + 1] = normLat
+      positions[i * 3 + 2] = normDepth
 
       const value = getVariableValue(point, selectedVariable)
       const normalized = (value - valueMin) / (valueMax - valueMin)
@@ -91,17 +109,17 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
 
   return (
     <>
-      <PerspectiveCamera position={[0, 0, 3]} fov={50} />
+      <PerspectiveCamera position={[2, 2, 2.5]} fov={50} />
       <OrbitControls enableZoom enablePan enableRotate />
       <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 10, 10]} intensity={0.8} />
+      <directionalLight position={[5, 5, 5]} intensity={0.8} />
       <PointCloud
         points={points}
         selectedVariable={selectedVariable}
         verticalExaggeration={verticalExaggeration}
         volumeOpacity={volumeOpacity}
       />
-      <gridHelper args={[20, 20]} position={[0, 0, -5]} />
+      <gridHelper args={[4, 4]} position={[0, 0, -2]} />
     </>
   )
 }
