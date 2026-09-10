@@ -23,8 +23,18 @@ export default function GeoMap() {
   const fetchFloats = async () => {
     try {
       setLoading(true)
+      setError(null)
+      console.log('Fetching floats from /api/floats...')
+
       const response = await apiClient.get('/floats')
+      console.log('Floats response:', response.data)
+
       const floatData = response.data || []
+      if (!Array.isArray(floatData)) {
+        throw new Error(`Expected array of floats, got ${typeof floatData}`)
+      }
+
+      console.log(`Fetched ${floatData.length} floats, fetching position history...`)
 
       // Fetch position history for each float
       const floatsWithPositions = await Promise.all(
@@ -33,20 +43,20 @@ export default function GeoMap() {
             const trackResponse = await apiClient.get(`/floats/${f.platformId}/track`)
             return {
               ...f,
-              positions: trackResponse.data || [],
+              positions: Array.isArray(trackResponse.data) ? trackResponse.data : [],
             }
           } catch (err) {
-            console.error(`Failed to fetch track for ${f.platformId}:`, err)
+            console.warn(`Failed to fetch track for ${f.platformId}:`, err.message)
             return { ...f, positions: [] }
           }
         })
       )
 
+      console.log('Floats with positions loaded:', floatsWithPositions.length)
       setFloats(floatsWithPositions)
-      setError(null)
     } catch (err) {
       console.error('Failed to fetch floats:', err)
-      setError(err.message || 'Failed to load floats')
+      setError(err?.response?.data?.message || err.message || 'Failed to load floats. Is backend running?')
     } finally {
       setLoading(false)
     }
