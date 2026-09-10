@@ -6,31 +6,17 @@ export default function AxisLabels() {
   const { scene } = useThree()
 
   useEffect(() => {
-    // Create axes
-    const axesLength = 2.5
+    const size = 2
+    const halfSize = size / 2
 
-    // X-axis (Longitude) - Red
-    const xGeometry = new THREE.BufferGeometry()
-    xGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, axesLength, 0, 0]), 3))
-    const xMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 })
-    const xLine = new THREE.Line(xGeometry, xMaterial)
+    // Create wireframe bounding box
+    const boxGeometry = new THREE.BoxGeometry(size, size, size)
+    const edges = new THREE.EdgesGeometry(boxGeometry)
+    const wireframe = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xcccccc }))
+    scene.add(wireframe)
 
-    // Y-axis (Latitude) - Green
-    const yGeometry = new THREE.BufferGeometry()
-    yGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 0, axesLength, 0]), 3))
-    const yMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, linewidth: 2 })
-    const yLine = new THREE.Line(yGeometry, yMaterial)
-
-    // Z-axis (Depth) - Blue (negative Z direction - going down)
-    const zGeometry = new THREE.BufferGeometry()
-    zGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 0, 0, -axesLength]), 3))
-    const zMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff, linewidth: 2 })
-    const zLine = new THREE.Line(zGeometry, zMaterial)
-
-    scene.add(xLine, yLine, zLine)
-
-    // Create tick marks and labels using canvas texture
-    const createTextTexture = (text) => {
+    // Helper function to create text sprite
+    const createTextSprite = (text, size = 0.3) => {
       const canvas = document.createElement('canvas')
       canvas.width = 256
       canvas.height = 64
@@ -42,81 +28,139 @@ export default function AxisLabels() {
       ctx.fillText(text, 128, 32)
 
       const texture = new THREE.CanvasTexture(canvas)
-      return texture
+      const geometry = new THREE.PlaneGeometry(size, size / 4)
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false,
+      })
+      return new THREE.Mesh(geometry, material)
     }
 
-    // X-axis (Longitude) label
-    const xLabelGeometry = new THREE.PlaneGeometry(0.6, 0.2)
-    const xLabelMaterial = new THREE.MeshBasicMaterial({
-      map: createTextTexture('Longitude'),
-      transparent: true,
+    // LONGITUDE labels (top and bottom)
+    const lonLabels = ['75', '80', '85', '90', '95']
+    lonLabels.forEach((label, i) => {
+      const x = -halfSize + (i / 4) * size
+
+      // Top
+      const topSprite = createTextSprite(label, 0.25)
+      topSprite.position.set(x, halfSize + 0.3, 0)
+      topSprite.renderOrder = 100
+      scene.add(topSprite)
+
+      // Bottom
+      const bottomSprite = createTextSprite(label, 0.25)
+      bottomSprite.position.set(x, -halfSize - 0.3, 0)
+      bottomSprite.renderOrder = 100
+      scene.add(bottomSprite)
     })
-    const xLabel = new THREE.Mesh(xLabelGeometry, xLabelMaterial)
-    xLabel.position.set(1.3, -0.3, 0)
-    xLabel.renderOrder = 100
-    scene.add(xLabel)
 
-    // Y-axis (Latitude) label
-    const yLabelGeometry = new THREE.PlaneGeometry(0.6, 0.2)
-    const yLabelMaterial = new THREE.MeshBasicMaterial({
-      map: createTextTexture('Latitude'),
-      transparent: true,
+    // LATITUDE labels (front and back)
+    const latLabels = ['10', '0', '-10', '-50', '-100']
+    latLabels.forEach((label, i) => {
+      const y = halfSize - (i / 4) * size
+
+      // Front
+      const frontSprite = createTextSprite(label, 0.25)
+      frontSprite.position.set(-halfSize - 0.35, y, halfSize + 0.15)
+      frontSprite.lookAt(scene.position)
+      frontSprite.renderOrder = 100
+      scene.add(frontSprite)
+
+      // Back
+      const backSprite = createTextSprite(label, 0.25)
+      backSprite.position.set(halfSize + 0.35, y, -halfSize - 0.15)
+      backSprite.lookAt(scene.position)
+      backSprite.renderOrder = 100
+      scene.add(backSprite)
     })
-    const yLabel = new THREE.Mesh(yLabelGeometry, yLabelMaterial)
-    yLabel.position.set(-0.5, 1.3, 0)
-    yLabel.renderOrder = 100
-    scene.add(yLabel)
 
-    // Z-axis (Depth) label - showing negative Z direction
-    const zLabelGeometry = new THREE.PlaneGeometry(0.5, 0.2)
-    const zLabelMaterial = new THREE.MeshBasicMaterial({
-      map: createTextTexture('Depth'),
-      transparent: true,
+    // DEPTH labels (left and right sides)
+    const depthLabels = ['0', '50', '100', '150', '200']
+    depthLabels.forEach((label, i) => {
+      const z = halfSize - (i / 4) * size
+
+      // Left side
+      const leftSprite = createTextSprite(label, 0.25)
+      leftSprite.position.set(-halfSize - 0.35, -0.3, z)
+      leftSprite.lookAt(scene.position)
+      leftSprite.renderOrder = 100
+      scene.add(leftSprite)
+
+      // Right side
+      const rightSprite = createTextSprite(label, 0.25)
+      rightSprite.position.set(halfSize + 0.35, -0.3, z)
+      rightSprite.lookAt(scene.position)
+      rightSprite.renderOrder = 100
+      scene.add(rightSprite)
     })
-    const zLabel = new THREE.Mesh(zLabelGeometry, zLabelMaterial)
-    zLabel.position.set(0.3, -0.3, -1.3)
-    zLabel.renderOrder = 100
-    scene.add(zLabel)
 
-    // Add tick marks on axes
-    const tickSize = 0.05
-    const tickMaterial = new THREE.LineBasicMaterial({ color: 0xcccccc })
+    // Add axis title labels
+    const titleSize = 0.4
 
-    // Ticks on X-axis (5 ticks)
-    for (let i = 0; i <= 5; i++) {
-      const x = (i / 5) * axesLength
-      const tickGeometry = new THREE.BufferGeometry()
-      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
-        new Float32Array([x, 0, 0, x, -tickSize, 0]), 3
+    // "Longitude" on top
+    const lonTitle = createTextSprite('Longitude', titleSize)
+    lonTitle.position.set(0, halfSize + 0.6, 0)
+    lonTitle.renderOrder = 100
+    scene.add(lonTitle)
+
+    // "Latitude" on left
+    const latTitle = createTextSprite('Latitude', titleSize)
+    latTitle.position.set(-halfSize - 0.7, halfSize + 0.2, 0)
+    latTitle.lookAt(scene.position)
+    latTitle.renderOrder = 100
+    scene.add(latTitle)
+
+    // "Depth" on right
+    const depthTitle = createTextSprite('Depth', titleSize)
+    depthTitle.position.set(halfSize + 0.7, 0, 0)
+    depthTitle.lookAt(scene.position)
+    depthTitle.renderOrder = 100
+    scene.add(depthTitle)
+
+    // Add grid lines on faces
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0xdddddd, transparent: true, opacity: 0.3 })
+
+    // Grid on XY plane (longitude-latitude)
+    for (let i = 0; i <= 4; i++) {
+      const pos = -halfSize + (i / 4) * size
+
+      // Lines parallel to Y (latitude)
+      const yGeometry = new THREE.BufferGeometry()
+      yGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([pos, -halfSize, halfSize, pos, halfSize, halfSize]), 3
       ))
-      const tick = new THREE.Line(tickGeometry, tickMaterial)
-      scene.add(tick)
+      scene.add(new THREE.Line(yGeometry, gridMaterial))
+
+      // Lines parallel to X (longitude)
+      const xGeometry = new THREE.BufferGeometry()
+      xGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-halfSize, pos, halfSize, halfSize, pos, halfSize]), 3
+      ))
+      scene.add(new THREE.Line(xGeometry, gridMaterial))
     }
 
-    // Ticks on Y-axis (5 ticks)
-    for (let i = 0; i <= 5; i++) {
-      const y = (i / 5) * axesLength
-      const tickGeometry = new THREE.BufferGeometry()
-      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
-        new Float32Array([0, y, 0, -tickSize, y, 0]), 3
-      ))
-      const tick = new THREE.Line(tickGeometry, tickMaterial)
-      scene.add(tick)
-    }
+    // Grid on YZ plane (latitude-depth)
+    for (let i = 0; i <= 4; i++) {
+      const pos = -halfSize + (i / 4) * size
 
-    // Ticks on Z-axis (5 ticks) - negative Z direction (depth)
-    for (let i = 0; i <= 5; i++) {
-      const z = -(i / 5) * axesLength
-      const tickGeometry = new THREE.BufferGeometry()
-      tickGeometry.setAttribute('position', new THREE.BufferAttribute(
-        new Float32Array([0, 0, z, 0, -tickSize, z]), 3
+      // Lines parallel to Z (depth)
+      const zGeometry = new THREE.BufferGeometry()
+      zGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-halfSize, pos, -halfSize, -halfSize, pos, halfSize]), 3
       ))
-      const tick = new THREE.Line(tickGeometry, tickMaterial)
-      scene.add(tick)
+      scene.add(new THREE.Line(zGeometry, gridMaterial))
+
+      // Lines parallel to Y (latitude)
+      const yGeometry = new THREE.BufferGeometry()
+      yGeometry.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-halfSize, -halfSize, pos, -halfSize, halfSize, pos]), 3
+      ))
+      scene.add(new THREE.Line(yGeometry, gridMaterial))
     }
 
     return () => {
-      scene.remove(xLine, yLine, zLine, xLabel, yLabel, zLabel)
+      scene.remove(wireframe)
     }
   }, [scene])
 
