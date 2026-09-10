@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, RadialLinearScale, ArcElement, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js'
 import { PolarArea } from 'react-chartjs-2'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend)
+ChartJS.register(RadialLinearScale, ArcElement, PointElement, LineElement, Filler, Tooltip, Legend)
 
 export default function CurrentRoseChart() {
   const [profiles, setProfiles] = useState([])

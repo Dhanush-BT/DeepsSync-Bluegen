@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Chart as ChartJS, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from 'chart.js'
 import { Bubble } from 'react-chartjs-2'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
 
-ChartJS.register(CategoryScale, LinearScale, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, Tooltip, Legend)
 
 export default function AlongTrackSectionChart() {
   const [profiles, setProfiles] = useState([])
