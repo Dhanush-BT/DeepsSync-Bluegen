@@ -80,7 +80,7 @@ export default function InstrumentDetailPanel({ float = null }) {
                 Coordinates
               </span>
               <span className="font-semibold text-slate-800">
-                {float.lastLatitude}°N, {float.lastLongitude}°E
+                {(float.latitude || float.lastLatitude)?.toFixed(2)}°N, {(float.longitude || float.lastLongitude)?.toFixed(2)}°E
               </span>
             </div>
             <div>

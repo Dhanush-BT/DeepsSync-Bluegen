@@ -55,9 +55,15 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
 
       // Add floats to map
       floats.forEach((float) => {
-        if (!float.lastLatitude || !float.lastLongitude) return
+        const lat = float.latitude || float.lastLatitude
+        const lon = float.longitude || float.lastLongitude
 
-        const color = float.instrumentType === 'ARGO' ? '#0284c7' : '#f59e0b'
+        if (!lat || !lon) {
+          console.warn('Float missing coordinates:', float.platformId)
+          return
+        }
+
+        const color = float.instrumentType?.includes('ARGO') ? '#0284c7' : '#f59e0b'
 
         // Add trajectory polyline
         if (float.positions && float.positions.length > 1) {
@@ -111,7 +117,7 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
           className: 'leaflet-custom-icon',
         })
 
-        const marker = L.marker([float.lastLatitude, float.lastLongitude], {
+        const marker = L.marker([lat, lon], {
           icon: markerIcon,
           title: float.platformId,
         })
@@ -125,7 +131,7 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
           <div class="p-2 text-sm">
             <div class="font-bold text-sky-700">${float.platformId}</div>
             <div class="text-xs text-gray-600 mt-1">
-              <div>${float.lastLatitude?.toFixed(2) || '?'}°N, ${float.lastLongitude?.toFixed(2) || '?'}°E</div>
+              <div>${lat?.toFixed(2) || '?'}°N, ${lon?.toFixed(2) || '?'}°E</div>
               <div class="mt-0.5">${float.instrumentType || 'UNKNOWN'}</div>
             </div>
           </div>
@@ -135,10 +141,10 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
 
       // Fit bounds if floats exist
       if (floats.length > 0) {
-        const validFloats = floats.filter((f) => f.lastLatitude && f.lastLongitude)
+        const validFloats = floats.filter((f) => (f.latitude || f.lastLatitude) && (f.longitude || f.lastLongitude))
         if (validFloats.length > 0) {
           const bounds = L.latLngBounds(
-            validFloats.map((f) => [f.lastLatitude, f.lastLongitude])
+            validFloats.map((f) => [f.latitude || f.lastLatitude, f.longitude || f.lastLongitude])
           )
           try {
             map.fitBounds(bounds, { padding: [50, 50], maxZoom: 8 })

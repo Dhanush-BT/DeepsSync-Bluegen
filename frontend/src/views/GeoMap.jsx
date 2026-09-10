@@ -80,6 +80,11 @@ export default function GeoMap() {
     setFilters((prev) => ({ ...prev, ...newFilters }))
   }
 
+  // Debug info
+  useEffect(() => {
+    console.log('GeoMap mounted, loading:', loading, 'error:', error, 'floats:', floats.length)
+  }, [loading, error, floats])
+
   return (
     <div className="flex h-screen flex-col bg-slate-50 overflow-hidden">
       {/* Navbar */}
@@ -104,11 +109,11 @@ export default function GeoMap() {
         <div className="hidden lg:flex items-center gap-2 ml-2">
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-200 font-semibold flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
-            {floats.filter((f) => f.instrumentType === 'ARGO').length} Argo Floats
+            {floats.filter((f) => f.instrumentType?.includes('ARGO')).length} Argo Floats
           </span>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-semibold flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-            {floats.filter((f) => f.instrumentType === 'GLIDER').length} Gliders
+            {floats.filter((f) => f.instrumentType?.includes('GLIDER')).length} Gliders
           </span>
           <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 font-medium">
             Sync: 6h ago

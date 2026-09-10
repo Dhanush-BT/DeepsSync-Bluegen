@@ -29,13 +29,18 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
   }
 
   const instrumentCounts = {
-    ARGO: floats.filter(f => f.instrumentType === 'ARGO').length,
-    GLIDER: floats.filter(f => f.instrumentType === 'GLIDER').length,
+    ARGO: floats.filter(f => f.instrumentType?.includes('ARGO')).length,
+    GLIDER: floats.filter(f => f.instrumentType?.includes('GLIDER')).length,
   }
 
   const visibleFloats = floats.filter(f => {
-    if (searchId && !f.platformId.toLowerCase().includes(searchId.toLowerCase())) return false
-    if (!selectedInstruments[f.instrumentType]) return false
+    const search = (searchId || '').trim().toLowerCase()
+    if (search && !f.platformId.toLowerCase().includes(search)) return false
+
+    // Check instrument type
+    if (f.instrumentType?.includes('ARGO') && !selectedInstruments.ARGO) return false
+    if (f.instrumentType?.includes('GLIDER') && !selectedInstruments.GLIDER) return false
+
     return true
   })
 
@@ -207,7 +212,7 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
                         className="w-2 h-2 rounded-full"
                         style={{
                           backgroundColor:
-                            f.instrumentType === 'ARGO' ? '#0284c7' : '#f59e0b',
+                            f.instrumentType?.includes('ARGO') ? '#0284c7' : '#f59e0b',
                         }}
                       ></span>
                       <span className="text-xs font-bold text-sky-900 font-mono">
@@ -215,7 +220,7 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
                       </span>
                     </div>
                     <span className="text-[10px] text-slate-500 font-mono mt-0.5">
-                      {f.lastLatitude}°N, {f.lastLongitude}°E
+                      {(f.latitude || f.lastLatitude)?.toFixed(2)}°N, {(f.longitude || f.lastLongitude)?.toFixed(2)}°E
                     </span>
                   </div>
                   <span className="material-symbols-outlined text-slate-400 text-[16px]">
