@@ -43,7 +43,7 @@ export default function Signup() {
     setSuccess('')
 
     if (!agreeTerms) {
-      setError('You must agree to the Terms of Service and Privacy Policy')
+      setError('You must agree to Terms of Service and Privacy Policy')
       setLoading(false)
       return
     }
@@ -59,7 +59,7 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] text-slate-900 antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between">
       {/* Header */}
       <header className="w-full px-6 md:px-12 h-16 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur-md">
         <div className="flex items-center gap-3">
@@ -70,10 +70,10 @@ export default function Signup() {
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <Link to="/" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 hover:bg-sky-100/80 border border-sky-200 text-xs font-semibold transition-colors">
-            <span className="material-symbols-outlined text-sm">explore</span>
+          <a href="#" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 hover:bg-sky-100/80 border border-sky-200 text-xs font-semibold transition-colors">
+            <span className="material-symbols-outlined text-sm">public</span>
             <span>Explore Public 3D Ocean</span>
-          </Link>
+          </a>
         </div>
       </header>
 
@@ -95,13 +95,14 @@ export default function Signup() {
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-700 font-semibold text-xs shadow-xs">
                 <span className="material-symbols-outlined text-emerald-600 text-sm">school</span>
+                <span>Smart India Hackathon 2025</span>
               </div>
             </div>
             <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.18] max-w-2xl">
               Interactive 3D Ocean Intelligence & Public Discovery Platform.
             </h1>
             <p className="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed">
-              Bridging state-of-the-art volumetric ocean modeling for INCOIS scientists with intuitive, open-access 3D exploration.
+              Bridging state-of-the-art volumetric ocean modeling with INCOIS scientists and intuitive, open-access 3D exploration.
             </p>
             <div className="flex flex-wrap items-center gap-2.5 pt-1">
               <div className="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2">
@@ -110,27 +111,27 @@ export default function Signup() {
               </div>
               <div className="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2">
                 <span className="material-symbols-outlined text-cyan-600 text-base">sensors</span>
-                <span className="text-xs font-semibold tracking-tight text-slate-800 font-mono">Argo & Glider Telemetry</span>
+                <span className="text-xs font-semibold tracking-tight text-slate-800 font-mono">Argo Telemetry</span>
               </div>
             </div>
           </div>
 
-          {/* Bottom Metrics */}
+          {/* Bottom Stats */}
           <div className="relative z-10 space-y-5">
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-white/70 rounded-xl p-3.5 border border-sky-100 shadow-xs">
-                <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">340K+ km²</div>
-                <div className="text-xs sm:text-sm text-slate-600 font-medium">Continuous EEZ 3D Coverage</div>
+                <div className="font-extrabold text-slate-900 tracking-tight">340K+ km²</div>
+                <div className="text-xs sm:text-sm text-slate-600 font-medium">Continuous EEZ Coverage</div>
               </div>
               <div className="bg-white/70 rounded-xl p-3.5 border border-sky-100 shadow-xs">
-                <div className="text-2xl sm:text-3xl font-extrabold text-sky-700 tracking-tight">&lt; 85ms</div>
-                <div className="text-xs sm:text-sm text-slate-600 font-medium">Volumetric Slice Latency</div>
+                <div className="font-extrabold text-sky-700 tracking-tight">&lt; 85ms</div>
+                <div className="text-xs sm:text-sm text-slate-600 font-medium">Volumetric Latency</div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Right Column: Auth Form */}
+        {/* Right Form Column */}
         <section className="lg:col-span-5 bg-white p-6 sm:p-10 lg:p-12 flex items-center justify-center shadow-xl lg:shadow-none overflow-y-auto max-h-[calc(100vh-4rem)]">
           <div className="w-full max-w-md space-y-6 py-4">
             <div className="space-y-1.5 text-left">
@@ -139,7 +140,7 @@ export default function Signup() {
                 <span>Secure Access</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Register Analyst</h2>
-              <p className="text-sm text-slate-600">Provision your INCOIS ocean modeling credential and profile</p>
+              <p className="text-sm text-slate-600">Provision your INCOIS ocean modeling credential profile</p>
             </div>
 
             {error && (
@@ -166,7 +167,7 @@ export default function Signup() {
                     value={formData.fullName}
                     onChange={handleChange}
                     className="w-full h-11 px-3.5 pr-11 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none"
-                    placeholder="e.g. Dr. Balakrishnan Nair TM"
+                    placeholder="e.g. Dr. Tarun M."
                     required
                   />
                   <div className="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700">
@@ -175,9 +176,9 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Email Field */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">INCOIS Institutional Email</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">INCOIS Email</label>
                 <div className="relative">
                   <input
                     type="email"
@@ -194,10 +195,10 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* Employee ID and Division */}
+              {/* Employee ID & Division */}
               <div className="space-y-3">
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">Official INCOIS Employee ID</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">Official INCOIS ID</label>
                   <div className="relative">
                     <input
                       type="text"
@@ -251,7 +252,7 @@ export default function Signup() {
                     value={formData.password}
                     onChange={handleChange}
                     className="w-full h-11 px-3.5 pr-11 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none"
-                    placeholder="At least 12 characters"
+                    placeholder="Create a strong password"
                     required
                   />
                   <button
@@ -263,21 +264,37 @@ export default function Signup() {
                   </button>
                 </div>
 
-                {/* Password Strength Requirements */}
+                {/* Password Strength Policy */}
                 <div className="space-y-2.5 pt-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-700 uppercase tracking-wider text-[11px]">Password Security Policy</span>
-                    <span className={`inline-flex items-center gap-1 font-semibold text-[11px] ${
-                      passwordStrength >= 4 ? 'text-emerald-600' : passwordStrength >= 2 ? 'text-amber-600' : 'text-slate-500'
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        passwordStrength >= 4 ? 'bg-emerald-500' : passwordStrength >= 2 ? 'bg-amber-500' : 'bg-slate-400'
-                      }`}></span>
-                      {passwordStrength >= 4 ? 'Strong' : passwordStrength >= 2 ? 'Fair' : 'Weak'}
+                    <span className="font-semibold text-slate-700 uppercase tracking-wider">Password Policy</span>
+                    <span
+                      className={`inline-flex items-center gap-1 font-semibold ${
+                        passwordStrength === 5
+                          ? 'text-emerald-600'
+                          : passwordStrength >= 3
+                          ? 'text-amber-600'
+                          : 'text-slate-500'
+                      }`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          passwordStrength === 5
+                            ? 'bg-emerald-500'
+                            : passwordStrength >= 3
+                            ? 'bg-amber-500'
+                            : 'bg-slate-400'
+                        }`}
+                      ></span>
+                      {passwordStrength === 5
+                        ? 'Strong'
+                        : passwordStrength >= 3
+                        ? 'Fair'
+                        : 'Weak'}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    {[1, 2, 3, 4].map((i) => (
+                    {[1, 2, 3, 4, 5].map((i) => (
                       <div
                         key={i}
                         className={`flex-1 h-1.5 rounded-full ${
@@ -287,71 +304,107 @@ export default function Signup() {
                     ))}
                   </div>
                   <div className="grid grid-cols-1 gap-1.5 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-                    <div className={`flex items-center gap-2 ${passwordChecks.length ? 'text-emerald-700' : 'text-slate-600'}`}>
-                      <span className="material-symbols-outlined text-sm">{passwordChecks.length ? 'check_circle' : 'radio_button_unchecked'}</span>
+                    <div
+                      className={`flex items-center gap-2 ${
+                        passwordChecks.length ? 'text-emerald-700' : 'text-slate-600'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        {passwordChecks.length ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
                       <span>Minimum 12 characters</span>
                     </div>
-                    <div className={`flex items-center gap-2 ${passwordChecks.uppercase && passwordChecks.lowercase ? 'text-emerald-700' : 'text-slate-600'}`}>
-                      <span className="material-symbols-outlined text-sm">{passwordChecks.uppercase && passwordChecks.lowercase ? 'check_circle' : 'radio_button_unchecked'}</span>
+                    <div
+                      className={`flex items-center gap-2 ${
+                        passwordChecks.uppercase && passwordChecks.lowercase
+                          ? 'text-emerald-700'
+                          : 'text-slate-600'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        {passwordChecks.uppercase && passwordChecks.lowercase
+                          ? 'check_circle'
+                          : 'radio_button_unchecked'}
+                      </span>
                       <span>Uppercase and lowercase letters</span>
                     </div>
-                    <div className={`flex items-center gap-2 ${passwordChecks.number ? 'text-emerald-700' : 'text-slate-600'}`}>
-                      <span className="material-symbols-outlined text-sm">{passwordChecks.number ? 'check_circle' : 'radio_button_unchecked'}</span>
+                    <div
+                      className={`flex items-center gap-2 ${
+                        passwordChecks.number ? 'text-emerald-700' : 'text-slate-600'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        {passwordChecks.number ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
                       <span>At least one number (0-9)</span>
                     </div>
-                    <div className={`flex items-center gap-2 ${passwordChecks.special ? 'text-emerald-700' : 'text-slate-600'}`}>
-                      <span className="material-symbols-outlined text-sm">{passwordChecks.special ? 'check_circle' : 'radio_button_unchecked'}</span>
+                    <div
+                      className={`flex items-center gap-2 ${
+                        passwordChecks.special ? 'text-emerald-700' : 'text-slate-600'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-sm">
+                        {passwordChecks.special ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
                       <span>At least one special symbol (!@#$%^&*)</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Terms Agreement */}
+              {/* Terms & Conditions */}
               <div className="pt-1">
                 <label className="flex items-start gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={agreeTerms}
                     onChange={(e) => setAgreeTerms(e.target.checked)}
-                    className="w-4 h-4 mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-sky-500 focus:ring-offset-0"
+                    className="w-4 h-4 mt-0.5 border border-slate-300 text-blue-600 focus:ring-sky-500 focus:ring-offset-0 rounded"
                   />
                   <span className="text-xs text-slate-600 leading-relaxed">
-                    I agree to the <a href="#" className="text-sky-700 font-semibold hover:underline">Terms of Service</a> and{' '}
-                    <a href="#" className="text-sky-700 font-semibold hover:underline">Privacy Policy</a>, and accept platform telemetry and research updates.
+                    I agree to the{' '}
+                    <a href="#" className="text-sky-700 font-semibold hover:underline">
+                      Terms of Service
+                    </a>
+                    {' '}and{' '}
+                    <a href="#" className="text-sky-700 font-semibold hover:underline">
+                      Privacy Policy
+                    </a>
                   </span>
                 </label>
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading || !agreeTerms}
                 className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 active:scale-[0.99] transition-all duration-150"
               >
                 <span className="material-symbols-outlined text-lg">person_add</span>
-                <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
+                <span>{loading ? 'Creating Account...' : 'Create My Account'}</span>
               </button>
             </form>
 
+            {/* Login Link */}
             <div className="text-center pt-2">
-              <p className="text-xs text-slate-600">
-                Already have an account?{' '}
+              <span className="text-xs text-slate-600">
+                Already registered?{' '}
                 <Link to="/login" className="font-semibold text-sky-700 hover:text-sky-800 transition-colors">
-                  Sign in
+                  Sign in here
                 </Link>
-              </p>
+              </span>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="w-full px-6 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-200 bg-[#faf8ff] text-xs text-slate-600">
+      <footer className="w-full px-6 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-200 text-xs text-slate-600">
         <div className="flex items-center gap-2">
-          <img alt="DeepSync Logo" className="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6dT7-MpeA7TrYqXMNLNHghOsJRKO5zH_w5NMevGaCm8IKudlDtJ04bxVrNv8jb-nX8_wF0K5clPKe-1TlIlWzzPKGbCp2alPt1b_djLZrwTQNlPdngG2G4k7ndwnoykUHR9aQeYPg-Sst_Gjp7_auOaJmQU47cZsqzbkLeVkENs80RDqPdQ1W5xr69wI4cHFfmbzGJO-Tj0A2rOBJA3uYpOOkqlbwnDK153MsTCJPP0q-pDU0HdgisydPOaqtk5X85Ls" />
+          <img alt="DeepSync" className="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6dT7-MpeA7TrYqXMNLNHghOsJRKO5zH_w5NMevGaCm8IKudlDtJ04bxVrNv8jb-nX8_wF0K5clPKe-1TlIlWzzPKGbCp2alPt1b_djLZrwTQNlPdngG2G4k7ndwnoykUHR9aQeYPg-Sst_Gjp7_auOaJmQU47cZsqzbkLeVkENs80RDqPdQ1W5xr69wI4cHFfmbzGJO-Tj0A2rOBJA3uYpOOkqlbwnDK153MsTCJPP0q-pDU0HdgisydPOaqtk5X85Ls" />
           <span className="font-bold text-slate-800">DeepSync by Bluegen</span>
           <span className="text-slate-400">•</span>
-          <span>© 2026 DeepSync by Bluegen for INCOIS</span>
+          <span>© 2026 DeepSync by INCOIS</span>
         </div>
         <nav className="flex flex-wrap items-center gap-5 font-medium">
           <a href="#" className="text-slate-600 hover:text-sky-700 transition-colors">API Docs</a>
