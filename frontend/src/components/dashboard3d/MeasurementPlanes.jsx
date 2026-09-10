@@ -89,10 +89,33 @@ export default function MeasurementPlanes() {
         <lineBasicMaterial color={0x0000ff} linewidth={3} transparent opacity={0.8} />
       </line>
 
-      {/* Intersection point - white dot */}
+      {/* Intersection point - bright yellow with glow */}
       <mesh position={[normLon, normDepth, normLat]}>
-        <sphereGeometry args={[0.08, 8, 8]} />
-        <meshBasicMaterial color={0xffffff} />
+        <sphereGeometry args={[0.12, 16, 16]} />
+        <meshPhongMaterial
+          color={0xffff00}
+          emissive={0xffff00}
+          emissiveIntensity={0.8}
+          shininess={100}
+          wireframe={false}
+        />
+      </mesh>
+
+      {/* Outer glow sphere */}
+      <mesh position={[normLon, normDepth, normLat]}>
+        <sphereGeometry args={[0.16, 16, 16]} />
+        <meshBasicMaterial
+          color={0xffff00}
+          transparent
+          opacity={0.3}
+          wireframe={false}
+        />
+      </mesh>
+
+      {/* Crosshair center marker - black outline */}
+      <mesh position={[normLon, normDepth, normLat]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshBasicMaterial color={0x000000} />
       </mesh>
 
       {/* Crosshair lines at intersection */}
