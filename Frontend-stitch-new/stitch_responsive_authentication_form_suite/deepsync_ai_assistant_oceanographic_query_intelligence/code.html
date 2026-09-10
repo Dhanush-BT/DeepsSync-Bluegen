@@ -1,0 +1,607 @@
+<!DOCTYPE html><html class="h-full bg-slate-50 text-slate-800" lang="en" style=""><head></head><body class="h-full flex flex-col font-sans overflow-hidden bg-slate-50 text-slate-800 antialiased selection:bg-ocean-100 selection:text-ocean-900"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync AI Assistant - Oceanographic Query Intelligence</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1', /* Primary Brand Color */
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="scrollbar-and-effects">
+    /* Custom refined scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .chart-grid line {
+      stroke: #f1f5f9;
+      stroke-dasharray: 4 4;
+    }
+  </style>
+
+
+<!-- BEGIN: GlobalNavbar -->
+<header class="bg-white border-b border-slate-200 z-30 flex-shrink-0 shadow-sm" data-purpose="primary-navigation">
+<div class="max-w-[1920px] mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+<!-- Brand & Organization Identifier -->
+<div class="flex items-center space-x-3.5">
+<img alt="DeepSync Logo" class="h-9 w-9 rounded-full object-contain ring-2 ring-ocean-100 shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6MGxY2j-HHiGdjUiFyqG2pvPNMWAsYGPCvp769K4O2nj8XfTEOvY8LZwWdCUjv2OlnD9iYEJPj3HsYIMfO-HAL-IPepJ3J56VMSeMNAJPdun7HSpDRutQE9oneCefghrOk9Ltoj3ZwpudnfFkN420VuAGJVxOkQA-sJ2zjhuF63SUNcLW55lUQDOhqd6tVamosvXFhMpzCl_56LJAUT0xcbBht2VWr_6_IdTQK_5A60l6hjdxT6F2-axiootq5f2mFnY">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">DeepSync</span>
+<span class="text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-ocean-50 text-ocean-700 border border-ocean-200">By Bluegen</span>
+</div>
+<span class="text-[11px] font-medium text-slate-500 tracking-tight mt-0.5">INCOIS · MoES Govt. of India</span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="hidden md:flex items-center space-x-1 font-semibold text-sm">
+<a class="px-3.5 py-2 text-slate-600 hover:text-ocean-700 hover:bg-slate-50 rounded-md transition-colors" href="#home">Home</a>
+<a class="px-3.5 py-2 text-slate-600 hover:text-ocean-700 hover:bg-slate-50 rounded-md transition-colors" href="#dashboard">Dashboard</a>
+<a class="px-3.5 py-2 text-slate-600 hover:text-ocean-700 hover:bg-slate-50 rounded-md transition-colors" href="#geomap">Geo Map</a>
+<a class="px-3.5 py-2 text-ocean-700 font-bold bg-ocean-50 border-b-2 border-ocean-700 rounded-t-md transition-colors flex items-center space-x-1.5" href="#assistant">
+<svg class="w-4 h-4 text-ocean-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">AI Assistant</span>
+</a>
+<div class="relative group">
+<button class="px-3.5 py-2 text-slate-600 hover:text-ocean-700 hover:bg-slate-50 rounded-md transition-colors flex items-center space-x-1">
+<span class="">Docs</span>
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-ocean-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</nav>
+<!-- Utility Status & Admin Actions -->
+<div class="flex items-center space-x-3">
+
+<button class="inline-flex items-center space-x-1.5 border border-slate-300 hover:border-ocean-600 hover:text-ocean-700 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-ocean-50 transition-all shadow-xs">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Admin sign in</span>
+</button>
+</div>
+</div>
+<!-- Breadcrumb & Telemetry Subheader Bar -->
+<div class="bg-slate-50 border-t border-slate-200/80 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between text-xs gap-2">
+<div class="flex items-center space-x-2 text-slate-500">
+<span class="font-bold text-slate-400 tracking-wide uppercase text-[10px]">DeepSync</span>
+<span class="">/</span>
+<span class="font-bold text-slate-800">AI Assistant</span>
+<span class="hidden md:inline-block h-3.5 w-px bg-slate-300 mx-1"></span>
+<span class="hidden md:inline-flex items-center gap-1.5 bg-white border border-slate-200 px-2 py-0.5 rounded text-[11px] font-mono text-slate-600">
+<svg class="w-3 h-3 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Model: OceanLLM-v2.4
+        </span>
+<span class="hidden lg:inline-flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded text-[11px] text-slate-600 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Connected: 4 Ingested Feeds
+        </span>
+<span class="hidden xl:inline-flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded text-[11px] text-slate-600 font-medium">
+<svg class="w-3 h-3 text-ocean-700" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fill-rule="evenodd"></path></svg>
+          Indian Ocean EEZ &amp; Argo Network
+        </span>
+</div>
+<!-- Quick Session Controls -->
+<div class="flex items-center space-x-2">
+<button class="inline-flex items-center space-x-1 text-slate-600 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded transition border border-transparent hover:border-rose-200 text-xs font-medium" id="clear-chat-btn">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Clear Conversation</span>
+</button>
+<button class="inline-flex items-center space-x-1 text-slate-600 hover:text-ocean-700 bg-white hover:bg-ocean-50 px-2.5 py-1 rounded border border-slate-200 text-xs font-medium shadow-xs transition">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Export (.json / .pdf)</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: GlobalNavbar -->
+<!-- BEGIN: MainWorkspace -->
+<main class="flex-1 flex overflow-hidden max-w-[1920px] w-full mx-auto" data-purpose="chat-application-workspace">
+<!-- BEGIN: ContextDrawer (Left Sidebar) -->
+<aside class="w-80 border-r border-slate-200 bg-white flex flex-col flex-shrink-0 hidden lg:flex" data-purpose="context-and-history-sidebar">
+<!-- Scope Filter Card -->
+<div class="p-4 border-b border-slate-200/80 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Oceanographic Scope</span>
+<span class="px-2 py-0.5 bg-ocean-50 text-ocean-700 text-[10px] font-bold rounded-full border border-ocean-200">INCOIS MOM4</span>
+</div>
+<div class="space-y-2">
+<div>
+<label class="text-[11px] font-medium text-slate-400">Target Region</label>
+<div class="mt-0.5 flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 font-semibold">
+<span class="truncate">Indian Ocean &amp; Bay of Bengal</span>
+<svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<div>
+<label class="text-[11px] font-medium text-slate-400">Telemetry Variables</label>
+<div class="mt-1 flex flex-wrap gap-1.5">
+<span class="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">SST</span>
+<span class="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">Salinity</span>
+<span class="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">MLD Depth</span>
+<span class="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">Wave Vectors</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Session Categories -->
+<div class="p-4 border-b border-slate-200/80">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">Prompt Templates</span>
+<div class="grid grid-cols-1 gap-1 text-xs">
+<button class="flex items-center text-left p-2 rounded hover:bg-slate-100 text-slate-700 group transition">
+<span class="w-1.5 h-1.5 rounded-full bg-ocean-500 mr-2 group-hover:scale-125 transition-transform"></span>
+<span class="truncate font-medium">Instrument Telemetry &amp; Drifts</span>
+</button>
+<button class="flex items-center text-left p-2 rounded hover:bg-slate-100 text-slate-700 group transition">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2 group-hover:scale-125 transition-transform"></span>
+<span class="truncate font-medium">Wave &amp; Coastal Hazard Advisories</span>
+</button>
+<button class="flex items-center text-left p-2 rounded hover:bg-slate-100 text-slate-700 group transition">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 group-hover:scale-125 transition-transform"></span>
+<span class="truncate font-medium">Correlation &amp; MLD Profiling</span>
+</button>
+<button class="flex items-center text-left p-2 rounded hover:bg-slate-100 text-slate-700 group transition">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2 group-hover:scale-125 transition-transform"></span>
+<span class="truncate font-medium">Copernicus &amp; INCOIS Reanalysis</span>
+</button>
+</div>
+</div>
+<!-- Recent Sessions -->
+<div class="flex-1 overflow-y-auto p-4 space-y-2">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">Recent Inquiries</span>
+<a class="block p-2.5 rounded-lg bg-ocean-50/70 border border-ocean-200 text-xs hover:border-ocean-300 transition" href="#">
+<p class="font-bold text-slate-900 truncate">Argo 2900004 7-day temp trend</p>
+<div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
+<span class="">Apex Profiler Mk-IV</span>
+<span class="">Just now</span>
+</div>
+</a>
+<a class="block p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs hover:bg-slate-100 transition" href="#">
+<p class="font-medium text-slate-700 truncate">Chennai high wave hazard inquiry</p>
+<div class="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+<span class="">SARAT Coastal</span>
+<span class="">10m ago</span>
+</div>
+</a>
+<a class="block p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs hover:bg-slate-100 transition" href="#">
+<p class="font-medium text-slate-700 truncate">Arabian Sea chlorophyll distribution</p>
+<div class="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+<span class="">MODIS-Aqua / OCM</span>
+<span class="">2h ago</span>
+</div>
+</a>
+<a class="block p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs hover:bg-slate-100 transition" href="#">
+<p class="font-medium text-slate-700 truncate">Glider GL-IN02 dive trajectory depth</p>
+<div class="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+<span class="">Autonomous Glider</span>
+<span class="">Yesterday</span>
+</div>
+</a>
+</div>
+<!-- Backend Engine Status -->
+<div class="p-3 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500">
+<div class="flex items-center space-x-1.5 font-semibold text-slate-700">
+<span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+<span class="">NaturalLanguageQueryService</span>
+</div>
+<p class="mt-1 text-[10px] text-slate-400 leading-tight">Spring Boot 3 API connected to live INCOIS-MOM4 Model Store &amp; Argo GTS Telemetry.</p>
+</div>
+</aside>
+<!-- END: ContextDrawer -->
+<!-- BEGIN: ChatWorkspace -->
+<div class="flex-1 flex flex-col bg-white overflow-hidden" data-purpose="chat-main-container">
+<!-- Scrollable Message Conversation Stream -->
+<div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-6 max-w-5xl w-full mx-auto" id="chat-messages-container">
+<!-- User Message 1 -->
+<div class="flex items-start justify-end space-x-3" data-purpose="user-message">
+<div class="flex flex-col items-end max-w-2xl">
+<div class="bg-slate-900 text-white px-4 py-3 rounded-2xl rounded-tr-xs shadow-sm text-sm leading-relaxed">
+              What's the temperature trend for ARGO_2900004 over the last 7 days?
+            </div>
+<div class="flex items-center space-x-2 mt-1.5 text-[11px] text-slate-400">
+<span class="">Today, 10:42 AM</span>
+<span class="">•</span>
+<span class="font-medium text-slate-500">You (Scientist / Researcher)</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 ring-2 ring-slate-100">
+            U
+          </div>
+</div>
+<!-- AI Assistant Response 1 -->
+<div class="flex items-start space-x-3.5" data-purpose="ai-response">
+<div class="w-9 h-9 rounded-full bg-ocean-700 text-white flex items-center justify-center flex-shrink-0 shadow-md ring-2 ring-ocean-100">
+<svg class="w-5 h-5 text-ocean-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-1 max-w-3xl space-y-3">
+<!-- Text Response Card -->
+<div class="bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-5 shadow-xs text-sm text-slate-800 space-y-3">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<span class="font-bold text-ocean-800 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-ocean-500"></span> DeepSync OceanLLM Analysis
+                </span>
+<span class="text-[11px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">WMO ID: 2900004</span>
+</div>
+<p class="leading-relaxed">
+                Temperature at <strong class="text-slate-900">ARGO_2900004</strong> (Apex Profiler Mk-IV at 12.4°N, 79.1°E) has cooled slightly from <span class="font-bold text-slate-900">28.6°C</span> to <span class="font-bold text-slate-900">27.9°C</span> over the last 7 days (<strong class="text-emerald-700 font-semibold">-0.7°C anomaly</strong>). The thermocline depth remains stable at ~64.2m with normal salinity profile at <strong class="text-slate-900">34.82 PSU</strong>.
+              </p>
+<!-- BEGIN: Inline Time Series Chart Component -->
+<div class="bg-slate-50/80 border border-slate-200 rounded-xl p-4 mt-3" data-purpose="inline-interactive-chart">
+<div class="flex flex-wrap items-center justify-between mb-3 gap-2">
+<div>
+<h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+<span class="">7-Day Sea Surface Temperature (°C) — ARGO_2900004</span>
+<span class="text-[10px] bg-ocean-100 text-ocean-800 px-1.5 py-0.5 rounded font-mono font-medium">10m Depth</span>
+</h4>
+<p class="text-[11px] text-slate-500">Cycle #178 to #184 · Calibrated CTD In-situ sensors</p>
+</div>
+<div class="flex items-center space-x-1.5">
+<button class="text-[11px] font-medium bg-white hover:bg-slate-100 text-slate-700 px-2.5 py-1 rounded border border-slate-200 transition shadow-2xs">
+                      Download NetCDF
+                    </button>
+<button class="text-[11px] font-medium text-white px-2.5 py-1 rounded transition-colors shadow-sm flex items-center gap-1" style="background-color: rgb(30, 84, 200);" onmouseover="this.style.backgroundColor='#1947ac'" onmouseout="this.style.backgroundColor='#1e54c8'"><span class="">Open in 3D Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+</div>
+<!-- Chart Visual (SVG Rendered) -->
+<div class="relative w-full h-48 bg-white border border-slate-200/90 rounded-lg p-3">
+<svg class="w-full h-full chart-grid" preserveAspectRatio="none" viewBox="0 0 650 150">
+<!-- Grid Lines -->
+<line stroke="#f1f5f9" x1="45" x2="630" y1="20" y2="20"></line>
+<line stroke="#f1f5f9" x1="45" x2="630" y1="55" y2="55"></line>
+<line stroke="#f1f5f9" x1="45" x2="630" y1="90" y2="90"></line>
+<line stroke="#f1f5f9" x1="45" x2="630" y1="125" y2="125"></line>
+<!-- Y-Axis Labels -->
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="35" y="24">29.0°</text>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="35" y="59">28.5°</text>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="35" y="94">28.0°</text>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="35" y="129">27.5°</text>
+<!-- Gradient fill under line -->
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0284c7" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<path d="M 60 48 L 155 52 L 250 42 L 345 68 L 440 85 L 535 98 L 615 97 L 615 130 L 60 130 Z" fill="url(#chartGradient)"></path>
+<!-- Trend Line -->
+<path d="M 60 48 L 155 52 L 250 42 L 345 68 L 440 85 L 535 98 L 615 97" fill="none" stroke="#0284c7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<!-- Data Points -->
+<circle cx="60" cy="48" fill="#ffffff" r="4" stroke="#0284c7" stroke-width="2"></circle>
+<circle cx="155" cy="52" fill="#ffffff" r="4" stroke="#0284c7" stroke-width="2"></circle>
+<circle cx="250" cy="42" fill="#0284c7" r="4.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<circle cx="345" cy="68" fill="#ffffff" r="4" stroke="#0284c7" stroke-width="2"></circle>
+<circle cx="440" cy="85" fill="#ffffff" r="4" stroke="#0284c7" stroke-width="2"></circle>
+<circle cx="535" cy="98" fill="#ffffff" r="4" stroke="#0284c7" stroke-width="2"></circle>
+<circle cx="615" cy="97" fill="#0369a1" r="4.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<!-- Annotations for high/low -->
+<text fill="#0369a1" font-family="Plus Jakarta Sans" font-size="9.5" font-weight="bold" text-anchor="middle" x="250" y="34">28.6°C (Peak)</text>
+<text fill="#075985" font-family="Plus Jakarta Sans" font-size="9.5" font-weight="bold" text-anchor="middle" x="615" y="113">27.9°C (Today)</text>
+<!-- X-Axis Labels -->
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="60" y="145">Sep 02</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="155" y="145">Sep 03</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="250" y="145">Sep 04</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="345" y="145">Sep 05</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="440" y="145">Sep 06</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="535" y="145">Sep 07</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="10" text-anchor="middle" x="615" y="145">Sep 08 (Latest)</text>
+</svg>
+</div>
+</div>
+<!-- END: Inline Time Series Chart Component -->
+<!-- Quality and Provenance Metadata Chip -->
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+<span class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span class="">Source: Argo Global / INCOIS Ingestion Pipeline · Quality Grade: <strong>A</strong> · CF-1.8 Compliant</span>
+</span>
+<span class="font-mono text-[10px] text-slate-400">Execution time: 382ms</span>
+</div>
+</div>
+</div>
+</div>
+<!-- User Message 2 -->
+<div class="flex items-start justify-end space-x-3" data-purpose="user-message">
+<div class="flex flex-col items-end max-w-2xl">
+<div class="bg-slate-900 text-white px-4 py-3 rounded-2xl rounded-tr-xs shadow-sm text-sm leading-relaxed">
+              Any high wave alerts near Chennai right now?
+            </div>
+<div class="flex items-center space-x-2 mt-1.5 text-[11px] text-slate-400">
+<span class="">Today, 10:45 AM</span>
+<span class="">•</span>
+<span class="font-medium text-slate-500">You (Scientist / Researcher)</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 ring-2 ring-slate-100">
+            U
+          </div>
+</div>
+<!-- AI Assistant Response 2 -->
+<div class="flex items-start space-x-3.5" data-purpose="ai-response">
+<div class="w-9 h-9 rounded-full bg-ocean-700 text-white flex items-center justify-center flex-shrink-0 shadow-md ring-2 ring-ocean-100">
+<svg class="w-5 h-5 text-ocean-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-1 max-w-3xl space-y-3">
+<div class="bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-5 shadow-xs text-sm text-slate-800 space-y-3">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<span class="font-bold text-ocean-800 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span> Advisory Alert Dispatch
+                </span>
+<span class="text-[11px] font-mono bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200 font-bold">WARNING ACTIVE</span>
+</div>
+<p class="leading-relaxed">
+                Yes — a <strong>High Wave Alert</strong> is active for the <strong>Tamil Nadu coast</strong> (including Chennai offshore sectors) for the next 24 hours. Swell heights between <span class="font-bold text-amber-700">2.8m – 3.5m</span> have been observed with south-southeasterly swell periods of 14–16s. <span class="text-emerald-700 font-semibold">No active tsunami warnings</span> are present for the Bay of Bengal basin.
+              </p>
+<!-- Inline Hazard Alert Card / Snippet -->
+<div class="border border-amber-300 bg-gradient-to-br from-amber-50/70 to-orange-50/40 rounded-xl p-4 shadow-2xs" data-purpose="hazard-advisory-card">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="p-2 rounded-lg bg-amber-500 text-white mt-0.5 shadow-xs">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-bold text-amber-900 uppercase tracking-wide">INCOIS Coastal Hazard Warning #HW-2026-0908</span>
+<span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded font-mono">Priority 1</span>
+</div>
+<p class="text-xs text-amber-950 font-medium mt-1">Swell Surge &amp; Rough Sea Advisory for Coastal Fishers and Port Authorities</p>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 text-xs">
+<div class="bg-white/80 border border-amber-200/80 p-2 rounded">
+<span class="block text-[10px] text-slate-500">Peak Significant Wave Height</span>
+<span class="font-bold text-amber-900">3.5 meters</span>
+</div>
+<div class="bg-white/80 border border-amber-200/80 p-2 rounded">
+<span class="block text-[10px] text-slate-500">Wave Direction &amp; Period</span>
+<span class="font-bold text-amber-900">160° SSE (15.2s)</span>
+</div>
+<div class="bg-white/80 border border-amber-200/80 p-2 rounded">
+<span class="block text-[10px] text-slate-500">Valid Until</span>
+<span class="font-bold text-amber-900">Tomorrow, 11:00 AM IST</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-amber-200/70 flex items-center justify-between text-xs">
+<span class="text-amber-800 font-medium text-[11px]">Affected Zone: Pulicat to Mahabalipuram (13.0°N – 12.6°N)</span>
+<a class="inline-flex items-center space-x-1 text-ocean-700 hover:text-ocean-900 font-semibold text-xs" href="#geomap">
+<span class="">View Hazard Zone on Geo Map</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<!-- Quality Chip -->
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+<span class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span class="">Validated by INCOIS Early Warning Center · SARAT Model Output</span>
+</span>
+<span class="font-mono text-[10px] text-slate-400">Execution time: 215ms</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BEGIN: InteractionArea (Bottom) -->
+<div class="border-t border-slate-200 bg-white p-4 max-w-5xl w-full mx-auto space-y-3" data-purpose="chat-input-controls">
+<!-- Suggested Query Chips Row -->
+<div class="flex items-center space-x-2 overflow-x-auto pb-1 text-xs whitespace-nowrap scrollbar-none" data-purpose="suggested-queries">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 flex-shrink-0">
+<svg class="w-3 h-3 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Suggested:
+          </span>
+<button class="px-3 py-1 bg-slate-100 hover:bg-ocean-50 text-slate-700 hover:text-ocean-700 border border-slate-200 rounded-full transition font-medium flex-shrink-0" onclick="fillQuery('Show salinity vs temperature for float ARGO_2900004')">
+            Show salinity vs temperature for a float
+          </button>
+<button class="px-3 py-1 bg-slate-100 hover:bg-ocean-50 text-slate-700 hover:text-ocean-700 border border-slate-200 rounded-full transition font-medium flex-shrink-0" onclick="fillQuery('Compare two regions chlorophyll levels in Arabian Sea and Bay of Bengal')">
+            Compare two regions' chlorophyll
+          </button>
+<button class="px-3 py-1 bg-slate-100 hover:bg-ocean-50 text-slate-700 hover:text-ocean-700 border border-slate-200 rounded-full transition font-medium flex-shrink-0" onclick="fillQuery('Plot current direction and drift velocity at 12°N, 79°E')">
+            Plot current direction at 12°N, 79°E
+          </button>
+<button class="px-3 py-1 bg-slate-100 hover:bg-ocean-50 text-slate-700 hover:text-ocean-700 border border-slate-200 rounded-full transition font-medium flex-shrink-0" onclick="fillQuery('Summarize Mixed Layer Depth (MLD) vs SST correlation this month')">
+            Summarize MLD vs SST correlation
+          </button>
+<button class="px-3 py-1 bg-slate-100 hover:bg-ocean-50 text-slate-700 hover:text-ocean-700 border border-slate-200 rounded-full transition font-medium flex-shrink-0" onclick="fillQuery('Inspect active glider missions in the Andaman Sea')">
+            Inspect active glider missions
+          </button>
+</div>
+<!-- Chat Input Bar -->
+<form class="relative flex items-center" id="chat-query-form" onsubmit="handleSendQuery(event)">
+<div class="relative flex-1">
+<input class="w-full pl-4 pr-28 py-3.5 bg-slate-50 border border-slate-300 focus:border-ocean-600 focus:bg-white focus:ring-2 focus:ring-ocean-100 rounded-xl text-sm placeholder-slate-400 transition-all" id="chat-query-input" placeholder="Ask about temperature, salinity, currents, floats, or hazards (e.g. 'Show Argo 2900004 trajectory')..." type="text">
+<!-- Quick input action buttons -->
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-1.5 text-slate-400">
+<button class="p-1.5 hover:text-ocean-700 hover:bg-slate-200/60 rounded-md transition" title="Upload NetCDF or CSV data" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="p-1.5 hover:text-ocean-700 hover:bg-slate-200/60 rounded-md transition" title="Voice dictation prompt" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<!-- Primary Action Submit Button -->
+<button class="ml-3 px-5 py-3.5 text-white font-medium text-sm rounded-xl shadow-sm transition-colors flex items-center space-x-2 flex-shrink-0" style="background-color: rgb(30, 84, 200);" onmouseover="this.style.backgroundColor='#1947ac'" onmouseout="this.style.backgroundColor='#1e54c8'" type="submit"><span class="">Send</span><svg class="w-4 h-4 transform rotate-45 -mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg></button>
+</form>
+<!-- Compliance & Intent Disclaimer -->
+<p class="text-[11px] text-center text-slate-400">
+          DeepSync AI queries live INCOIS model outputs and in-situ Argo/Glider telemetry. AI intent classification via <span class="font-mono text-slate-500 font-semibold">NaturalLanguageQueryService</span>; real ocean data values are strictly retrieved from calibrated repositories.
+        </p>
+</div>
+<!-- END: InteractionArea -->
+</div>
+<!-- END: ChatWorkspace -->
+</main>
+<!-- END: MainWorkspace -->
+<!-- BEGIN: DockedFooter -->
+<footer class="bg-white border-t border-slate-200 z-20 flex-shrink-0" data-purpose="institutional-footer">
+<div class="max-w-[1920px] mx-auto px-4 lg:px-6 h-11 flex items-center justify-between text-xs text-slate-500">
+<!-- Brand Copyright & Team Identifiers -->
+<div class="flex items-center space-x-3">
+<img alt="DeepSync Mini" class="h-4 w-4 rounded-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXSrgRNIkyRZpkEd98K5vGJuWh2V-o3KV4LVaIUfZef52D6w_gx8SR6VThCyS9OMO5QKgIzFo99atyU2u6aM9id_gcfTOH9BAunza7gngAkn2tXI7g8zDZtS1qsgD4SnOofTf8m0S5QlJBjPNY0Pa4OiVlLfSWYADLsTdKCk1Re-ExrtSGB-2ZVIMcj5O9RDrsoyVgtrNe5YC-QNLMUoWXZtlSfuJBWHf_POb6dQz6FiXroJhah4_2u8t8F-oJ48-3iTo">
+<span class="">DeepSync by Bluegen</span>
+<span class="text-slate-300">•</span>
+<span class="">© 2026 DeepSync</span>
+<span class="text-slate-300">•</span>
+<span class="font-mono text-[11px] text-slate-600">Team BLUEGEN_606</span>
+<span class="text-slate-300">•</span>
+<span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono text-[10px]">PS 26067 INCOIS</span>
+</div>
+<!-- Institutional Feeds & Operational Standards -->
+<div class="hidden sm:flex items-center space-x-5">
+<div class="flex items-center space-x-1.5 text-emerald-600 font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+
+</div>
+<a class="hover:text-ocean-700 transition" href="#bathymetry">Bathymetry Registry</a>
+<a class="hover:text-ocean-700 transition" href="#security">Security Architecture</a>
+<a class="hover:text-ocean-700 transition" href="#ogc">OGC WMS/WCS Services</a>
+<a class="hover:text-ocean-700 transition" href="#api">API Documentation</a>
+</div>
+</div>
+</footer>
+<!-- END: DockedFooter -->
+<!-- Client-side interaction logic -->
+<script data-purpose="chat-interactivity">
+    // Fill input field from suggested chips
+    function fillQuery(queryText) {
+      const input = document.getElementById('chat-query-input');
+      if (input) {
+        input.value = queryText;
+        input.focus();
+      }
+    }
+
+    // Clear chat simulation
+    document.getElementById('clear-chat-btn')?.addEventListener('click', () => {
+      const chatContainer = document.getElementById('chat-messages-container');
+      if (chatContainer && confirm('Clear current conversation session?')) {
+        chatContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-400">
+            <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <p class="font-medium text-slate-600">Conversation cleared</p>
+            <p class="text-xs text-slate-400 mt-1">Ask a question about in-situ Argo floats, coastal warnings, or ocean profiles.</p>
+          </div>
+        `;
+      }
+    });
+
+    // Handle form submit simulation
+    function handleSendQuery(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-query-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatContainer = document.getElementById('chat-messages-container');
+      
+      // Append user bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end space-x-3';
+      userBubble.innerHTML = `
+        <div class="flex flex-col items-end max-w-2xl">
+          <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl rounded-tr-xs shadow-sm text-sm leading-relaxed">
+            ${escapeHTML(text)}
+          </div>
+          <div class="flex items-center space-x-2 mt-1.5 text-[11px] text-slate-400">
+            <span>Just now</span>
+            <span>•</span>
+            <span class="font-medium text-slate-500">You (Scientist / Researcher)</span>
+          </div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 ring-2 ring-slate-100">
+          U
+        </div>
+      `;
+      chatContainer.appendChild(userBubble);
+      input.value = '';
+
+      // Scroll to bottom
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Simulated assistant responding animation
+      setTimeout(() => {
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'flex items-start space-x-3.5';
+        aiBubble.innerHTML = `
+          <div class="w-9 h-9 rounded-full bg-ocean-700 text-white flex items-center justify-center flex-shrink-0 shadow-md ring-2 ring-ocean-100">
+            <svg class="w-5 h-5 text-ocean-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="flex-1 max-w-3xl space-y-3">
+            <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-5 shadow-xs text-sm text-slate-800 space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="font-bold text-ocean-800 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-ocean-500"></span> DeepSync OceanLLM Analysis
+                </span>
+                <span class="text-[11px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">Processing Intent</span>
+              </div>
+              <p class="leading-relaxed text-slate-700">
+                Retrieving in-situ telemetry datasets for query: <em class="font-semibold text-slate-900">"${escapeHTML(text)}"</em> across INCOIS Indian Ocean Data Servers...
+              </p>
+              <div class="flex items-center space-x-2 text-xs text-ocean-700 font-medium bg-ocean-50 p-2.5 rounded-lg border border-ocean-200">
+                <svg class="w-4 h-4 animate-spin text-ocean-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span>Query dispatched to NaturalLanguageQueryService · Fetching Argo/Glider NetCDF slices...</span>
+              </div>
+            </div>
+          </div>
+        `;
+        chatContainer.appendChild(aiBubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 500);
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+  </script>
+
+
+
+
+
+
+
+
+</body></html>

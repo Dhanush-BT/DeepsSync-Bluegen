@@ -1,0 +1,645 @@
+<!DOCTYPE html><html class="h-full bg-slate-50 text-slate-900 antialiased" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync | Ocean Data Manager — INCOIS MoES</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts: Plus Jakarta Sans / Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+            deepnavy: '#0b1329',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars-and-glows">
+    /* Subtle custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .custom-dashed-border {
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%2338BDF8FF' stroke-width='2' stroke-dasharray='8%2c 8' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans bg-[#f8fafc] text-slate-800">
+<!-- BEGIN: TopNavigationBar -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between h-16">
+    <!-- Left: Brand Logo & Title -->
+    <div class="flex items-center gap-3">
+      <a class="flex items-center gap-3 group" href="#">
+        <div class="w-10 h-10 rounded-xl overflow-hidden ring-1 ring-ocean-500/20 shadow-sm transition-transform duration-200 group-hover:scale-105 bg-white flex items-center justify-center p-1">
+          <img alt="DeepSync Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5nCl5QcvuoBqPR0mPZkOLkE8y0Fcr6M5LghiHzbb5GKv6Q2kIydU2NMMTK1rvKj1xA82VTg81Carj9SSuvwmvAcGtFT3Dnv5I7mByqy36dZAY051e2T0gqvSXTbizmqPLt6k808u6fScWTCYJkvXU9s2FrFF97yGHt0NgeQij6_G6Xq61qO0L5ghURPK6r3YakIvF7Aw6znph4_8sbKqYPmiRImhtvFpfBxmH-sH0FLGj5JsJ1mGoONtSTbyDLUAchVo">
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">DEEPSYNC</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-ocean-100 text-ocean-800 rounded">BY BLUEGEN</span>
+          </div>
+          <span class="text-[11px] font-medium text-slate-500 tracking-wide">INCOIS · MoES Govt. of India</span>
+        </div>
+      </a>
+    </div>
+    <!-- Center: Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1">
+      <a class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" href="#">Home</a>
+      <a class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" href="#">Dashboard</a>
+      <a class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" href="#">Geo Map</a>
+      <a class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" href="#">AI Assistant</a>
+      <a class="px-3 py-1.5 text-xs font-semibold text-ocean-700 underline underline-offset-8 transition-colors" href="#">Data Manager</a>
+      <a class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-1" href="#">
+        Docs
+        <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+      </a>
+    </nav>
+    <!-- Right: Systems Status & Profile -->
+    <div class="flex items-center gap-3">
+      
+      <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+        <div class="w-8 h-8 rounded-lg bg-slate-900 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+          BN
+        </div>
+        <div class="hidden xl:flex flex-col text-left">
+          <span class="text-xs font-semibold text-slate-900 leading-tight">Dr. Balakrishnan Nair</span>
+          <span class="text-[10px] text-slate-500">INCOIS Admin Officer</span>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wider">
+          Admin
+        </span>
+      </div>
+    </div>
+  </div>
+</div></header>
+<!-- END: TopNavigationBar -->
+<!-- BEGIN: SubHeaderControls -->
+<section class="bg-white border-b border-slate-200/90 py-3.5" data-purpose="sub-header-bar">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<!-- Breadcrumbs & Heading -->
+<div>
+<div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+<a class="hover:text-ocean-600 transition-colors" href="#">DEEPSYNC</a>
+<span class="">/</span>
+<span class="text-slate-400">Administration</span>
+<span class="">/</span>
+<span class="font-medium text-slate-700">Data Manager</span>
+</div>
+<div class="flex items-center gap-3">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">Ocean Data Manager</h1>
+
+</div>
+</div>
+<!-- Telemetry & Storage Pill Actions -->
+<div class="flex items-center flex-wrap gap-2.5">
+<div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-600">
+<svg class="w-4 h-4 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Last Sync: <span class="font-semibold text-slate-800">4m ago</span></span>
+</div>
+
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-ocean-700 bg-ocean-50 hover:bg-ocean-100 border border-ocean-200 rounded-lg transition-colors" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Refresh Nodes
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: SubHeaderControls -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<!-- BEGIN: MetricStrip -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-purpose="pipeline-metrics">
+<!-- Metric 1 -->
+<div class="bg-white rounded-xl border border-slate-200/90 p-4 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ingestion Success Rate</span>
+<span class="p-1.5 rounded-md bg-emerald-50 text-emerald-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold tracking-tight text-slate-900">99.4%</span>
+<span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded">+0.8%</span>
+</div>
+<p class="text-xs text-slate-500 mt-1">1,204 rows ingested today across floats</p>
+</div>
+<!-- Metric 2 -->
+<div class="bg-white rounded-xl border border-slate-200/90 p-4 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Parsers</span>
+<span class="p-1.5 rounded-md bg-ocean-50 text-ocean-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold tracking-tight text-slate-900">3 Plugins</span>
+<span class="text-xs text-slate-500 font-normal">All online</span>
+</div>
+<p class="text-xs text-slate-500 mt-1">NetCDF CF-1.8, Delimited CSV &amp; BGC</p>
+</div>
+<!-- Metric 3 -->
+<div class="bg-white rounded-xl border border-slate-200/90 p-4 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Approvals</span>
+<span class="p-1.5 rounded-md bg-amber-50 text-amber-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold tracking-tight text-amber-600">2 Requests</span>
+<span class="text-xs text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 font-medium">Requires Action</span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Researchers awaiting roster verification</p>
+</div>
+<!-- Metric 4 -->
+<div class="bg-white rounded-xl border border-slate-200/90 p-4 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ocean Grid Scope</span>
+<span class="p-1.5 rounded-md bg-indigo-50 text-indigo-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold tracking-tight text-slate-900">340,000 km²</span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Indian EEZ Coverage · MOM4 Live Grid</p>
+</div>
+</section>
+<!-- END: MetricStrip -->
+<!-- BEGIN: PendingApprovalsSection -->
+<section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden" data-purpose="pending-approvals-module">
+<div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+<div class="flex items-center gap-2.5">
+<h2 class="text-base font-bold text-slate-900">Pending Admin Approvals</h2>
+<span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full">2</span>
+<span class="hidden md:inline text-xs text-slate-500">— Role-gated researcher and scientist access requests awaiting credential validation against the INCOIS employee roster</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-xs font-medium text-slate-600 hover:text-slate-900 px-2.5 py-1 rounded border border-slate-200 hover:bg-slate-50 transition-colors" type="button">
+            Filter Roster
+          </button>
+<button class="text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded-md shadow-sm transition-colors" type="button">Approve All Verified</button>
+</div>
+</div>
+<div class="divide-y divide-slate-100">
+<!-- User Row 1 -->
+<div class="px-6 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-ocean-100 text-ocean-800 flex items-center justify-center font-bold text-xs">
+              RK
+            </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-sm font-semibold text-slate-900">r.kumar@incois.gov.in</span>
+<span class="text-xs text-slate-500 font-medium">(Dr. R. Kumar)</span>
+<span class="text-[11px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">Scientist-E · OOS Division</span>
+</div>
+<div class="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
+<span class="flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                  Signed up 2h ago
+                </span>
+<span class="">•</span>
+<span class="">Role requested: <strong class="text-slate-700">Data Contributor (NetCDF Push)</strong></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3 self-end md:self-auto">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+              Pending
+            </span>
+<button class="px-3.5 py-1.5 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-colors" type="button">Approve</button>
+<button class="px-3.5 py-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors" type="button">
+              Reject
+            </button>
+</div>
+</div>
+<!-- User Row 2 -->
+<div class="px-6 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold text-xs">
+              AI
+            </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-sm font-semibold text-slate-900">a.iyer@incois.gov.in</span>
+<span class="text-xs text-slate-500 font-medium">(Ms. A. Iyer)</span>
+<span class="text-[11px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">Scientific Asst-B · Ocean Modeling</span>
+</div>
+<div class="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
+<span class="flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                  Signed up 1d ago
+                </span>
+<span class="">•</span>
+<span class="">Role requested: <strong class="text-slate-700">Analyst Read/Write</strong></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3 self-end md:self-auto">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+              Pending
+            </span>
+<button class="px-3.5 py-1.5 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-colors" type="button">Approve</button>
+<button class="px-3.5 py-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors" type="button">
+              Reject
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PendingApprovalsSection -->
+<!-- BEGIN: IngestOceanDataUploadPanel -->
+<section class="bg-white rounded-xl border border-slate-200 shadow-xs p-6" data-purpose="upload-ingestion-card">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-100">
+<div>
+<h2 class="text-base font-bold text-slate-900">Upload &amp; Ingest Ocean Data</h2>
+<p class="text-xs text-slate-500">Drag &amp; drop NetCDF (.nc) or ASCII / CSV logs here, or browse your local file system</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-500">Standard:</span>
+<span class="text-xs font-semibold text-ocean-700 bg-ocean-50 border border-ocean-200 px-2.5 py-1 rounded-md">CF-1.8 Metadata Compliant</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Upload Drop Zone (Left/Center) -->
+<div class="lg:col-span-8 flex flex-col justify-center items-center custom-dashed-border rounded-xl p-8 bg-sky-50/30 hover:bg-sky-50/60 transition-colors cursor-pointer text-center group">
+<div class="w-14 h-14 rounded-2xl bg-ocean-100 text-ocean-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<p class="text-sm font-semibold text-slate-800">
+<span class="text-ocean-600 underline underline-offset-2">Click to browse files</span> or drag and drop your ocean datasets
+          </p>
+<p class="text-xs text-slate-500 mt-1.5 font-mono">
+            Accepts: .nc, .nc4, .csv, .dat, .txt, .ascii (Max file size: 2.0 GB per batch)
+          </p>
+<!-- Current Staged File Demo Progress -->
+<div class="w-full max-w-md mt-6 pt-4 border-t border-slate-200/80 text-left">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<div class="flex items-center gap-1.5 font-mono text-slate-700">
+<svg class="w-3.5 h-3.5 text-ocean-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+<span class="">argo_2026_indian_basin.nc</span>
+</div>
+<span class="font-semibold text-emerald-600">100% Validated</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+<div class="bg-ocean-600 h-1.5 rounded-full w-full"></div>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Status: Ready for parser ingestion pipeline. 4D Grid dimensions verified (time, depth, lat, lon).</p>
+</div>
+</div>
+<!-- Ingestion Settings Panel (Right) -->
+<div class="lg:col-span-4 bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-4">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-600">Ingestion Parameters</h3>
+<!-- Format Select -->
+<div>
+<label class="block text-xs font-semibold text-slate-700 mb-1" for="format-select">Target Format</label>
+<select class="w-full text-xs font-medium rounded-lg border-slate-300 bg-white shadow-2xs focus:border-ocean-500 focus:ring-ocean-500" id="format-select">
+<option selected="">NetCDF (CF-Convention Model Output)</option>
+<option>ASCII Delimited (CTD / Glider Casts)</option>
+<option>BGC Sensor Stream (CSV / Mooring)</option>
+<option>THREDDS Harvester Manifest (.xml)</option>
+</select>
+</div>
+<!-- Observation Window -->
+<div>
+<label class="block text-xs font-semibold text-slate-700 mb-1" for="target-dataset">Dataset Collection</label>
+<select class="w-full text-xs font-medium rounded-lg border-slate-300 bg-white shadow-2xs focus:border-ocean-500 focus:ring-ocean-500" id="target-dataset">
+<option>Argo Float Indian Ocean Array (IN-ARGO)</option>
+<option>Bay of Bengal Monsoon Moorings (OMNI)</option>
+<option>Autonomous Underwater Glider Transits</option>
+<option>Copernicus Global Ocean Biogeochemistry</option>
+</select>
+</div>
+<!-- Compliance Toggles -->
+<div class="space-y-2 pt-1 border-t border-slate-200">
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-ocean-600 focus:ring-ocean-500 h-4 w-4" type="checkbox">
+<span class="text-xs text-slate-700 font-medium">Verify CF-1.8 conventions</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-ocean-600 focus:ring-ocean-500 h-4 w-4" type="checkbox">
+<span class="text-xs text-slate-700 font-medium">Compute dynamic MLD isosurfaces</span>
+</label>
+</div>
+<!-- Submit Action -->
+<div class="pt-2">
+<button class="w-full flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-[#1e54c8] hover:bg-blue-700 rounded-lg shadow-sm transition-colors" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>Upload &amp; Ingest Dataset</button>
+<p class="text-[11px] text-center text-slate-400 mt-2">Trigger calls directly to INCOIS distributed ingestion backend</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: IngestOceanDataUploadPanel -->
+<!-- BEGIN: RegisteredParsersSection -->
+<section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden" data-purpose="registered-parsers-registry">
+<div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<div>
+<h2 class="text-base font-bold text-slate-900">Registered Ocean Data Parsers</h2>
+<p class="text-xs text-slate-500">Active server-side parsers capable of unpacking structured oceanographic records</p>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[#1e54c8] hover:bg-blue-700 rounded-lg shadow-sm transition-colors" type="button"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>Register New Parser</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
+<th class="py-3 px-6">Parser Identifier</th>
+<th class="py-3 px-6">Underlying Engine / Library</th>
+<th class="py-3 px-6">Target Data Types</th>
+<th class="py-3 px-6">Variables Supported</th>
+<th class="py-3 px-6">Status</th>
+<th class="py-3 px-6 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-xs text-slate-700">
+<!-- Parser 1 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-3.5 px-6 font-mono font-bold text-slate-900">NETCDF</td>
+<td class="py-3.5 px-6 text-slate-600">
+<span class="font-medium text-slate-800">Unidata netcdf-java</span>
+<span class="text-slate-400 font-mono text-[11px]"> · cdm-core v4.6.15</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                  CF-Convention Model Output
+                </span>
+</td>
+<td class="py-3.5 px-6 font-mono text-[11px] text-slate-600">Temp, Salinity, U/V, Chl-a, SSH</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right font-medium">
+<a class="text-ocean-600 hover:text-ocean-800 mr-2" href="#">Config</a>
+<a class="text-slate-400 hover:text-slate-600" href="#">Logs</a>
+</td>
+</tr>
+<!-- Parser 2 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-3.5 px-6 font-mono font-bold text-slate-900">ASCII_DELIMITED</td>
+<td class="py-3.5 px-6 text-slate-600">
+<span class="font-medium text-slate-800">Apache Commons CSV</span>
+<span class="text-slate-400 font-mono text-[11px]"> · RFC-4180 Parser</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-cyan-50 text-cyan-700 border border-cyan-200">
+                  CTD Casts &amp; Delimited Logs
+                </span>
+</td>
+<td class="py-3.5 px-6 font-mono text-[11px] text-slate-600">Depth, Pressure, Conductivity, O2</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right font-medium">
+<a class="text-ocean-600 hover:text-ocean-800 mr-2" href="#">Config</a>
+<a class="text-slate-400 hover:text-slate-600" href="#">Logs</a>
+</td>
+</tr>
+<!-- Parser 3 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-3.5 px-6 font-mono font-bold text-slate-900">BGC_STREAM</td>
+<td class="py-3.5 px-6 text-slate-600">
+<span class="font-medium text-slate-800">INCOIS Custom Biogeochem</span>
+<span class="text-slate-400 font-mono text-[11px]"> · v2.1-stream</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Moored Fluorometer Casts
+                </span>
+</td>
+<td class="py-3.5 px-6 font-mono text-[11px] text-slate-600">Nitrate, pH, PAR, Turbidity</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right font-medium">
+<a class="text-ocean-600 hover:text-ocean-800 mr-2" href="#">Config</a>
+<a class="text-slate-400 hover:text-slate-600" href="#">Logs</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- END: RegisteredParsersSection -->
+<!-- BEGIN: IngestionHistoryAuditSection -->
+<section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden" data-purpose="ingestion-history-table">
+<div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<div>
+<h2 class="text-base font-bold text-slate-900">Ingestion History &amp; Audit Status</h2>
+<p class="text-xs text-slate-500">Telemetry of past data imports, records inserted, validation status, and pipeline logs</p>
+</div>
+<div class="flex items-center gap-2">
+<!-- Search input -->
+<div class="relative">
+<input class="text-xs rounded-lg border-slate-200 pl-8 pr-3 py-1.5 bg-slate-50 focus:bg-white focus:ring-ocean-500 focus:border-ocean-500" placeholder="Search filenames..." type="text">
+<svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<!-- Filter dropdown -->
+<select class="text-xs rounded-lg border-slate-200 py-1.5 pl-2.5 pr-8 bg-slate-50 focus:bg-white">
+<option>All Statuses</option>
+<option>Success Only</option>
+<option>Failures Only</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
+<th class="py-3 px-6">File Name &amp; Source</th>
+<th class="py-3 px-6">Timestamp</th>
+<th class="py-3 px-6">Records / Extracted</th>
+<th class="py-3 px-6">Data Dimensions</th>
+<th class="py-3 px-6">Status / Outcome</th>
+<th class="py-3 px-6 text-right">Audit</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-normal">
+<!-- Row 1: Success -->
+<tr class="hover:bg-slate-50/60 transition-colors">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-ocean-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+<span class="font-mono font-semibold text-slate-900">argo_2900004.nc</span>
+</div>
+<span class="text-[11px] text-slate-400 pl-6 block">Source: Coriolis DAC / Argo Global Assembly</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-600">
+<div class="">09:14 today</div>
+<span class="text-[10px] text-slate-400">2026-03-30 09:14:22 UTC</span>
+</td>
+<td class="py-3.5 px-6 font-medium text-slate-900">
+                1,204 rows
+                <span class="text-[11px] text-slate-400 block font-normal">4 vertical profiles</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-[11px] text-slate-500">
+                [T, S, P] · 2000 dbar
+              </td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Success
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="text-ocean-600 hover:text-ocean-800 font-medium text-xs mr-2" type="button">Inspect</button>
+<button class="text-slate-400 hover:text-slate-600 font-medium text-xs" type="button">JSON</button>
+</td>
+</tr>
+<!-- Row 2: Failed -->
+<tr class="hover:bg-rose-50/30 transition-colors bg-rose-50/10">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-rose-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+<span class="font-mono font-semibold text-slate-900">glider_ariel_v2.nc</span>
+</div>
+<span class="text-[11px] text-slate-400 pl-6 block">Source: NIO Coastal Glider Mission</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-600">
+<div class="">Yesterday</div>
+<span class="text-[10px] text-slate-400">2026-03-29 18:42:01 UTC</span>
+</td>
+<td class="py-3.5 px-6 font-medium text-slate-900">
+<span class="text-rose-600">0 rows</span>
+<span class="text-[11px] text-rose-500 block font-normal">Validation aborted</span>
+</td>
+<td class="py-3.5 px-6">
+<span class="text-xs text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded font-mono">
+                  Missing 'depth' variable
+                </span>
+</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                  Failed
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="text-rose-600 hover:text-rose-800 font-medium text-xs mr-2" type="button">View Error</button>
+<button class="text-ocean-600 hover:text-ocean-800 font-medium text-xs" type="button">Retry</button>
+</td>
+</tr>
+<!-- Row 3: Success -->
+<tr class="hover:bg-slate-50/60 transition-colors">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-cyan-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+<span class="font-mono font-semibold text-slate-900">omni_mooring_bd08_ctd.csv</span>
+</div>
+<span class="text-[11px] text-slate-400 pl-6 block">Source: NIOT OMNI Deep Sea Mooring Array</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-slate-600">
+<div class="">2 days ago</div>
+<span class="text-[10px] text-slate-400">2026-03-28 11:20:15 UTC</span>
+</td>
+<td class="py-3.5 px-6 font-medium text-slate-900">
+                8,450 rows
+                <span class="text-[11px] text-slate-400 block font-normal">Timeseries 10-min bins</span>
+</td>
+<td class="py-3.5 px-6 font-mono text-[11px] text-slate-500">
+                [T, S, O2, pH] · Fixed Mooring
+              </td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Success
+                </span>
+</td>
+<td class="py-3.5 px-6 text-right">
+<button class="text-ocean-600 hover:text-ocean-800 font-medium text-xs mr-2" type="button">Inspect</button>
+<button class="text-slate-400 hover:text-slate-600 font-medium text-xs" type="button">JSON</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Status Bar -->
+<div class="px-6 py-3 bg-slate-50/80 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+<div class="">Showing 1 to 3 of 42 Ingestion Events</div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded border border-slate-200 bg-white text-slate-400 cursor-not-allowed">Previous</button>
+<button class="px-2.5 py-1 rounded border border-ocean-500 bg-ocean-50 text-ocean-700 font-semibold">1</button>
+<button class="px-2.5 py-1 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">2</button>
+<button class="px-2.5 py-1 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">3</button>
+<button class="px-2.5 py-1 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Next</button>
+</div>
+</div>
+</section>
+<!-- END: IngestionHistoryAuditSection -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: InstitutionalFooter -->
+<footer class="mt-auto bg-white border-t border-slate-200 py-6 text-xs text-slate-500" data-purpose="institutional-footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col md:flex-row items-center justify-between gap-4">
+<!-- Left Footer Brand -->
+<div class="flex items-center gap-3">
+<img alt="DeepSync Logo" class="w-6 h-6 rounded-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6JLPVPzIotIo4HDui4U3WprLe5vcRQn3iv8bKsnhps6_X1w5puEsRZYsa-8CSlp4bw17TKUuu4Ox2cq4dUFR5dJEFDrDlFv0KNVU0lqDqxHyepiNMEFmkAd-E6G-UvHhcAJUh3tUiiv8YyjuDsZwSMvdDQhaoxICeuw2F_odF-PdbqlL4isH11GuhHUyvuPkh1J8QEXPUrq-5uFBcrLURUCyz6LdT01txust46nJX1O2GrwNhakhk-PSTBwyp2YtkLfo">
+<span class="">
+<strong class="text-slate-700 font-semibold">DeepSync by BLUEGEN</strong> • © 2026 DeepSync • Team BLUEGEN_606 • PS 26067 INCOIS
+          </span>
+</div>
+<!-- Center Links -->
+<div class="flex items-center flex-wrap gap-4 text-xs font-medium text-slate-600">
+<a class="hover:text-ocean-600 transition-colors" href="#">Bathymetry Registry</a>
+<a class="hover:text-ocean-600 transition-colors" href="#">Security Architecture</a>
+<a class="hover:text-ocean-600 transition-colors" href="#">API Telemetry Terms</a>
+<a class="hover:text-ocean-600 transition-colors" href="#">OGC WMS/WCS Services</a>
+</div>
+<!-- Right Health Pill -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-slate-600 text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Live Ingestion Node: Active (Mumbai Cluster)
+        </div>
+</div>
+</div>
+</footer>
+<!-- END: InstitutionalFooter -->
+
+
+
+
+
+
+</body></html>

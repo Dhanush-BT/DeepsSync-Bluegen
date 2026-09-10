@@ -1,0 +1,699 @@
+<!DOCTYPE html><html lang="en" style=""><head></head><body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-sky-500 selection:text-white"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync | 3D Ocean Data Visualization Platform - INCOIS PS 26067</title>
+<!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#082f49',
+              950: '#031326',
+            },
+            deep: {
+              dark: '#031124',
+              surface: '#071d3a',
+              grid: '#0f2b52',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles: Gradients, Colorbars & Chart Canvas Styling -->
+<style data-purpose="custom-styling">
+    /* Subtle custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Range slider custom styling */
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #0284c7;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+
+    /* Realistic Multi-hue Scientific Colorbar */
+    .ocean-colorbar {
+      background: linear-gradient(to right, #081d58, #225ea8, #1d91c0, #41b6c4, #7fcdbb, #c7e9b4, #edf8b1, #fec44f, #fe9929, #ec7014, #cc4c02, #8c2d04);
+    }
+
+    /* Grid overlay pattern for 3D Viewport */
+    .ocean-3d-grid {
+      background-image: 
+        linear-gradient(to right, rgba(30, 58, 138, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 58, 138, 0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+
+
+<!-- BEGIN: GlobalNavbar -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs" data-purpose="primary-navigation"><div class="max-w-[1720px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between"><div class="flex items-center space-x-3"><a class="flex items-center space-x-3" href="#"><img alt="DeepSync Logo" class="h-8 w-8 object-contain rounded-full shadow-xs border border-sky-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhuhcV0b_QzfxX91zW6cNFBqwPNE98_9IqOkns-Mv1pMBQUE6Ep-PrZYvf-BWW6k4_hJV2yDukUUxoawYCLpt9cTlhzzzVbNYDikSmI7YVNlY606dkbMmz7qfSXh3VtuFUxIBay7f_5ukRGNyi6BDhLrpLCTXmmORbyZVYArD0JEw1nW7fZl0p6xnkIuT9ZNayGqL7K3hhIWgVvZH60aMLDsMYz1Ve0U3c8Ac8576HuBCnYG_X3uD3AheieuwaQpMeaGk"><div class="flex flex-col"><span class="text-lg font-black tracking-tight text-slate-900 leading-none">DeepSync</span><span class="text-[10px] text-slate-500 font-medium tracking-wide mt-0.5">INCOIS • MoES Govt. of India</span></div></a></div><nav class="hidden md:flex items-center space-x-6 text-sm font-semibold"><a class="text-slate-600 hover:text-slate-900 font-medium transition-colors whitespace-nowrap py-1" href="#">Home</a><a class="text-blue-600 font-bold border-b-2 border-blue-600 transition-colors whitespace-nowrap pb-1" href="#">Dashboard</a><a class="text-slate-600 hover:text-slate-900 font-medium transition-colors whitespace-nowrap py-1" href="#">Geo Map</a><a class="text-slate-600 hover:text-slate-900 font-medium transition-colors whitespace-nowrap py-1" href="#">AI Assistant</a><div class="relative group"><button class="text-slate-600 hover:text-slate-900 font-medium transition-colors flex items-center space-x-1 whitespace-nowrap py-1"><span class="">Docs</span><svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button></div></nav><div class="flex items-center space-x-4"><a class="px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:text-sky-600 shadow-xs transition-all duration-200 flex items-center space-x-1.5" href="#"><span class="">Admin sign in</span></a></div></div></header>
+<!-- END: GlobalNavbar -->
+<!-- BEGIN: MainDashboardContainer -->
+<main class="max-w-[1720px] w-full mx-auto px-3 sm:px-4 py-3 flex-1 flex flex-col gap-3">
+<!-- BEGIN: Zone1_3DVolumetricView -->
+<section class="bg-white border border-slate-200 rounded-lg shadow-xs overflow-hidden flex flex-col" data-purpose="3d-volumetric-zone">
+<!-- Zone 1 Header Strip -->
+<div class="bg-slate-900 text-white px-3 py-2 flex items-center justify-between text-xs font-semibold border-b border-slate-800">
+<div class="flex items-center space-x-2">
+
+<span class="tracking-wide uppercase font-bold text-slate-200">3D VOLUMETRIC VIEW</span>
+<span class="text-slate-400 font-normal hidden md:inline">— live ocean model (INCOIS-MOM4) + in-situ instrument scene</span>
+</div>
+<div class="flex items-center space-x-3">
+
+
+</div>
+</div>
+<!-- Main 3D Viewport & Docked Control Sidebar Layout -->
+<div class="flex flex-col lg:flex-row min-h-[540px] bg-deep-dark relative">
+<!-- Interactive 3D Ocean Simulation Canvas Container -->
+<div class="relative flex-1 bg-gradient-to-b from-[#031326] via-[#051937] to-[#020d1c] ocean-3d-grid flex flex-col justify-between overflow-hidden">
+<!-- Top Left Layer Toggles (Floating Overlay) -->
+<div class="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5 max-w-[500px]" data-purpose="layer-toggles">
+<button class="bg-slate-900/80 backdrop-blur-md text-slate-200 border border-sky-500/50 px-2 py-1 rounded text-xs flex items-center space-x-1.5 hover:bg-slate-800 transition">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium">Isosurface</span>
+<span class="text-[10px] bg-sky-950 text-sky-300 px-1 rounded border border-sky-800">ON</span>
+</button>
+<button class="bg-slate-900/80 backdrop-blur-md text-slate-200 border border-sky-500/50 px-2 py-1 rounded text-xs flex items-center space-x-1.5 hover:bg-slate-800 transition">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium">Volumetric</span>
+<span class="text-[10px] bg-sky-950 text-sky-300 px-1 rounded border border-sky-800">ON</span>
+</button>
+<button class="bg-slate-900/80 backdrop-blur-md text-slate-200 border border-sky-500/50 px-2 py-1 rounded text-xs flex items-center space-x-1.5 hover:bg-slate-800 transition">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-medium">Trajectories</span>
+<span class="text-[10px] bg-sky-950 text-sky-300 px-1 rounded border border-sky-800">ON</span>
+</button>
+<button class="bg-slate-900/70 backdrop-blur-md text-slate-400 border border-slate-700/60 px-2 py-1 rounded text-xs flex items-center space-x-1.5 hover:bg-slate-800 hover:text-slate-300 transition">
+<span class="w-2 h-2 rounded-full bg-slate-500"></span>
+<span class="font-medium">Streamlines</span>
+<span class="text-[10px] bg-slate-800 text-slate-400 px-1 rounded">OFF</span>
+</button>
+<button class="bg-slate-900/70 backdrop-blur-md text-slate-400 border border-slate-700/60 px-2 py-1 rounded text-xs flex items-center space-x-1.5 hover:bg-slate-800 hover:text-slate-300 transition">
+<span class="w-2 h-2 rounded-full bg-slate-500"></span>
+<span class="font-medium">Hazard zones</span>
+<span class="text-[10px] bg-slate-800 text-slate-400 px-1 rounded">OFF</span>
+</button>
+</div>
+<!-- Interactive WebGL Canvas Mock Visuals with Realistic 3D Elements -->
+<div class="relative w-full h-full flex-1 flex items-center justify-center p-4">
+<!-- Dynamic simulated 3D volumetric ocean mesh lines -->
+<svg class="w-full h-full absolute inset-0 opacity-45 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="streamGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"></stop>
+<stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.6"></stop>
+<stop offset="100%" stop-color="#0284c7" stop-opacity="0.2"></stop>
+</linearGradient>
+<linearGradient id="polyGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#0369a1" stop-opacity="0.05"></stop>
+</linearGradient>
+</defs>
+<!-- Bathymetric grid lines perspective -->
+<path d="M 50,420 L 500,280 L 1100,320 L 800,480 Z" fill="url(#polyGrad)" stroke="#0284c7" stroke-dasharray="3 3" stroke-width="1.5"></path>
+<path d="M 120,440 L 520,310 L 1050,345 L 750,490 Z" fill="none" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1"></path>
+<path d="M 200,460 L 550,340 L 980,370 L 700,500 Z" fill="none" stroke="#38bdf8" stroke-opacity="0.3" stroke-width="0.8"></path>
+<!-- Trajectory Curves for Argo float paths -->
+<path d="M 260,340 Q 380,240 560,260 T 780,290" fill="none" stroke="url(#streamGrad)" stroke-width="2.5"></path>
+<path d="M 320,380 Q 450,320 640,310 T 890,360" fill="none" stroke="#fbbf24" stroke-dasharray="4 2" stroke-width="1.5"></path>
+<!-- Depth Slice plane indicator -->
+<polygon fill="rgba(14, 165, 233, 0.08)" points="180,180 820,150 940,290 300,320" stroke="#38bdf8" stroke-dasharray="5 3" stroke-width="1.2"></polygon>
+</svg>
+<!-- Center Watermark / Navigation Instructions -->
+<div class="text-center z-10 pointer-events-none select-none opacity-40">
+<div class="text-xs tracking-widest font-mono text-sky-200 uppercase font-semibold">3D Ocean Scene (WebGL / Three.js)</div>
+<div class="text-[11px] text-slate-300 font-mono mt-0.5">drag = orbit • scroll = zoom • right-drag = pan • click empty water = point query</div>
+</div>
+<!-- In-situ Instrument Pin: Argo #2900004 -->
+<div class="absolute top-[32%] left-[28%] z-20 group cursor-pointer" data-purpose="argo-pin">
+<div class="relative flex items-center justify-center">
+<span class="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-amber-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-400 border-2 border-white shadow-md"></span>
+</div>
+<!-- Quick Glance Telemetry Popover -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-2.5 py-2 rounded shadow-xl border border-sky-400/40 text-[11px] w-48 transition-all duration-200 pointer-events-none font-mono">
+<div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1">
+<span class="font-bold text-amber-400">ARGO #2900004</span>
+<span class="text-[9px] bg-emerald-950 text-emerald-300 px-1 rounded border border-emerald-800">ACTIVE</span>
+</div>
+<div class="text-slate-300 flex justify-between"><span class="">Lat/Lon:</span><span class="text-white">12.4°N, 79.1°E</span></div>
+<div class="text-slate-300 flex justify-between"><span class="">Depth:</span><span class="text-sky-300">-120.4 m</span></div>
+<div class="text-slate-300 flex justify-between"><span class="">Temp / Sal:</span><span class="text-white">28.4°C / 34.8 PSU</span></div>
+</div>
+</div>
+<!-- Second Instrument Marker: Glider #INCOIS-G2 -->
+<div class="absolute bottom-[36%] right-[32%] z-20 cursor-pointer group" data-purpose="glider-pin">
+<div class="relative flex items-center justify-center">
+<span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-400 border-2 border-slate-900 shadow"></span>
+</div>
+<div class="hidden group-hover:block absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-2 py-1 rounded text-[10px] font-mono whitespace-nowrap border border-cyan-400/40">
+                Glider #INCOIS-G2 • Depth: -340m
+              </div>
+</div>
+<!-- Point-Query Coordinate Pin (Arbitrary user pin) -->
+<div class="absolute bottom-[24%] right-[22%] z-20 cursor-pointer group">
+<div class="h-2.5 w-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20"></div>
+<div class="hidden group-hover:block absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-slate-200 px-2 py-0.5 rounded text-[10px] font-mono border border-emerald-500/40 whitespace-nowrap">
+                Query Point: [14.1°N, 84.3°E]
+              </div>
+</div>
+</div>
+<!-- Viewport Bottom Control Bar: TimeSlider + Spatial Metadata Readout -->
+<div class="bg-slate-950/90 backdrop-blur border-t border-slate-800 px-3 py-2 z-20 flex flex-col sm:flex-row items-center justify-between gap-2" data-purpose="timeslider-controls">
+<!-- Playback & Time Slider Control -->
+<div class="flex items-center space-x-2.5 w-full sm:w-auto flex-1 max-w-2xl">
+<button class="w-7 h-7 rounded-md bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center shadow-xs transition shrink-0" title="Play simulation">
+<svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+</button>
+<!-- Time Scrubber -->
+<div class="flex-1 flex items-center space-x-2">
+<input class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500" max="100" min="0" type="range" value="65">
+</div>
+<!-- Timestamp Readout -->
+<span class="font-mono text-xs font-semibold text-sky-300 bg-sky-950 px-2 py-1 rounded border border-sky-800 shrink-0">
+                2026-09-08 00:00Z
+              </span>
+</div>
+<!-- Coordinate Extents & MOM4 Grid Specs -->
+<div class="hidden xl:flex items-center space-x-3 text-[11px] font-mono text-slate-400">
+<span class="">Lat: <strong class="text-slate-200">8.5°N – 22.0°N</strong></span>
+<span class="text-slate-600">|</span>
+<span class="">Lon: <strong class="text-slate-200">68.0°E – 89.5°E</strong></span>
+<span class="text-slate-600">|</span>
+<span class="">Depth: <strong class="text-slate-200">0 to -4500m</strong></span>
+<span class="text-slate-600">|</span>
+<span class="">Grid: <strong class="text-sky-300">INCOIS-MOM4</strong></span>
+</div>
+</div>
+</div>
+<!-- Docked Control Panel Sidebar (Right side of 3D Scene) -->
+<aside class="w-full lg:w-72 xl:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 p-3.5 flex flex-col justify-between" data-purpose="volumetric-control-panel">
+<div class="space-y-4">
+<!-- Panel Header -->
+<div class="flex items-center justify-between border-b border-slate-100 pb-2">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center space-x-1.5">
+<svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Control panel</span>
+</h3>
+<span class="text-[10px] text-slate-600 bg-slate-100 font-mono px-1.5 py-0.5 rounded border border-slate-300">CLIENT-ONLY</span>
+</div>
+<!-- Variable Selector Dropdown -->
+<div class="space-y-1">
+<label class="text-[11px] font-semibold text-slate-700 block">Variable Field</label>
+<select class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:ring-1 focus:ring-sky-500 focus:border-sky-500">
+<option selected="">Temperature (°C)</option>
+<option>Salinity (PSU)</option>
+<option>Current U/V (m/s)</option>
+<option>Chlorophyll-a (mg/m³)</option>
+<option>Mixed Layer Depth (MLD, m)</option>
+</select>
+</div>
+<!-- Colorbar Legend -->
+<div class="space-y-1.5" data-purpose="colorbar-legend">
+<div class="flex items-center justify-between text-[11px]">
+<span class="font-semibold text-slate-700">Colorbar</span>
+<span class="font-mono text-[10px] text-slate-500">Scale: Auto min/max</span>
+</div>
+<div class="h-3.5 w-full rounded-sm ocean-colorbar border border-slate-300 shadow-inner"></div>
+<div class="flex justify-between text-[10px] font-mono text-slate-500 font-medium">
+<span class="">12.0°C</span>
+<span class="">21.5°C</span>
+<span class="">31.0°C</span>
+</div>
+</div>
+<!-- Depth-Slice Slider -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-[11px]">
+<span class="font-semibold text-slate-700">Depth slice</span>
+<span class="font-mono font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">-120 m</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600" max="2000" min="0" type="range" value="120">
+<div class="flex justify-between text-[9px] text-slate-400 font-mono">
+<span class="">Surface (0m)</span>
+<span class="">Benthic (-2000m)</span>
+</div>
+</div>
+<!-- Vertical Exaggeration Slider -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-[11px]">
+<span class="font-semibold text-slate-700">Vertical exaggeration</span>
+<span class="font-mono font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">3.5x</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600" max="10" min="1" step="0.5" type="range" value="3.5">
+</div>
+<!-- Opacity Slider -->
+<div class="space-y-1">
+<div class="flex justify-between items-center text-[11px]">
+<span class="font-semibold text-slate-700">Volume opacity</span>
+<span class="font-mono font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">85%</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600" max="100" min="10" type="range" value="85">
+</div>
+</div>
+<!-- Bottom Action Buttons: CSV & Share Link -->
+<div class="pt-4 border-t border-slate-100 grid grid-cols-2 gap-2 mt-4">
+<button class="w-full flex items-center justify-center space-x-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 py-1.5 px-2 rounded text-xs font-semibold shadow-xs transition">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">CSV Export</span>
+</button>
+<button class="w-full flex items-center justify-center space-x-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 py-1.5 px-2 rounded text-xs font-semibold shadow-xs transition">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Copy link</span>
+</button>
+</div>
+</aside>
+</div>
+</section>
+<!-- END: Zone1_3DVolumetricView -->
+<!-- BEGIN: Zone2_2DDataAnalysis -->
+<section class="bg-white border border-slate-200 rounded-lg shadow-xs overflow-hidden flex flex-col" data-purpose="2d-analysis-zone">
+<!-- Zone 2 Header Strip -->
+<div class="bg-slate-900 text-white px-3 py-2 flex items-center justify-between text-xs font-semibold border-b border-slate-800">
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold tracking-wide uppercase border border-purple-400/30">
+            ANALYTICS
+          </span>
+<span class="tracking-wide uppercase font-bold text-slate-200">2D DATA ANALYSIS</span>
+<span class="text-slate-400 font-normal hidden md:inline">— 8 analytical oceanographic chart types, unified instrument selector</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[11px] font-mono text-slate-300">Data pipeline: <span class="text-emerald-400">NetCDF4 / CF-1.8</span></span>
+</div>
+</div>
+<div class="p-3.5 space-y-3.5">
+<!-- Instrument Selector Bar & Chart Types Navigation -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+<!-- Float Selector Dropdown -->
+<div class="flex items-center space-x-2">
+<label class="text-xs font-bold text-slate-700 whitespace-nowrap">Select instrument:</label>
+<div class="relative min-w-[280px]">
+<select class="w-full text-xs font-mono font-semibold bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-slate-900 focus:ring-1 focus:ring-sky-500 focus:border-sky-500">
+<option selected="">ARGO_2900004 — 12.4°N, 79.1°E</option>
+<option>ARGO_2900005 — 14.8°N, 82.3°E</option>
+<option>GLIDER_INCOIS_02 — 11.2°N, 76.5°E</option>
+<option>MOORING_BD08 — 18.2°N, 89.7°E</option>
+</select>
+</div>
+</div>
+<!-- Chart Type Pill Selector -->
+<div class="flex items-center flex-wrap gap-1.5" data-purpose="chart-type-selector">
+<span class="text-xs font-bold text-slate-700 mr-1 hidden sm:inline">Chart type:</span>
+<button class="bg-slate-900 text-white font-semibold text-xs px-2.5 py-1 rounded shadow-xs">Depth Profile</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Correlation</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">T-S Diagram</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Distribution</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Time Series</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Hovmöller</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Along-track</button>
+<button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-2.5 py-1 rounded border border-slate-200 transition">Current Rose</button>
+</div>
+</div>
+<!-- Main Chart: Multi-Series Depth Profile (Selected Chart) -->
+<div class="border border-slate-200 rounded-lg p-3 bg-slate-50/50" data-purpose="depth-profile-main-chart">
+<!-- Chart Controls Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-200 text-xs">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-slate-900">Depth profile</span>
+<span class="text-[11px] text-slate-500 font-normal">(currently selected)</span>
+<button class="ml-2 inline-flex items-center space-x-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded text-[11px] font-medium transition shadow-2xs">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">CSV</span>
+</button>
+</div>
+<!-- Series Checkboxes -->
+<div class="flex flex-wrap items-center gap-3 text-xs">
+<label class="flex items-center space-x-1.5 cursor-pointer text-slate-700">
+<input checked="" class="rounded text-rose-600 focus:ring-0 w-3.5 h-3.5 border-slate-300" type="checkbox">
+<span class="font-medium flex items-center space-x-1">
+<span class="w-2.5 h-0.5 bg-rose-600 inline-block"></span>
+<span class="">Temperature</span>
+</span>
+</label>
+<label class="flex items-center space-x-1.5 cursor-pointer text-slate-700">
+<input checked="" class="rounded text-sky-600 focus:ring-0 w-3.5 h-3.5 border-slate-300" type="checkbox">
+<span class="font-medium flex items-center space-x-1">
+<span class="w-2.5 h-0.5 bg-sky-600 inline-block"></span>
+<span class="">Salinity</span>
+</span>
+</label>
+<label class="flex items-center space-x-1.5 cursor-pointer text-slate-700">
+<input checked="" class="rounded text-indigo-600 focus:ring-0 w-3.5 h-3.5 border-slate-300" type="checkbox">
+<span class="font-medium flex items-center space-x-1">
+<span class="w-2.5 h-0.5 bg-indigo-600 inline-block"></span>
+<span class="">Current U/V</span>
+</span>
+</label>
+<label class="flex items-center space-x-1.5 cursor-pointer text-slate-700">
+<input checked="" class="rounded text-emerald-600 focus:ring-0 w-3.5 h-3.5 border-slate-300" type="checkbox">
+<span class="font-medium flex items-center space-x-1">
+<span class="w-2.5 h-0.5 bg-emerald-600 inline-block"></span>
+<span class="">Chlorophyll</span>
+</span>
+</label>
+<label class="flex items-center space-x-1.5 cursor-pointer text-slate-700">
+<input checked="" class="rounded text-amber-600 focus:ring-0 w-3.5 h-3.5 border-slate-300" type="checkbox">
+<span class="font-medium flex items-center space-x-1">
+<span class="w-2.5 border-b border-dashed border-amber-600 inline-block"></span>
+<span class="">MLD reference line</span>
+</span>
+</label>
+</div>
+</div>
+<!-- Realistic High-density Depth Profile SVG Line Chart -->
+<div class="h-64 w-full bg-white rounded border border-slate-200 relative p-2 flex">
+<!-- Inverted Depth Axis (Y-axis: 0m to -2000m) -->
+<div class="h-full w-14 flex flex-col justify-between items-end pr-2 text-[10px] font-mono text-slate-400 border-r border-slate-200 py-1 select-none">
+<span class="">0m</span>
+<span class="">-250m</span>
+<span class="">-500m</span>
+<span class="">-1000m</span>
+<span class="">-1500m</span>
+<span class="">-2000m</span>
+</div>
+<!-- Chart Canvas Body -->
+<div class="flex-1 h-full relative pl-2">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 240">
+<!-- Background Horizontal Gridlines -->
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="20" y2="20"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="65" y2="65"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="110" y2="110"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="155" y2="155"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="200" y2="200"></line>
+<!-- Vertical Gridlines -->
+<line stroke="#f8fafc" stroke-width="1" x1="200" x2="200" y1="0" y2="240"></line>
+<line stroke="#f8fafc" stroke-width="1" x1="400" x2="400" y1="0" y2="240"></line>
+<line stroke="#f8fafc" stroke-width="1" x1="600" x2="600" y1="0" y2="240"></line>
+<line stroke="#f8fafc" stroke-width="1" x1="800" x2="800" y1="0" y2="240"></line>
+<!-- Mixed Layer Depth (MLD) Horizontal Dashed Threshold -->
+<line stroke="#d97706" stroke-dasharray="6 4" stroke-width="1.8" x1="0" x2="1000" y1="48" y2="48"></line>
+<text fill="#d97706" font-family="JetBrains Mono" font-size="9" font-weight="600" x="880" y="44">MLD = -64.2m</text>
+<!-- Series 1: Temperature Curve (Thermocline steep drop) -->
+<path d="M 850,5 C 840,40 680,60 480,95 C 320,130 240,180 190,235" fill="none" stroke="#e11d48" stroke-width="2.5"></path>
+<!-- Series 2: Salinity Halocline Curve -->
+<path d="M 420,5 C 430,35 480,70 520,110 C 560,150 575,190 580,235" fill="none" stroke="#0284c7" stroke-width="2"></path>
+<!-- Series 3: Current U/V Magnitude Curve -->
+<path d="M 680,5 C 620,30 450,55 310,90 C 210,130 180,180 150,235" fill="none" stroke="#6366f1" stroke-width="1.5"></path>
+<!-- Series 4: Chlorophyll Deep Maxima Subsurface Peak -->
+<path d="M 120,5 C 150,25 380,45 320,70 C 240,95 110,140 70,235" fill="none" stroke="#059669" stroke-width="1.8"></path>
+</svg>
+<!-- Inline Chart Labels -->
+<div class="absolute bottom-1 right-2 text-[10px] font-mono text-slate-400">
+                Multi-series line chart (depth on Y-axis)
+              </div>
+</div>
+</div>
+</div>
+<!-- Secondary Analytical Charts Grid (Preview of 3 key chart types) -->
+<div>
+<div class="text-[11px] text-slate-500 font-medium mb-2">
+            Preview of 3 of the other chart types available behind the selector above — the remaining types (Correlation, Distribution, Time Series) follow the same single-chart-area pattern.
+          </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- Secondary Chart 1: T-S Diagram -->
+<div class="border border-slate-200 rounded-lg p-2.5 bg-white shadow-2xs hover:border-sky-300 transition">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span>
+<span class="text-xs font-bold text-slate-800">T-S Diagram</span>
+</div>
+<span class="text-[9px] font-mono text-slate-400">(salinity × temp, depth = color)</span>
+</div>
+<div class="h-32 w-full bg-slate-50 rounded border border-slate-100 flex items-center justify-center relative overflow-hidden">
+<!-- Visual simulation of TS cluster plot -->
+<svg class="w-full h-full" viewBox="0 0 200 100">
+<line stroke="#cbd5e1" stroke-width="1" x1="20" x2="190" y1="90" y2="90"></line>
+<line stroke="#cbd5e1" stroke-width="1" x1="20" x2="20" y1="10" y2="90"></line>
+<!-- Scatter points -->
+<circle cx="45" cy="80" fill="#0284c7" opacity="0.8" r="3"></circle>
+<circle cx="65" cy="70" fill="#0ea5e9" opacity="0.8" r="3"></circle>
+<circle cx="90" cy="55" fill="#14b8a6" opacity="0.8" r="3.5"></circle>
+<circle cx="120" cy="40" fill="#eab308" opacity="0.8" r="4"></circle>
+<circle cx="145" cy="30" fill="#f97316" opacity="0.8" r="4.5"></circle>
+<circle cx="165" cy="22" fill="#ef4444" opacity="0.8" r="5"></circle>
+</svg>
+<div class="absolute bottom-1 right-2 text-[8px] font-mono text-slate-400">ISOPYCNAL CONTOURS</div>
+</div>
+</div>
+<!-- Secondary Chart 2: Hovmöller Diagram -->
+<div class="border border-slate-200 rounded-lg p-2.5 bg-white shadow-2xs hover:border-sky-300 transition">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-teal-500"></span>
+<span class="text-xs font-bold text-slate-800">Hovmöller</span>
+</div>
+<span class="text-[9px] font-mono text-slate-400">(time × depth, color = intensity)</span>
+</div>
+<div class="h-32 w-full bg-slate-50 rounded border border-slate-100 flex items-center justify-center relative overflow-hidden">
+<!-- Heatmap grid simulation -->
+<div class="w-full h-full grid grid-cols-6 grid-rows-4 gap-0.5 p-1 opacity-80">
+<div class="bg-rose-500 rounded-xs"></div><div class="bg-rose-400 rounded-xs"></div><div class="bg-rose-500 rounded-xs"></div><div class="bg-amber-400 rounded-xs"></div><div class="bg-amber-300 rounded-xs"></div><div class="bg-amber-400 rounded-xs"></div>
+<div class="bg-amber-400 rounded-xs"></div><div class="bg-emerald-400 rounded-xs"></div><div class="bg-teal-400 rounded-xs"></div><div class="bg-teal-500 rounded-xs"></div><div class="bg-cyan-500 rounded-xs"></div><div class="bg-sky-500 rounded-xs"></div>
+<div class="bg-teal-600 rounded-xs"></div><div class="bg-cyan-600 rounded-xs"></div><div class="bg-sky-600 rounded-xs"></div><div class="bg-sky-700 rounded-xs"></div><div class="bg-blue-700 rounded-xs"></div><div class="bg-blue-800 rounded-xs"></div>
+<div class="bg-blue-900 rounded-xs"></div><div class="bg-blue-900 rounded-xs"></div><div class="bg-indigo-900 rounded-xs"></div><div class="bg-indigo-950 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div><div class="bg-slate-900 rounded-xs"></div>
+</div>
+<div class="absolute bottom-1 right-2 text-[8px] font-mono text-white bg-black/40 px-1 rounded">DEPTH / TIME MATRIX</div>
+</div>
+</div>
+<!-- Secondary Chart 3: Current Rose -->
+<div class="border border-slate-200 rounded-lg p-2.5 bg-white shadow-2xs hover:border-sky-300 transition">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="text-xs font-bold text-slate-800">Current Rose</span>
+</div>
+<span class="text-[9px] font-mono text-slate-400">(direction × magnitude)</span>
+</div>
+<div class="h-32 w-full bg-slate-50 rounded border border-slate-100 flex items-center justify-center relative overflow-hidden">
+<!-- Radial compass simulation -->
+<svg class="w-28 h-28" viewBox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="40" stroke="#e2e8f0" stroke-width="1"></circle>
+<circle cx="50" cy="50" fill="none" r="25" stroke="#e2e8f0" stroke-width="1"></circle>
+<circle cx="50" cy="50" fill="none" r="10" stroke="#e2e8f0" stroke-width="1"></circle>
+<line stroke="#cbd5e1" stroke-width="0.8" x1="50" x2="50" y1="5" y2="95"></line>
+<line stroke="#cbd5e1" stroke-width="0.8" x1="5" x2="95" y1="50" y2="50"></line>
+<!-- Petals of Current direction -->
+<polygon fill="#f59e0b" opacity="0.85" points="50,50 46,20 54,20"></polygon>
+<polygon fill="#3b82f6" opacity="0.75" points="50,50 68,34 76,40"></polygon>
+<polygon fill="#10b981" opacity="0.6" points="50,50 30,68 34,76"></polygon>
+<circle cx="50" cy="50" fill="#1e293b" r="2"></circle>
+</svg>
+<div class="absolute bottom-1 right-2 text-[8px] font-mono text-slate-400">POLAR VELOCITY</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Correlation Analysis Section (Strip layout) -->
+<div class="pt-2 border-t border-slate-100">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-slate-800">Correlation analysis <span class="text-slate-500 font-normal">(two of 8 chart types shown expanded here)</span></span>
+<span class="text-[10px] font-mono text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-100">Derived.MldCalculatorService</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+<!-- Scatter Plot 1: SST vs Chlorophyll-a -->
+<div class="border border-slate-200 rounded-lg p-3 bg-white shadow-2xs flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+<span class="text-xs font-bold text-slate-800 font-mono">SST (°C) vs Chlorophyll-a (mg/m³)</span>
+</div>
+<span class="text-[10px] font-mono text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-semibold">r = -0.68 (p &lt; 0.001) • N = 1,420</span>
+</div>
+<div class="h-48 w-full bg-slate-50 rounded border border-slate-100 relative p-2 flex flex-col justify-between overflow-hidden">
+<div class="flex h-full w-full">
+<!-- Y-Axis labels (Chlorophyll: 0.05 to 1.20 mg/m³) -->
+<div class="w-14 flex flex-col justify-between items-end pr-2 text-[9px] font-mono text-slate-400 select-none border-r border-slate-200 py-1">
+<span class="">1.20</span>
+<span class="">0.80</span>
+<span class="">0.40</span>
+<span class="">0.05</span>
+</div>
+<!-- Scatter Plot Canvas -->
+<div class="flex-1 h-full relative pl-2">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 320 140">
+<!-- Gridlines -->
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="10" y2="10"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="50" y2="50"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="95" y2="95"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="130" y2="130"></line>
+<!-- Scatter data clusters (negative slope) -->
+<circle cx="24" cy="22" fill="#0d9488" opacity="0.6" r="2.5"></circle>
+<circle cx="35" cy="34" fill="#0d9488" opacity="0.65" r="2.5"></circle>
+<circle cx="42" cy="18" fill="#0d9488" opacity="0.55" r="3"></circle>
+<circle cx="55" cy="42" fill="#0d9488" opacity="0.7" r="2.5"></circle>
+<circle cx="68" cy="30" fill="#0d9488" opacity="0.6" r="2.5"></circle>
+<circle cx="80" cy="52" fill="#0d9488" opacity="0.75" r="3"></circle>
+<circle cx="95" cy="48" fill="#0d9488" opacity="0.65" r="2.5"></circle>
+<circle cx="110" cy="64" fill="#0d9488" opacity="0.7" r="3"></circle>
+<circle cx="125" cy="58" fill="#0d9488" opacity="0.6" r="2.5"></circle>
+<circle cx="140" cy="72" fill="#0d9488" opacity="0.75" r="3"></circle>
+<circle cx="152" cy="80" fill="#0d9488" opacity="0.65" r="2.5"></circle>
+<circle cx="170" cy="75" fill="#0d9488" opacity="0.7" r="3"></circle>
+<circle cx="185" cy="90" fill="#0d9488" opacity="0.6" r="2.5"></circle>
+<circle cx="200" cy="86" fill="#0d9488" opacity="0.7" r="3"></circle>
+<circle cx="215" cy="102" fill="#0d9488" opacity="0.75" r="2.5"></circle>
+<circle cx="230" cy="98" fill="#0d9488" opacity="0.6" r="3"></circle>
+<circle cx="248" cy="112" fill="#0d9488" opacity="0.75" r="2.5"></circle>
+<circle cx="265" cy="108" fill="#0d9488" opacity="0.65" r="3"></circle>
+<circle cx="280" cy="122" fill="#0d9488" opacity="0.7" r="2.5"></circle>
+<circle cx="298" cy="118" fill="#0d9488" opacity="0.6" r="3"></circle>
+<!-- Fitted negative regression line -->
+<line stroke="#0284c7" stroke-width="2" x1="15" x2="305" y1="20" y2="124"></line>
+</svg>
+</div>
+</div>
+<!-- X-Axis Labels (SST: 20°C to 32°C) -->
+<div class="flex justify-between pl-14 pr-2 text-[9px] font-mono text-slate-400 select-none pt-1 border-t border-slate-200 mt-1">
+<span class="">20°C</span>
+<span class="">23°C</span>
+<span class="">26°C</span>
+<span class="">29°C</span>
+<span class="">32°C</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-slate-500 font-mono mt-1.5 pt-1.5 border-t border-slate-100">
+<span class="">Inverse thermocline trophic linkage</span>
+<span class="text-sky-700 font-semibold">Linear Fit: Y = -0.092X + 3.12</span>
+</div>
+</div>
+<!-- Scatter Plot 2: MLD vs SST -->
+<div class="border border-slate-200 rounded-lg p-3 bg-white shadow-2xs flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<span class="text-xs font-bold text-slate-800 font-mono">MLD (m) vs SST (°C)</span>
+</div>
+<span class="text-[10px] font-mono text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded font-semibold">r = +0.54 (p &lt; 0.001) • NetCDF grid</span>
+</div>
+<div class="h-48 w-full bg-slate-50 rounded border border-slate-100 relative p-2 flex flex-col justify-between overflow-hidden">
+<div class="flex h-full w-full">
+<!-- Y-Axis labels (Mixed Layer Depth: -20m to -120m) -->
+<div class="w-14 flex flex-col justify-between items-end pr-2 text-[9px] font-mono text-slate-400 select-none border-r border-slate-200 py-1">
+<span class="">-20m</span>
+<span class="">-50m</span>
+<span class="">-85m</span>
+<span class="">-120m</span>
+</div>
+<!-- Scatter Plot Canvas -->
+<div class="flex-1 h-full relative pl-2">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 320 140">
+<!-- Gridlines -->
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="10" y2="10"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="50" y2="50"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="95" y2="95"></line>
+<line stroke="#e2e8f0" stroke-dasharray="2 2" stroke-width="0.8" x1="0" x2="320" y1="130" y2="130"></line>
+<!-- Scatter data clusters (positive slope) -->
+<circle cx="22" cy="118" fill="#d97706" opacity="0.65" r="2.5"></circle>
+<circle cx="36" cy="112" fill="#d97706" opacity="0.6" r="3"></circle>
+<circle cx="50" cy="104" fill="#d97706" opacity="0.7" r="2.5"></circle>
+<circle cx="65" cy="96" fill="#d97706" opacity="0.6" r="2.5"></circle>
+<circle cx="82" cy="102" fill="#d97706" opacity="0.75" r="3"></circle>
+<circle cx="98" cy="88" fill="#d97706" opacity="0.65" r="2.5"></circle>
+<circle cx="115" cy="82" fill="#d97706" opacity="0.7" r="3"></circle>
+<circle cx="130" cy="74" fill="#d97706" opacity="0.6" r="2.5"></circle>
+<circle cx="148" cy="68" fill="#d97706" opacity="0.75" r="3"></circle>
+<circle cx="166" cy="60" fill="#d97706" opacity="0.65" r="2.5"></circle>
+<circle cx="182" cy="66" fill="#d97706" opacity="0.7" r="3"></circle>
+<circle cx="200" cy="52" fill="#d97706" opacity="0.6" r="2.5"></circle>
+<circle cx="218" cy="46" fill="#d97706" opacity="0.75" r="3"></circle>
+<circle cx="236" cy="40" fill="#d97706" opacity="0.65" r="2.5"></circle>
+<circle cx="252" cy="35" fill="#d97706" opacity="0.7" r="3"></circle>
+<circle cx="270" cy="28" fill="#d97706" opacity="0.6" r="2.5"></circle>
+<circle cx="288" cy="22" fill="#d97706" opacity="0.75" r="3"></circle>
+<circle cx="304" cy="18" fill="#d97706" opacity="0.65" r="2.5"></circle>
+<!-- Fitted positive regression line -->
+<line stroke="#ea580c" stroke-width="2" x1="15" x2="305" y1="124" y2="18"></line>
+</svg>
+</div>
+</div>
+<!-- X-Axis Labels (SST: 22°C to 31°C) -->
+<div class="flex justify-between pl-14 pr-2 text-[9px] font-mono text-slate-400 select-none pt-1 border-t border-slate-200 mt-1">
+<span class="">22°C</span>
+<span class="">24°C</span>
+<span class="">26°C</span>
+<span class="">28°C</span>
+<span class="">31°C</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-slate-500 font-mono mt-1.5 pt-1.5 border-t border-slate-100">
+<span class="">Thermal stratification mixing depth</span>
+<span class="text-amber-700 font-semibold">Linear Fit: Y = +9.84X - 294.1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Zone2_2DDataAnalysis -->
+<!-- BEGIN: AnnotationLegendBlock -->
+
+<!-- END: AnnotationLegendBlock -->
+</main>
+<!-- END: MainDashboardContainer -->
+<!-- BEGIN: DockedInstitutionalFooter -->
+<footer class="bg-white border-t border-slate-200 mt-4 py-3 text-xs text-slate-500" data-purpose="institutional-footer">
+<div class="max-w-[1720px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+<!-- Brand & Copyright -->
+<div class="flex items-center space-x-2">
+<img alt="DeepSync Logo" class="h-4 w-4 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUlA5NfZsh1VAyz2z5CNCdhk71xSI-GuwVXrKtOi7W--em3gYHpdnxmzV1qEprSJO_Uz8ECvbGNmG9J73KBfjshc-Y0NXK7Pp7K-jmswwx8FC4I5VWsrziKCv0n28XvBkR1y238repvrguYnlwjsmGS3ExQvkjeKCbt5g653oRJF_s_x8YHN0Q2Fo3oxSc0UwiGQs7i1xIV9_JS6S7TrTTced46qUlj3WNEsP-GqfTlDg0FJproX7U8Qxs8VHskXIL2VY">
+<span class=""><strong>DeepSync by Bluegen</strong> • © 2026 DeepSync • Team BLUEGEN_606 • PS 26067 INCOIS</span>
+</div>
+<!-- Links & Feed Indicator -->
+<div class="flex items-center space-x-4 font-medium">
+<a class="hover:text-slate-900 transition" href="#">Bathymetry Registry</a>
+<a class="hover:text-slate-900 transition" href="#">Security Architecture</a>
+<a class="hover:text-slate-900 transition" href="#">API Telemetry Terms</a>
+<div class="flex items-center space-x-1.5 text-slate-700 font-semibold">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="">Live Model Feeds</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: DockedInstitutionalFooter -->
+
+
+
+
+
+
+</body></html>

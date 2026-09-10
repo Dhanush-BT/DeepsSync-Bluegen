@@ -1,44 +1,44 @@
-import { useEffect, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import apiClient from './api/client'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import './index.css'
+
+// Pages
+import Home from './views/Home'
+import Login from './views/Login'
+import Signup from './views/Signup'
+import Dashboard from './views/Dashboard'
+import GeoMap from './views/GeoMap'
+import DataManager from './views/DataManager'
+import ProfileSettings from './views/ProfileSettings'
+import AiAssistant from './views/AiAssistant'
+
+// Layout
+import Layout from './components/shared/Layout'
+import ProtectedRoute from './components/shared/ProtectedRoute'
 
 function App() {
-  const [health, setHealth] = useState(null)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    apiClient
-      .get('/health')
-      .then((response) => setHealth(response.data))
-      .catch((err) => setError(err.message))
-  }, [])
-
   return (
-    <>
-      <section id="center">
-        <h1>DEEPSYNC</h1>
-        <p>
-          Backend health check:{' '}
-          {error && `error — ${error}`}
-          {!error && !health && 'loading...'}
-          {!error && health && `${health.status} @ ${health.timestamp}`}
-        </p>
-      </section>
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/geomap" element={<GeoMap />} />
+          <Route path="/assistant" element={<AiAssistant />} />
 
-      <div style={{ width: '100%', height: '400px' }}>
-        <Canvas camera={{ position: [2, 2, 2] }}>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} />
-          <mesh>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="orange" />
-          </mesh>
-          <OrbitControls />
-        </Canvas>
-      </div>
-    </>
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/datamanager" element={<DataManager />} />
+            <Route path="/settings" element={<ProfileSettings />} />
+          </Route>
+        </Route>
+
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   )
 }
 

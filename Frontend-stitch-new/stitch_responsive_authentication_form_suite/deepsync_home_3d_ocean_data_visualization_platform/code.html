@@ -1,0 +1,441 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync — 3D Ocean Data Visualization Platform | INCOIS</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            }
+          },
+          boxShadow: {
+            'glow': '0 4px 20px -2px rgba(3, 105, 161, 0.25)',
+            'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Font: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Custom Styles for Simulation & Waves -->
+<style data-purpose="ocean-viewport-animation">
+    @keyframes waveGrid {
+      0% { transform: perspective(800px) rotateX(48deg) rotateZ(0deg) translateY(0); }
+      50% { transform: perspective(800px) rotateX(52deg) rotateZ(3deg) translateY(-8px); }
+      100% { transform: perspective(800px) rotateX(48deg) rotateZ(0deg) translateY(0); }
+    }
+    @keyframes pulseIso {
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      50% { opacity: 0.65; transform: scale(1.02); }
+    }
+    .perspective-grid {
+      background-image: linear-gradient(to right, rgba(14, 165, 233, 0.15) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(14, 165, 233, 0.15) 1px, transparent 1px);
+      background-size: 36px 36px;
+      animation: waveGrid 14s ease-in-out infinite;
+    }
+    .iso-layer {
+      animation: pulseIso 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-ocean-500 selection:text-white">
+<!-- BEGIN: GlobalNavbar -->
+<!-- Component 1: Persistent across pages with operational status and sign-in link -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-sky-100/90 shadow-sm" data-purpose="global-navbar">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Identity -->
+<div class="flex items-center space-x-3">
+<a class="flex items-center space-x-3 group" href="#" title="DeepSync Home">
+<img alt="DeepSync Ocean Logo" class="w-8 h-8 rounded-full object-cover ring-2 ring-sky-200 group-hover:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSmzx_S-VCtqEBnnB0fYNHhAHgsCwhtQGLcjftsrCnoTVcwShVeXbKK2_OHIrrJOabx6-A5aDLxmkTOix81VA9qey40EkNfl2WYSh29ae6vvSHmg49D_c_KCQ6J4kvlGi1FgzAWm7KGIqkMp-accrfuPH-ARZHO752Bz7ahuqZwEWfhHoEc573xNs_xoXCKQAYibZGWVHnVIbRU6HLfWWu79UkJA83fRFJCZhepF8Xx7xV3-yephG-QUxP10UyGosCat0">
+<div class="flex items-baseline space-x-2">
+<span class="text-xl font-bold tracking-tight text-slate-900">DeepSync</span>
+<span class="text-[10px] font-bold tracking-widest text-sky-600 uppercase bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200/80">BY BLUEGEN</span>
+</div>
+</a>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center space-x-1" data-purpose="nav-menu">
+<a class="px-3.5 py-2 text-sm font-semibold text-ocean-700 relative after:content-[''] after:absolute after:bottom-0 after:left-3.5 after:right-3.5 after:h-0.5 after:bg-ocean-600" href="#">Home</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-ocean-700 hover:bg-sky-50/60 rounded-lg transition-colors" href="#">Dashboard</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-ocean-700 hover:bg-sky-50/60 rounded-lg transition-colors" href="#">Geo Map</a>
+<a class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-ocean-700 hover:bg-sky-50/60 rounded-lg transition-colors" href="#">AI Assistant</a>
+<!-- Documentation Dropdown Link -->
+<div class="relative group">
+<button class="inline-flex items-center px-3.5 py-2 text-sm font-medium text-slate-600 group-hover:text-ocean-700 group-hover:bg-sky-50/60 rounded-lg transition-colors">
+<span class="">Docs</span>
+<svg class="w-3.5 h-3.5 ml-1 text-slate-400 group-hover:text-ocean-600 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<div class="absolute left-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-sky-100 py-1.5 hidden group-hover:block transition-all duration-150 z-50">
+<a class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-sky-50 hover:text-ocean-700" href="#docs">API Documentation</a>
+<a class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-sky-50 hover:text-ocean-700" href="#docs">Forecaster Manual</a>
+<a class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-sky-50 hover:text-ocean-700" href="#docs">Geo Map Guide</a>
+</div>
+</div>
+</nav>
+<!-- System Status and Admin Sign In Link -->
+<div class="flex items-center space-x-3.5">
+<!-- Live System Operational Pill -->
+
+<!-- Sign In Button Styled matching platform design -->
+<a class="inline-flex items-center justify-center px-4 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-sky-50/60 hover:border-sky-300 hover:text-ocean-600 transition-all shadow-sm" href="#">Admin sign in</a>
+</div>
+</div>
+</header>
+<!-- END: GlobalNavbar -->
+<main class="relative overflow-hidden">
+<!-- Subtle Background Accents -->
+<div class="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-sky-100/50 via-sky-50/30 to-transparent pointer-events-none -z-10"></div>
+<div class="absolute -top-32 right-1/4 w-96 h-96 bg-sky-200/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- BEGIN: HeroSection -->
+<!-- Component 2: Headline, INCOIS metadata & Purpose Statement -->
+<section class="pt-12 pb-8 sm:pt-16 sm:pb-12 text-center max-w-4xl mx-auto px-4 sm:px-6" data-purpose="hero-section">
+<!-- Tag Pill -->
+<div class="inline-flex items-center space-x-2 px-3 py-1 mb-5 rounded-full bg-sky-100/80 border border-sky-200 text-sky-900 text-xs font-semibold tracking-wide">
+<svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">PS 26067 · INCOIS | Ministry of Earth Sciences, Govt. of India</span>
+</div>
+<!-- Main Headline -->
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight sm:leading-none mb-6">
+        3D Ocean Data <span class="bg-clip-text text-transparent bg-gradient-to-r from-ocean-700 via-ocean-600 to-cyan-500">Visualization Platform</span>
+</h1>
+<!-- Purpose Statement Subtitle -->
+<p class="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed mb-8">
+        DEEPSYNC integrates ocean model outputs with in-situ instrument observations in one interactive environment — built for Smart India Hackathon 2025 (PS 26067, INCOIS) by Team BLUEGEN_606.
+      </p>
+<!-- BEGIN: QuickAccessNav -->
+<!-- Component 3: Two core CTAs (Open Dashboard & Open Geo Map) -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 mb-4" data-purpose="quick-access-nav">
+<!-- Primary Action: Open Dashboard -->
+<a href="#" style="background-color: rgb(37, 99, 235);" class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md hover:shadow-lg shadow-blue-600/25 transition-all duration-200 space-x-2.5 group"><svg class="w-4 h-4 text-blue-100 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="">Open Dashboard</span></a>
+<!-- Secondary Action: Open Geo Map -->
+<a class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-slate-700 bg-white hover:bg-sky-50/70 border border-slate-300 hover:border-sky-400 hover:text-ocean-600 rounded-xl shadow-sm transition-all duration-200 space-x-2.5" href="#"><svg class="w-4 h-4 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="">Open Geo Map</span></a>
+</div>
+<!-- END: QuickAccessNav -->
+<!-- Subtle Access Guarantee Note -->
+<p class="text-xs text-slate-400 font-medium">Public &amp; Research Open Access · Real-time 3D telemetry without login requirement</p>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: LiveMetricsPanel -->
+<!-- Component 4: 2 rows x 4 columns grid of live telemetry stats (GET /api/stats/summary) -->
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mb-16" data-purpose="live-metrics-panel">
+<div class="text-center mb-6">
+<h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Live system status</h2>
+<p class="text-xs text-slate-400 mt-1">Refreshed on load from the live data store — not a static claim.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4">
+<!-- Metric 1: Active floats -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">142</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Active floats</div>
+<div class="text-[11px] font-medium text-emerald-600 mt-0.5 flex items-center">
+<span class="">↑ 4 today</span>
+</div>
+</div>
+<!-- Metric 2: Active gliders -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">18</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Active gliders</div>
+<div class="text-[11px] font-medium text-slate-400 mt-0.5">— steady</div>
+</div>
+<!-- Metric 3: EEZ 3D coverage -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">340K+ <span class="text-base sm:text-lg font-bold text-ocean-700">km²</span></div>
+<div class="text-xs font-semibold text-slate-700 mt-1">EEZ 3D coverage</div>
+<div class="text-[11px] font-medium text-slate-400 mt-0.5">fixed Indian EEZ grid</div>
+</div>
+<!-- Metric 4: Data sources connected -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">4</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Data sources connected</div>
+<div class="text-[11px] font-medium text-ocean-600 mt-0.5">see below</div>
+</div>
+<!-- Metric 5: Last data sync -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">6h ago</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Last data sync</div>
+<div class="text-[11px] font-medium text-slate-400 mt-0.5">auto every 6h</div>
+</div>
+<!-- Metric 6: Profiles ingested -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">12,480</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Profiles ingested (30d)</div>
+<div class="text-[11px] font-medium text-emerald-600 mt-0.5">↑ 320 today</div>
+</div>
+<!-- Metric 7: Variables tracked -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">6</div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Variables tracked</div>
+<div class="text-[11px] font-medium text-slate-400 mt-0.5 truncate">temp, sal, U/V, chl, MLD</div>
+</div>
+<!-- Metric 8: Volumetric slice latency -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100/90 shadow-subtle hover:shadow-md transition-shadow">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">&lt;85<span class="text-base sm:text-lg font-bold text-emerald-600">ms</span></div>
+<div class="text-xs font-semibold text-slate-700 mt-1">Volumetric slice latency</div>
+<div class="text-[11px] font-medium text-slate-400 mt-0.5">p95, last hour</div>
+</div>
+</div>
+</section>
+<!-- END: LiveMetricsPanel -->
+<!-- BEGIN: CapabilitiesGrid -->
+<!-- Component 5: 4 core functional capability pillars of DeepSync -->
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mb-16" data-purpose="capabilities-grid">
+<div class="text-center mb-8">
+<h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Platform capabilities</h2>
+<p class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">Architected for Scalable Ocean Intelligence</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Capability Card 1 -->
+<div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-subtle hover:border-sky-300 hover:shadow-md transition-all">
+<div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 flex items-center justify-center text-ocean-700 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-1.5">3D Volumetric Rendering</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+            Depth-slice views, isosurfaces, and full volumetric shading of live ocean model fields.
+          </p>
+</div>
+<!-- Capability Card 2 -->
+<div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-subtle hover:border-sky-300 hover:shadow-md transition-all">
+<div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 flex items-center justify-center text-ocean-700 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-1.5">Multi-instrument Overlay</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+            Argo floats, gliders, CTD and BGC profiles plotted directly alongside hydrodynamic model output.
+          </p>
+</div>
+<!-- Capability Card 3 -->
+<div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-subtle hover:border-sky-300 hover:shadow-md transition-all">
+<div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 flex items-center justify-center text-ocean-700 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-1.5">Extensible Ingestion</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+            Plugin-style parser architecture — new formats and telemetry sensors need zero re-engineering.
+          </p>
+</div>
+<!-- Capability Card 4 -->
+<div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-subtle hover:border-sky-300 hover:shadow-md transition-all">
+<div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 flex items-center justify-center text-ocean-700 mb-4">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-1.5">OGC &amp; CF Compliant</h3>
+<p class="text-xs text-slate-500 leading-relaxed">
+            WMS/WCS services and CF-convention validation for national and international data-portal interoperability.
+          </p>
+</div>
+</div>
+</section>
+<!-- END: CapabilitiesGrid -->
+<!-- BEGIN: MiniOceanPreview -->
+<!-- Component 6: Reuses the Dashboard 3D scene in a stripped, read-only auto-rotate simulation container -->
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mb-16" data-purpose="mini-ocean-preview">
+<div class="relative bg-gradient-to-br from-slate-900 via-sky-950 to-slate-950 rounded-3xl border border-sky-800/60 shadow-2xl overflow-hidden p-6 sm:p-10 min-h-[420px] flex flex-col justify-between">
+<!-- Viewport Top Toolbar -->
+<div class="flex flex-wrap items-center justify-between gap-3 z-10">
+<div class="flex items-center space-x-2">
+<span class="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-xs font-mono font-medium text-sky-200">LIVE ROTATING PREVIEW · 3D OCEAN SCENE</span>
+</div>
+<!-- Simulation Quick Tags -->
+<div class="flex items-center space-x-2 text-[11px] font-mono text-sky-300/80 bg-white/5 backdrop-blur-md px-3 py-1 rounded-lg border border-sky-400/20">
+<span class="">Grid: INCOIS-MOM4</span>
+<span class="text-sky-600">|</span>
+<span class="">Slice: -120m</span>
+<span class="text-sky-600">|</span>
+<span class="text-emerald-400">FPS: 60</span>
+</div>
+</div>
+<!-- 3D Perspective Ocean Bathymetry Simulation Viewport -->
+<div class="relative my-8 h-56 w-full flex items-center justify-center overflow-hidden rounded-2xl bg-sky-950/40 border border-sky-500/20">
+<!-- Animated Wireframe Bathymetry Floor -->
+<div class="absolute inset-0 w-full h-[200%] perspective-grid origin-bottom opacity-40"></div>
+<!-- Deep Ocean Thermocline Isosurface Simulation -->
+<div class="absolute w-72 sm:w-96 h-36 rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-400/30 to-blue-600/10 blur-xl iso-layer"></div>
+<!-- Argo Float Sensor Markers -->
+<div class="absolute top-1/3 left-1/4 flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-amber-400 animate-ping absolute"></div>
+<div class="w-3 h-3 rounded-full bg-amber-400 border border-white shadow-lg"></div>
+<span class="text-[9px] font-mono text-amber-300 mt-1 bg-slate-900/80 px-1 rounded">Argo #2900004</span>
+</div>
+<div class="absolute bottom-1/3 right-1/3 flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+<span class="text-[9px] font-mono text-cyan-300 mt-1 bg-slate-900/80 px-1 rounded">Glider IN-02</span>
+</div>
+<!-- Central Crosshair / Non-interactive Badge -->
+<div class="relative z-10 flex flex-col items-center justify-center p-3 rounded-xl bg-slate-900/80 border border-sky-400/30 backdrop-blur-md text-center max-w-xs shadow-xl">
+<div class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center mb-1.5">
+<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" style="animation-duration: 10s;" viewBox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<p class="text-xs font-semibold text-white">Live WebGL Depth Volume</p>
+<p class="text-[10px] text-sky-300/80 mt-0.5">Read-only auto-rotate mode. Open Dashboard for complete orbit &amp; clipping controls.</p>
+</div>
+</div>
+<!-- Viewport Bottom Status Info -->
+<div class="flex flex-wrap items-center justify-between text-xs text-sky-300/70 border-t border-sky-800/40 pt-4 gap-2 z-10">
+<div class="flex items-center space-x-4 font-mono text-[11px]">
+<span class="">Lat: 8.5°N – 22.0°N</span>
+<span class="">Lon: 68.0°E – 89.5°E</span>
+<span class="hidden sm:inline">Depth: 0 to -4500m</span>
+</div>
+<a class="inline-flex items-center space-x-1 text-xs font-bold text-sky-300 hover:text-white hover:underline transition-all" href="#"><span class="">Explore full interactive scene</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></a>
+</div>
+</div>
+</section>
+<!-- END: MiniOceanPreview -->
+<!-- BEGIN: ConnectedDataSources -->
+<!-- Component 7: 4 upstream real data sources supplying the engine -->
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mb-16" data-purpose="connected-data-sources">
+<div class="text-center mb-8">
+<h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Connected data sources</h2>
+<p class="text-sm text-slate-500 mt-0.5">Verified upstream live endpoints feeding the unified pipeline</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Source Card 1 -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100 shadow-subtle hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-slate-900">LAS INCOIS</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Syncing</span>
+</div>
+<p class="text-xs text-slate-500 font-mono">Ocean model output · syncing</p>
+</div>
+<!-- Source Card 2 -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100 shadow-subtle hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-slate-900">Copernicus Marine</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-ocean-700 border border-sky-200">Live API</span>
+</div>
+<p class="text-xs text-slate-500 font-mono truncate" title="GLOBAL_MULTIYEAR_PHY_001_030">GLOBAL_MULTIYEAR_PHY_001_030</p>
+</div>
+<!-- Source Card 3 -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100 shadow-subtle hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-slate-900">Argo Global</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-ocean-700 border border-sky-200">Active</span>
+</div>
+<p class="text-xs text-slate-500 font-mono">ifremer.fr · float profiles</p>
+</div>
+<!-- Source Card 4 -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-sky-100 shadow-subtle hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-slate-900">Glider (v2)</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-ocean-700 border border-sky-200">Stream</span>
+</div>
+<p class="text-xs text-slate-500 font-mono">ifremer.fr · glider missions</p>
+</div>
+</div>
+</section>
+<!-- END: ConnectedDataSources -->
+<!-- BEGIN: RecentActivityFeed -->
+<!-- Component 8: GET /api/activity/recent aggregated ingest & hazard advisories -->
+<section class="max-w-4xl mx-auto px-4 sm:px-6 mb-16" data-purpose="recent-activity-feed">
+<div class="text-center mb-6">
+<h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Recent activity</h2>
+</div>
+<div class="bg-white rounded-2xl border border-sky-100 shadow-subtle divide-y divide-slate-100 overflow-hidden">
+<!-- Activity Item 1 -->
+<div class="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors">
+<div class="flex items-center space-x-3 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+<p class="text-xs sm:text-sm font-medium text-slate-800 truncate">
+<span class="font-mono text-xs font-semibold text-slate-900">argo_2900004.nc</span> ingested successfully — <span class="text-slate-500">1,204 rows</span>
+</p>
+</div>
+<span class="text-xs font-mono text-slate-400 shrink-0 ml-4">9:14 today</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors">
+<div class="flex items-center space-x-3 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+<p class="text-xs sm:text-sm font-medium text-slate-800 truncate">
+              New High Wave Advisory issued for <span class="font-semibold text-slate-900">Tamil Nadu coast</span>
+</p>
+</div>
+<span class="text-xs font-mono text-slate-400 shrink-0 ml-4">2h ago</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors">
+<div class="flex items-center space-x-3 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-ocean-600 shrink-0"></span>
+<p class="text-xs sm:text-sm font-medium text-slate-800 truncate">
+              4 new Argo float positions reported
+            </p>
+</div>
+<span class="text-xs font-mono text-slate-400 shrink-0 ml-4">6h ago</span>
+</div>
+</div>
+</section>
+<!-- END: RecentActivityFeed -->
+<!-- BEGIN: DocumentationSection -->
+<!-- Component 9: Technical & manual links, single source of truth -->
+<section class="max-w-4xl mx-auto px-4 sm:px-6 mb-20 text-center" data-purpose="documentation-section" id="docs">
+<h2 class="text-xs uppercase tracking-widest font-bold text-slate-500 mb-6">Documentation</h2>
+<div class="inline-flex flex-col sm:flex-row items-stretch justify-center gap-3 w-full sm:w-auto"><a class="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-ocean-600 hover:bg-sky-50/60 shadow-subtle hover:shadow transition-all" href="#"><svg class="w-4 h-4 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="">Architecture &amp; API documentation</span></a><a class="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-ocean-600 hover:bg-sky-50/60 shadow-subtle hover:shadow transition-all" href="#"><svg class="w-4 h-4 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="">User manual — Forecaster</span></a><a class="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-ocean-600 hover:bg-sky-50/60 shadow-subtle hover:shadow transition-all" href="#"><svg class="w-4 h-4 text-ocean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="">User manual — Geo Map</span></a></div>
+</section>
+<!-- END: DocumentationSection -->
+</main>
+<!-- BEGIN: Footer -->
+<!-- Component 10: Static credibility links, copyright and specifications metadata -->
+<footer class="bg-white border-t border-sky-100 py-8" data-purpose="site-footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+<!-- Brand & Copyright -->
+<div class="flex items-center space-x-3">
+<img alt="DeepSync Logo" class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdUII0Mq8Q_UItEqx7TeWQpE_qzkNNtn4meNkoDp-96ta22lIJgHF-sGJC7bhVYTOb-n_MowH89ASHPE_NGG0o75xa57EaWO5YliwdPe_8IT6HoPu0MutCLsyKDSWgZIKbuIMceWL9A1AW3JRhPAjn3GjYKlHoLLNbtsWB5iqtgeeOspeC2dL7AokKU8IWAhGmc4mteS-hH8lwFBA7y8VAQRDG4LfXTKKmMOslnbPPPosAi42Mw2QD964_v9RvO5Zl9rU">
+<span class=""><strong>DeepSync by Bluegen</strong> • © 2026 DeepSync • Team BLUEGEN_606 • PS 26067</span>
+</div>
+<!-- Credibility and Standards Nav -->
+<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+<a class="hover:text-ocean-700 transition-colors" href="#">Bathymetry Registry</a>
+<a class="hover:text-ocean-700 transition-colors" href="#">Security Architecture</a>
+<a class="hover:text-ocean-700 transition-colors" href="#">API Telemetry Terms</a>
+<a class="inline-flex items-center space-x-1.5 font-semibold text-ocean-700 hover:underline" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="">Live Model Feeds</span>
+</a>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+
+
+
+
+</body></html>

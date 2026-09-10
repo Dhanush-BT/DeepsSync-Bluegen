@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync by Bluegen — 3D Ocean Data Visualization Platform for INCOIS</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-primary": "#ffffff",
+          "secondary": "#0284c7",
+          "on-surface": "#0f172a",
+          "surface-variant": "#f1f5f9",
+          "on-primary-container": "#cbe4ff",
+          "inverse-surface": "#1e293b",
+          "surface-container-lowest": "#ffffff",
+          "on-tertiary-fixed": "#001f26",
+          "secondary-fixed": "#e0f2fe",
+          "secondary-container": "#bae6fd",
+          "primary-fixed": "#e0f2fe",
+          "surface-container": "#f8fafc",
+          "surface-bright": "#ffffff",
+          "tertiary-fixed-dim": "#38bdf8",
+          "primary": "#0369a1",
+          "surface-tint": "#0284c7",
+          "on-secondary-container": "#0369a1",
+          "surface-dim": "#e2e8f0",
+          "surface-container-low": "#f8fafc",
+          "on-error": "#ffffff",
+          "on-surface-variant": "#475569",
+          "inverse-on-surface": "#f8fafc",
+          "surface-container-high": "#f1f5f9",
+          "error": "#dc2626",
+          "primary-fixed-dim": "#7dd3fc",
+          "primary-container": "#0369a1",
+          "on-background": "#0f172a",
+          "background": "#f8fafc",
+          "surface-container-highest": "#e2e8f0",
+          "outline-variant": "#e2e8f0",
+          "on-secondary": "#ffffff",
+          "outline": "#94a3b8",
+          "tertiary": "#0284c7",
+          "surface": "#ffffff"
+        },
+        "fontFamily": {
+          "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+          "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+          "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+          "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+          "display-lg": ["Plus Jakarta Sans", "sans-serif"],
+          "body-lg": ["Inter", "sans-serif"],
+          "body-md": ["Inter", "sans-serif"],
+          "body-sm": ["Inter", "sans-serif"],
+          "label-lg": ["Inter", "sans-serif"],
+          "label-md": ["Inter", "sans-serif"],
+          "label-sm": ["Inter", "sans-serif"],
+          "code-sm": ["Inter", "monospace"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .oceanic-radar-glow {
+    box-shadow: 0 0 50px 10px rgba(14, 165, 233, 0.18), inset 0 0 24px rgba(2, 132, 199, 0.12);
+  }
+</style>
+</head>
+<body class="bg-[#faf8ff] text-slate-900 font-body-md antialiased min-h-screen flex flex-col justify-between selection:bg-sky-500 selection:text-white">
+<!-- Top Navigation Bar -->
+<header class="w-full px-6 md:px-12 h-16 flex items-center justify-between border-b border-slate-200 sticky top-0 z-50 bg-white/90 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<img alt="DeepSync Logo" class="w-9 h-9 object-contain rounded-xl shadow-md shadow-sky-600/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWF_O1x8nktIFzLBu6ec0IJe_UJGcEZeXk7FPJaZ7GBTUsUJac695uj8UTV0mCNwoEPONL-5Meh2hHnbnklGbYWbPZBHkDZRSbIam5DL7xbNZq8Xffvxh6g0iSW8b8SE7uF6pFbwz2FKRs7heQ5R7lZuQjfvXVIYitS6zugQ-j-Y9sdyS_ODdymJrrUhPi1MBwQ0KguedFBrfZdfC-VQg1x46rsT_hBKxL8SkLEYoL74YsStHofraothlDSgoDuEafAg0">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md font-extrabold tracking-tight text-slate-900 text-lg sm:text-xl">DeepSync</span>
+<span class="text-xs font-semibold text-sky-700 uppercase tracking-wider bg-sky-100/80 px-2 py-0.5 rounded">by Bluegen</span>
+</div>
+</div>
+<div class="flex items-center gap-6"><a class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 hover:bg-sky-100/80 border border-sky-200 text-xs font-semibold transition-colors" href="#"><span class="material-symbols-outlined text-sm text-sky-600">public</span><span class="">Explore Public 3D Ocean</span></a><div class="hidden md:flex items-center gap-5 text-sm font-medium"></div></div>
+</header>
+<!-- 50/50 Split Screen Auth Canvas -->
+<main class="flex-1 w-full grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-4rem-4.5rem)]">
+<!-- Left Showcase Column: Light Oceanic Backdrop & Volumetric Observation -->
+<section class="lg:col-span-7 relative bg-gradient-to-br from-sky-50 via-blue-50/40 to-slate-50 p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-sky-100">
+<!-- Soft Sky-Blue Ambient Glow Accents -->
+<div class="absolute -top-24 -left-24 w-[28rem] h-[28rem] bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 right-0 w-96 h-96 bg-cyan-100/50 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-20 left-1/3 w-80 h-80 bg-blue-100/60 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Top Tagline & Badges -->
+<div class="relative z-10 space-y-6"><div class="flex flex-wrap items-center gap-2"><div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-sky-200/80 text-sky-800 font-medium text-xs shadow-sm backdrop-blur-sm"><span class="material-symbols-outlined text-sky-600 text-base">explore</span><span class="">INCOIS Ocean Modeling &amp; Volumetric 3D Engine</span></div><div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-700 font-semibold text-xs shadow-xs"><span class="material-symbols-outlined text-emerald-600 text-sm">school</span></div></div><h1 class="font-display-lg text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.18] max-w-2xl">Interactive 3D Ocean Intelligence &amp; Public Discovery Platform.</h1><p class="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed">Bridging state-of-the-art volumetric ocean modeling for INCOIS scientists with intuitive, open-access 3D exploration for university researchers, educators, students, and citizen marine enthusiasts.</p><div class="flex flex-wrap items-center gap-2.5 pt-1"><div class="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2"><span class="material-symbols-outlined text-sky-700 text-base">dataset</span><span class="text-xs font-semibold tracking-tight text-slate-800 font-mono">NetCDF / CF-Compliant</span></div><div class="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2"><span class="material-symbols-outlined text-cyan-600 text-base">sensors</span><span class="text-xs font-semibold tracking-tight text-slate-800 font-mono">Argo &amp; Glider Telemetry</span></div><div class="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2"><span class="material-symbols-outlined text-blue-700 text-base">view_in_ar</span><span class="text-xs font-semibold tracking-tight text-slate-800 font-mono">WebGL 3D Volumetric Slices</span></div><div class="px-3 py-1.5 rounded-lg bg-white/80 border border-sky-200/70 shadow-xs flex items-center gap-2"><span class="material-symbols-outlined text-teal-600 text-base">hub</span><span class="text-xs font-semibold tracking-tight text-slate-800 font-mono">OPeNDAP / OGC WMS</span></div></div></div>
+<!-- Center Sonar / Telemetry Graphic -->
+<div class="relative z-10 py-6 my-auto grid grid-cols-1 sm:grid-cols-2 gap-3.5"><div class="bg-white/70 backdrop-blur-sm border border-sky-100/80 rounded-xl p-4 shadow-sm hover:border-sky-300 transition-all flex flex-col justify-between space-y-2.5"><div class="flex items-center gap-2.5"><div class="p-2 rounded-lg bg-sky-100/80 text-sky-700 shrink-0"><span class="material-symbols-outlined text-lg">layers</span></div><h3 class="text-sm font-bold text-slate-900 tracking-tight">Real-Time Volumetric 4D Slicing</h3></div><p class="text-xs text-slate-600 leading-relaxed">Instant dynamic isosurface extraction across depth levels (0m to -6000m) with GPU-accelerated WebGL rendering.</p></div><div class="bg-white/70 backdrop-blur-sm border border-sky-100/80 rounded-xl p-4 shadow-sm hover:border-sky-300 transition-all flex flex-col justify-between space-y-2.5"><div class="flex items-center gap-2.5"><div class="p-2 rounded-lg bg-cyan-100/50 text-cyan-600 shrink-0"><span class="material-symbols-outlined text-lg">sensors</span></div><h3 class="text-sm font-bold text-slate-900 tracking-tight">Autonomous Sensor Fusion</h3></div><p class="text-xs text-slate-600 leading-relaxed">Seamless live ingestion and co-visualization of 140+ active Argo floats, underwater gliders, and mooring arrays.</p></div><div class="bg-white/70 backdrop-blur-sm border border-sky-100/80 rounded-xl p-4 shadow-sm hover:border-sky-300 transition-all flex flex-col justify-between space-y-2.5"><div class="flex items-center gap-2.5"><div class="p-2 rounded-lg bg-blue-100/60 text-blue-700 shrink-0"><span class="material-symbols-outlined text-lg">school</span></div><h3 class="text-sm font-bold text-slate-900 tracking-tight">Interactive 3D E-Learning</h3></div><p class="text-xs text-slate-600 leading-relaxed">Interactive 3D bathymetry tours for university classrooms, science centers, and marine policy awareness without institutional barriers.</p></div><div class="bg-white/70 backdrop-blur-sm border border-sky-100/80 rounded-xl p-4 shadow-sm hover:border-sky-300 transition-all flex flex-col justify-between space-y-2.5"><div class="flex items-center gap-2.5"><div class="p-2 rounded-lg bg-emerald-50 text-teal-600 shrink-0"><span class="material-symbols-outlined text-lg">crisis_alert</span></div><h3 class="text-sm font-bold text-slate-900 tracking-tight">Automated Operational Advisories</h3></div><p class="text-xs text-slate-600 leading-relaxed">Algorithmic hazard alerts, cyclone storm surge forecasts, and Indian EEZ potential fishing zone mapping.</p></div></div>
+<!-- Bottom Metrics & Quote -->
+<div class="relative z-10 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-sky-200/80 shadow-xs space-y-2 text-xs"><div class="flex items-center gap-2 text-sky-950 font-semibold"><span class="material-symbols-outlined text-base text-sky-700 shrink-0">verified_user</span><span class="">Access Governance &amp; INCOIS Directory Policy</span></div><p class="text-slate-600 leading-relaxed"><span class="font-semibold text-slate-800">Public &amp; Educational Access:</span> Open 3D ocean exploration and volumetric telemetry are freely available in read-only mode without credentials via <span class="text-sky-700 font-medium">'Explore Public 3D Ocean'</span>.</p><p class="text-slate-600 leading-relaxed border-t border-sky-100 pt-2"><span class="font-semibold text-slate-800">INCOIS Directory Roster:</span> Full administrative and scientific CRUD permissions are provisioned according to official INCOIS Employee Directory roster (Director Dr. Balakrishnan Nair TM, Scientists-G/F/E/D/C/B, Scientific Assistants, and Officers across divisions ODICT, OMARS, OMDA, OON, OOS, ICT, and Admin, Emp IDs 002–101).</p></div><div class="relative z-10 space-y-5 border-t border-sky-200/60 pt-6">
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-white/70 rounded-xl p-3.5 border border-sky-100 shadow-xs">
+<div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">340K+ km²</div>
+<div class="text-xs sm:text-sm text-slate-600 font-medium">Continuous EEZ 3D Coverage</div>
+</div>
+<div class="bg-white/70 rounded-xl p-3.5 border border-sky-100 shadow-xs">
+<div class="text-2xl sm:text-3xl font-extrabold text-sky-700 tracking-tight">&lt; 85ms</div>
+<div class="text-xs sm:text-sm text-slate-600 font-medium">Volumetric Slice Latency</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Clean White Authentication Form (Desktop: 5 cols) -->
+<section class="lg:col-span-5 bg-white p-6 sm:p-10 lg:p-12 flex items-center justify-center shadow-xl lg:shadow-none">
+<div class="w-full max-w-md space-y-6"><div class="space-y-1.5 text-left"><div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-semibold mb-1"><span class="material-symbols-outlined text-sm">lock</span><span class="">Secure Access</span></div><h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900" id="authHeading">Create DeepSync Account</h2><p class="text-sm text-slate-600" id="authSubtitle">Join the 3D ocean intelligence platform for interactive data, research models, and public exploration.</p></div><div aria-label="Portal tier selector" class="p-1 rounded-xl bg-slate-100 border border-slate-200 flex gap-1" role="tablist"><button aria-selected="false" class="flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5" id="tabResearcher" role="tab" type="button"><span class="material-symbols-outlined text-base text-slate-500">login</span><span class="">Sign In</span></button><button aria-selected="true" class="flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5" id="tabPublic" role="tab" type="button"><span class="material-symbols-outlined text-base text-sky-700">person_add</span><span class="">Sign Up</span></button></div><div class="space-y-2.5"></div><div class="flex items-center gap-3"><div class="flex-1 h-px bg-slate-200"></div><div class="flex-1 h-px bg-slate-200"></div></div><form class="space-y-4" id="authFormPanel" onsubmit="event.preventDefault();"><div class="space-y-1.5"><label class="block text-xs font-semibold uppercase tracking-wider text-slate-700" for="fullNameInput">Full Name</label><div class="relative"><input class="w-full h-11 px-3.5 pr-11 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none" id="fullNameInput" placeholder="e.g. Dr. Balakrishnan Nair TM or E.Pattabhi Rama Rao" type="text"><div class="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700"><span class="material-symbols-outlined text-xl">person</span></div></div></div><div class="space-y-1.5"><label class="block text-xs font-semibold uppercase tracking-wider text-slate-700" for="emailInput">INCOIS Institutional Email (@incois.gov.in)</label><div class="relative"><input class="w-full h-11 px-3.5 pr-11 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none" id="emailInput" placeholder="username@incois.gov.in" type="email"><div class="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700"><span class="material-symbols-outlined text-xl">mail</span></div></div></div><div class="space-y-3"><div class="space-y-1.5"><div class="flex items-center justify-between"><label class="block text-xs font-semibold uppercase tracking-wider text-slate-700" for="instituteIdInput">Official INCOIS Employee ID (Emp ID)</label></div><div class="relative"><input class="w-full h-11 px-3.5 pr-11 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none font-mono" id="instituteIdInput" placeholder="e.g. 002, 009, 017, 024 or official 3-digit ID" type="text"><div class="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700"><span class="material-symbols-outlined text-xl">badge</span></div></div><p class="text-[11px] text-slate-500">Directory roster ID (002–101) for Scientist / Staff authentication</p></div><div class="space-y-1.5"><label class="block text-xs font-semibold uppercase tracking-wider text-slate-700" for="divisionSelect">Designated Division &amp; Group</label><div class="relative"><select class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none cursor-pointer appearance-none" id="divisionSelect"><option value="ODICT">ODICT (Ocean Data &amp; Info &amp; ICT)</option><option value="OMARS">OMARS (Ocean Modeling &amp; Applied Research)</option><option value="OMDA">OMDA (Ocean Modeling &amp; Data Assimilation)</option><option value="OON">OON (Ocean Observation Network)</option><option value="OOS">OOS (Ocean Observation Systems)</option><option value="ARO">ARO (Applied Research &amp; Oceanography)</option><option value="ICT">ICT (Information &amp; Comm Tech)</option><option value="ADMIN">P&amp;S / P&amp;GA / ESS (Administration, Purchase &amp; Accounts)</option><option value="DIR">Directorate &amp; Executive Administration</option></select><div class="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700"><span class="material-symbols-outlined text-xl">corporate_fare</span></div></div></div></div><div class="space-y-1.5"><label class="block text-xs font-semibold uppercase tracking-wider text-slate-700" for="passwordInput">Create Password</label><div class="relative"><input class="w-full h-11 px-3.5 pr-11 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none" id="passwordInput" placeholder="At least 12 characters (symbol, number &amp; mixed case)" type="password"><button aria-label="Toggle password visibility" class="absolute right-3 top-2 p-1 text-slate-400 hover:text-slate-700 transition-colors focus:outline-none" id="togglePasswordVisibility" type="button"><span class="material-symbols-outlined text-xl" id="passwordIcon">visibility</span></button></div><div class="space-y-2.5 pt-1.5"><div class="flex items-center justify-between text-xs"><span class="font-semibold text-slate-700 uppercase tracking-wider text-[11px]">Password Security Policy</span><span class="inline-flex items-center gap-1 font-semibold text-emerald-600 text-[11px]"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Scientific Level Compliance</span></div><div class="flex items-center gap-1.5"><div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div><div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div><div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div><div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div></div><div class="grid grid-cols-1 gap-1.5 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs"><div class="flex items-center gap-2 text-emerald-700"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span><span class="">Minimum 12 characters (16+ recommended for telemetry write access)</span></div><div class="flex items-center gap-2 text-emerald-700"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span><span class="">At least one uppercase and one lowercase letter (A-Z, a-z)</span></div><div class="flex items-center gap-2 text-emerald-700"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span><span class="">At least one numerical digit (0-9)</span></div><div class="flex items-center gap-2 text-emerald-700"><span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span><span class="">At least one special symbol (!@#$%^&amp;*()_+)</span></div><div class="flex items-center gap-2 text-slate-600"><span class="material-symbols-outlined text-sm text-slate-400">radio_button_unchecked</span><span class="">Cannot match User ID, Institute Email, or common dictionary sequences</span></div></div></div></div><div class="pt-1"><label class="flex items-start gap-2.5 cursor-pointer select-none"><input checked="" class="w-4 h-4 mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-sky-500 focus:ring-offset-0" type="checkbox"><span class="text-xs text-slate-600 leading-relaxed">I agree to the <a class="text-sky-700 font-semibold hover:underline" href="#">Terms of Service</a> and <a class="text-sky-700 font-semibold hover:underline" href="#">Privacy Policy</a>, and accept platform telemetry and research updates.</span></label></div><button class="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 active:scale-[0.99] transition-all duration-150" id="submitBtn" type="submit"><span class="material-symbols-outlined text-lg">person_add</span><span id="btnText" class="">Create Account</span></button><div class="text-center pt-2"><p class="text-xs text-slate-600">Already have an account? <a class="font-semibold text-sky-700 hover:text-sky-800 transition-colors" href="#" id="linkToSignIn">Sign In</a></p></div></form></div>
+</section>
+</main>
+<!-- Bottom Scientific Web Footer -->
+<footer class="w-full px-6 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-200 bg-[#faf8ff] text-xs text-slate-600">
+<div class="flex items-center gap-2"><img alt="DeepSync Logo" class="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6dT7-MpeA7TrYqXMNLNHghOsJRKO5zH_w5NMevGaCm8IKudlDtJ04bxVrNv8jb-nX8_wF0K5clPKe-1TlIlWzzPKGbCp2alPt1b_djLZrwTQNlPdngG2G4k7ndwnoykUHR9aQeYPg-Sst_Gjp7_auOaJmQU47cZsqzbkLeVkENs80RDqPdQ1W5xr69wI4cHFfmbzGJO-Tj0A2rOBJA3uYpOOkqlbwnDK153MsTCJPP0q-pDU0HdgisydPOaqtk5X85Ls">
+<span class="font-bold text-slate-800">DeepSync by Bluegen</span>
+<span class="text-slate-400">•</span>
+<span class="">© 2026 DeepSync by Bluegen for INCOIS • OGC WMS &amp; NetCDF Standards.</span>
+</div>
+<nav class="flex flex-wrap items-center gap-5 font-medium">
+<a class="text-slate-600 hover:text-sky-700 transition-colors" href="#">Bathymetry Registry</a>
+<a class="text-slate-600 hover:text-sky-700 transition-colors" href="#">Security Architecture</a>
+<a class="text-slate-600 hover:text-sky-700 transition-colors" href="#">API Telemetry Terms</a>
+<a class="text-sky-700 font-semibold hover:text-sky-800 flex items-center gap-1.5" href="#">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="">Live Model Feeds</span>
+</a>
+</nav>
+</footer>
+<!-- Interactive Script for Tab Switcher and Password Reveal -->
+<script>
+  const tabSignIn = document.getElementById('tabSignIn');
+  const tabSignUp = document.getElementById('tabSignUp');
+  const authHeading = document.getElementById('authHeading');
+  const authSubtitle = document.getElementById('authSubtitle');
+  const fieldFullName = document.getElementById('fieldFullName');
+  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
+  const passwordInput = document.getElementById('passwordInput');
+  const passwordIcon = document.getElementById('passwordIcon');
+
+  tabSignIn.addEventListener('click', () => {
+    tabSignIn.setAttribute('aria-selected', 'true');
+    tabSignUp.setAttribute('aria-selected', 'false');
+    tabSignIn.className = "flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    tabSignUp.className = "flex-1 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    authHeading.textContent = "Console Access";
+    authSubtitle.textContent = "Authenticate with your researcher or institutional credentials";
+    fieldFullName.classList.add('hidden');
+    forgotPasswordLink.classList.remove('hidden');
+    btnText.textContent = "Authenticate DeepSync Session";
+  });
+
+  tabSignUp.addEventListener('click', () => {
+    tabSignUp.setAttribute('aria-selected', 'true');
+    tabSignIn.setAttribute('aria-selected', 'false');
+    tabSignUp.className = "flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    tabSignIn.className = "flex-1 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    authHeading.textContent = "Register Analyst";
+    authSubtitle.textContent = "Provision your INCOIS ocean modeling credential and profile";
+    fieldFullName.classList.remove('hidden');
+    forgotPasswordLink.classList.add('hidden');
+    btnText.textContent = "Register Research Account";
+  });
+
+  togglePasswordVisibility.addEventListener('click', () => {
+    const isPassword = passwordInput.getAttribute('type') === 'password';
+    if (isPassword) {
+      passwordInput.setAttribute('type', 'text');
+      passwordIcon.textContent = 'visibility_off';
+    } else {
+      passwordInput.setAttribute('type', 'password');
+      passwordIcon.textContent = 'visibility';
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+</body></html>

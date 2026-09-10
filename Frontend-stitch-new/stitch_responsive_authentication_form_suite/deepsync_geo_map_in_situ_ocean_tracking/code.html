@@ -1,0 +1,720 @@
+<!DOCTYPE html><html class="h-full" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DeepSync by Bluegen | Geo Map - Indian Ocean &amp; EEZ In-Situ Telemetry</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-surface-variant": "#40474f",
+          "on-primary-fixed-variant": "#004b74",
+          "primary-container": "#0369a1",
+          "on-secondary-fixed-variant": "#004b73",
+          "inverse-primary": "#94ccff",
+          "outline": "#707881",
+          "inverse-on-surface": "#eef0ff",
+          "surface-dim": "#d2d9f4",
+          "error": "#ba1a1a",
+          "on-error-container": "#93000a",
+          "tertiary": "#005463",
+          "primary-fixed-dim": "#94ccff",
+          "on-primary": "#ffffff",
+          "surface-tint": "#006399",
+          "surface-bright": "#faf8ff",
+          "on-tertiary-container": "#a9ecff",
+          "secondary": "#006398",
+          "background": "#faf8ff",
+          "on-error": "#ffffff",
+          "error-container": "#ffdad6",
+          "inverse-surface": "#283044",
+          "surface-container-high": "#e2e7ff",
+          "on-tertiary": "#ffffff",
+          "primary-fixed": "#cde5ff",
+          "surface-variant": "#dae2fd",
+          "on-surface": "#131b2e",
+          "outline-variant": "#c0c7d1",
+          "tertiary-fixed": "#acedff",
+          "surface-container-low": "#f8fafc",
+          "surface-container-highest": "#dae2fd",
+          "on-background": "#131b2e",
+          "on-secondary-container": "#00476e",
+          "on-tertiary-fixed-variant": "#004e5c",
+          "on-secondary-fixed": "#001d31",
+          "tertiary-fixed-dim": "#4cd7f6",
+          "tertiary-container": "#006e81",
+          "on-primary-container": "#cbe4ff",
+          "surface-container-lowest": "#ffffff",
+          "primary": "#0284c7",
+          "surface": "#faf8ff",
+          "on-tertiary-fixed": "#001f26",
+          "secondary-container": "#5bb8fe",
+          "on-secondary": "#ffffff",
+          "secondary-fixed": "#cce5ff",
+          "surface-container": "#f1f5f9",
+          "on-primary-fixed": "#001d32",
+          "secondary-fixed-dim": "#93ccff"
+        },
+        borderRadius: {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "2xl": "1rem",
+          "full": "9999px"
+        },
+        fontFamily: {
+          sans: ["Plus Jakarta Sans", "sans-serif"],
+          body: ["Plus Jakarta Sans", "sans-serif"],
+          heading: ["Plus Jakarta Sans", "sans-serif"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    font-size: 18px;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+  @keyframes ping-slow {
+    0% { transform: scale(1); opacity: 0.8; }
+    80%, 100% { transform: scale(2.2); opacity: 0; }
+  }
+  .animate-ping-slow {
+    animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+</style>
+</head>
+<body class="bg-background text-on-surface flex flex-col h-screen overflow-hidden antialiased font-sans text-sm">
+<!-- 1. GLOBAL NAVIGATION BAR (Matches DeepSync Home Exactly) -->
+<header class="w-full px-6 lg:px-8 h-16 flex items-center justify-between border-b border-slate-200/80 sticky top-0 z-50 bg-white/95 backdrop-blur-md shrink-0 shadow-xs"><div class="flex items-center gap-3">
+<img alt="DeepSync Logo" class="w-9 h-9 object-contain rounded-full shadow-xs ring-1 ring-sky-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYAI8J3Hb9y2BV2SbeD1ezhIEERb9lLb2mLiILUeClQ7Ofh8vCIkXJlyNYobieM-G-B84eK2M1BfncyxzNG3P1JhkqsqsO2XPaPAemR66sZ8y1CpepFXVuaymXDjJDqde16CknjuOgJp2ZCCWGjwDy8cVMieSWrJvA5HKB0X0jv2s5q7ar6RkFPao-D3_dG4GaTNvuDcD8vxyBUZIXKzOepT1bGTf_Dp7US9miLDGeBRYug0Xitics0-j_uPuIKL8XfiA">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-lg font-extrabold text-slate-900 tracking-tight">DeepSync</span>
+<span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">BY BLUEGEN</span>
+</div>
+<span class="text-[11px] text-slate-500 font-medium -mt-0.5">INCOIS · MoES Govt. of India</span>
+</div>
+</div>
+
+<!-- Centered Navigation Links -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm text-slate-600 hover:text-slate-900 font-medium py-1 transition-colors" href="#">Home</a>
+<a class="text-sm text-slate-600 hover:text-slate-900 font-medium py-1 transition-colors" href="#">Dashboard</a>
+<a class="text-sm text-sky-600 font-semibold border-b-2 border-sky-600 py-1 transition-colors" href="#">Geo Map</a>
+<a class="text-sm text-slate-600 hover:text-slate-900 font-medium py-1 transition-colors" href="#">AI Assistant</a>
+<div class="relative group cursor-pointer flex items-center">
+<span class="text-sm text-slate-600 hover:text-slate-900 font-medium py-1 transition-colors flex items-center gap-0.5">
+Docs
+<span class="material-symbols-outlined text-[15px] text-slate-400">expand_more</span>
+</span>
+</div>
+</nav>
+
+<div class="flex items-center gap-3">
+<!-- Admin Sign In Outlined Button -->
+<button class="text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-400 active:scale-[0.98] transition-all flex items-center gap-1.5 shadow-2xs">
+<span class="material-symbols-outlined text-[16px] text-slate-600">admin_panel_settings</span>
+<span class="">Admin sign in</span>
+</button>
+</div></header>
+<!-- 2. SUB-HEADER / MAP CONTROL TOOLBAR -->
+<div class="w-full bg-white border-b border-slate-200/80 px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 z-30 shadow-2xs">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="text-xs uppercase tracking-wider text-slate-400 font-bold">DEEPSYNC</span>
+<span class="text-slate-300">/</span>
+<h1 class="text-sm font-bold text-slate-900">Geo Map</h1>
+</div>
+<div class="h-4 w-px bg-slate-200 hidden sm:block"></div>
+<span class="text-xs text-slate-500 hidden sm:inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-sky-600">explore</span>
+      Indian Ocean &amp; EEZ In-Situ Tracking
+    </span>
+<!-- Telemetry Badges -->
+<div class="hidden lg:flex items-center gap-2 ml-2">
+<span class="text-xs px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-200 font-semibold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-600"></span> 142 Argo Floats
+      </span>
+<span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-semibold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> 18 Gliders
+      </span>
+<span class="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 font-medium">
+        Sync: 6h ago
+      </span>
+</div>
+</div>
+<!-- Map Tool Controls -->
+<div class="flex items-center gap-2 flex-wrap ml-auto">
+<div class="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+<button class="text-xs px-3 py-1 rounded-md bg-white text-sky-700 font-semibold shadow-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-sky-600">layers</span>
+        Layer: Hybrid Bathymetry
+        <span class="material-symbols-outlined text-[13px] text-slate-400">expand_more</span>
+</button>
+<button class="text-xs px-3 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-slate-500">public</span>
+        EPSG:3857 (Mercator)
+      </button>
+</div>
+<button class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-colors flex items-center gap-1 shadow-2xs" title="Reset map camera to Indian Ocean extents">
+<span class="material-symbols-outlined text-[15px] text-slate-500">center_focus_strong</span>
+<span class="hidden md:inline">Reset Extents</span>
+</button>
+<button class="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors shadow-2xs" title="Toggle Fullscreen">
+<span class="material-symbols-outlined text-[18px]">fullscreen</span>
+</button>
+</div>
+</div>
+<!-- 3. MAIN WORKSPACE -->
+<main class="flex-1 flex overflow-hidden relative">
+<!-- 3A. LEFT SIDEBAR: Filters & Instruments -->
+<aside class="w-[305px] xl:w-[325px] bg-slate-50/70 border-r border-slate-200/80 flex flex-col h-full shrink-0 z-20 shadow-xs overflow-y-auto">
+<!-- Header -->
+<div class="p-4 border-b border-slate-200/80 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-tight">Filters &amp; Instruments</h2>
+<span class="text-[11px] text-slate-500">Dataset Scope Control</span>
+</div>
+</div>
+<button class="text-xs text-sky-700 hover:text-sky-800 hover:underline font-semibold">Reset all</button>
+</div>
+<div class="p-4 space-y-4">
+<!-- Search Platform Input -->
+<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
+<label class="text-xs font-semibold text-slate-700 mb-1.5 block">Search Platform ID / WMO</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[17px]">search</span>
+<input class="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-slate-900 font-mono font-medium placeholder:text-slate-400 transition-all" placeholder="e.g. ARGO_2900004..." type="text" value="2900004">
+<button class="absolute right-2 top-2 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+</button>
+</div>
+</div>
+<!-- Instrument Categories Card -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Instrument Categories</span>
+<span class="text-xs text-sky-700 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">2/4 Active</span>
+</div>
+<!-- Argo Floats -->
+<label class="flex items-center justify-between p-2.5 rounded-xl border border-sky-200 bg-sky-50/50 hover:bg-sky-50 cursor-pointer transition-colors">
+<div class="flex items-center gap-2.5">
+<input checked="" class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 border-slate-300 cursor-pointer" type="checkbox">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-sky-600 ring-2 ring-sky-200"></span>
+<span class="text-xs font-bold text-slate-800">Argo Floats</span>
+</div>
+</div>
+<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-900">142 active</span>
+</label>
+<!-- Gliders -->
+<label class="flex items-center justify-between p-2.5 rounded-xl border border-amber-200 bg-amber-50/50 hover:bg-amber-50 cursor-pointer transition-colors">
+<div class="flex items-center gap-2.5">
+<input checked="" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300 cursor-pointer" type="checkbox">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
+<span class="text-xs font-bold text-slate-800">Autonomous Gliders</span>
+</div>
+</div>
+<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">18 active</span>
+</label>
+<!-- CTD Moorings -->
+<label class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors">
+<div class="flex items-center gap-2.5">
+<input class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 border-slate-300 cursor-pointer" type="checkbox">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+<span class="text-xs font-medium text-slate-700">CTD Moorings</span>
+</div>
+</div>
+<span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">24 stns</span>
+</label>
+<!-- BGC Floats -->
+<label class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors">
+<div class="flex items-center gap-2.5">
+<input class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 border-slate-300 cursor-pointer" type="checkbox">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+<span class="text-xs font-medium text-slate-700">BGC Bio-sensors</span>
+</div>
+</div>
+<span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">36 dep</span>
+</label>
+</div>
+<!-- Date Range & Observation Window Card -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+<label class="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">Observation Window</label>
+<div class="relative">
+<select class="w-full pl-3 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-800 appearance-none cursor-pointer focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100">
+<option>Last 30 days (Default)</option>
+<option>Last 24 hours (Real-time)</option>
+<option>Last 7 days (Synoptic)</option>
+<option>Custom Temporal Window...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2 text-slate-400 pointer-events-none text-[16px]">calendar_today</span>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-600 pt-1 font-mono">
+<span class="">Aug 10, 2026</span>
+<span class="text-slate-400">⟶</span>
+<span class="font-bold text-sky-700">Sep 08, 2026</span>
+</div>
+</div>
+<!-- Water Column Depth Scope Card -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Profile Depth Scope</span>
+<span class="text-xs font-mono font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-100">0 to -2,500m</span>
+</div>
+<div class="relative py-2">
+<div class="h-2 w-full rounded-full bg-gradient-to-r from-sky-400 via-sky-600 to-[#0b192c]"></div>
+<div class="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-500 shadow-xs cursor-pointer"></div>
+<div class="absolute right-10 top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-800 shadow-xs cursor-pointer"></div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+<span class="">Surface (0m)</span>
+<span class="">Mesopelagic</span>
+<span class="">-4000m</span>
+</div>
+</div>
+<!-- Visible Targets Mini List -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Visible Instruments</span>
+<span class="text-[11px] text-slate-500 font-medium">3 In Focus</span>
+</div>
+<div class="space-y-1.5">
+<!-- Focused Float Item -->
+<div class="p-2 rounded-lg border border-sky-300 bg-sky-50/70 flex items-center justify-between cursor-pointer">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-sky-600"></span>
+<span class="text-xs font-bold text-sky-900 font-mono">ARGO_2900004</span>
+<span class="text-[9px] px-1.5 py-0.2 bg-sky-200 text-sky-900 rounded font-bold">FOCUSED</span>
+</div>
+<span class="text-[10px] text-slate-600 font-mono mt-0.5">12.4°N, 79.1°E · 2h ago</span>
+</div>
+<span class="material-symbols-outlined text-sky-600 text-[18px]">gps_fixed</span>
+</div>
+<!-- Secondary Float -->
+<div class="p-2 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-sky-600"></span>
+<span class="text-xs font-semibold text-slate-800 font-mono">ARGO_2901588</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">14.1°N, 82.3°E · 5h ago</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[16px] hover:text-sky-600">my_location</span>
+</div>
+<!-- Glider -->
+<div class="p-2 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-between cursor-pointer transition-colors">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="text-xs font-semibold text-slate-800 font-mono">GLID_INCOIS_04</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">11.8°N, 80.5°E · 42m ago</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[16px] hover:text-amber-600">my_location</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- 3B. CENTER: GeoMapView & Ocean Visualizer -->
+<div class="flex-1 relative bg-[#091b2c] overflow-hidden select-none flex flex-col">
+<!-- Map Graphic Viewport -->
+<div class="absolute inset-0 w-full h-full overflow-hidden">
+<!-- Bathymetry Canvas Base -->
+<div class="w-full h-full relative" style="background: radial-gradient(circle at 62% 45%, #0e2a47 0%, #081a2e 50%, #040e1b 100%);">
+<!-- Coordinate Grid -->
+<svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="80" id="ocean-grid" patternUnits="userSpaceOnUse" width="80">
+<path d="M 80 0 L 0 0 0 80" fill="none" stroke="#38bdf8" stroke-dasharray="3 3" stroke-width="0.7"></path>
+</pattern>
+</defs>
+<rect fill="url(#ocean-grid)" height="100%" width="100%"></rect>
+</svg>
+<!-- Coastline & Bathymetric Contours -->
+<svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 700">
+<path d="M 120 0 Q 320 220 380 440 Q 420 540 450 620 L 460 700 L 0 700 L 0 0 Z" fill="#0c233c" opacity="0.8"></path>
+<path d="M 180 0 Q 350 200 410 420 Q 440 500 465 590 L 470 700 L 0 700 L 0 0 Z" fill="#0f2e4d" opacity="0.7"></path>
+<path d="M 230 0 Q 380 180 430 380 Q 460 480 480 570 L 485 700 L 0 700 L 0 0 Z" fill="#13385c" opacity="0.6"></path>
+<!-- Indian Peninsular Geometry -->
+<path d="M 0 120 Q 140 130 190 190 Q 230 250 280 340 Q 320 420 370 490 Q 390 520 410 570 Q 420 590 435 620 Q 440 600 445 570 Q 460 500 485 430 Q 510 360 550 300 Q 610 240 690 190 Q 750 160 850 130 L 850 0 L 0 0 Z" fill="#1b2a38" stroke="#334e68" stroke-width="2"></path>
+<!-- Sri Lanka -->
+<path d="M 450 630 C 470 635 485 660 475 690 C 465 710 445 705 440 680 C 435 655 440 635 450 630 Z" fill="#1b2a38" stroke="#334e68" stroke-width="1.5"></path>
+<!-- EEZ 200nm boundary -->
+<path d="M 200 120 Q 320 280 400 470 Q 440 560 470 650 Q 540 540 570 410 Q 610 320 730 230" fill="none" opacity="0.45" stroke="#0ea5e9" stroke-dasharray="6 4" stroke-width="1.2"></path>
+<!-- Trajectory Polyline: Selected ARGO_2900004 -->
+<g id="trajectory-argo-2900004">
+<path d="M 680 380 L 640 400 L 590 390 L 550 430 L 515 475 L 485 520 L 465 545" fill="none" opacity="0.3" stroke="#38bdf8" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"></path>
+<path d="M 680 380 L 640 400 L 590 390 L 550 430 L 515 475 L 485 520 L 465 545" fill="none" stroke="#0284c7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<circle cx="680" cy="380" fill="#bae6fd" r="3" stroke="#0369a1" stroke-width="1.5"></circle>
+<circle cx="640" cy="400" fill="#bae6fd" r="3" stroke="#0369a1" stroke-width="1.5"></circle>
+<circle cx="590" cy="390" fill="#bae6fd" r="3" stroke="#0369a1" stroke-width="1.5"></circle>
+<circle cx="550" cy="430" fill="#bae6fd" r="3" stroke="#0369a1" stroke-width="1.5"></circle>
+<circle cx="515" cy="475" fill="#93c5fd" r="3.5" stroke="#0369a1" stroke-width="1.5"></circle>
+<circle cx="485" cy="520" fill="#93c5fd" r="3.5" stroke="#0369a1" stroke-width="1.5"></circle>
+<polygon fill="#38bdf8" points="568,412 575,417 568,422" transform="rotate(35 570 417)"></polygon>
+<polygon fill="#38bdf8" points="500,498 507,503 500,508" transform="rotate(55 502 503)"></polygon>
+</g>
+<!-- Trajectory: Secondary Float -->
+<path d="M 580 310 L 560 335 L 535 370 L 510 395" fill="none" opacity="0.6" stroke="#0284c7" stroke-dasharray="3 2" stroke-width="1.5"></path>
+<circle cx="580" cy="310" fill="#93c5fd" r="2.5"></circle>
+<circle cx="535" cy="370" fill="#93c5fd" r="2.5"></circle>
+<circle cx="510" cy="395" fill="#0284c7" r="3.5"></circle>
+<!-- Trajectory: Glider GLID_INCOIS_04 -->
+<path d="M 490 590 L 485 575 L 478 560 L 470 540" fill="none" opacity="0.8" stroke="#f59e0b" stroke-dasharray="4 3" stroke-width="2"></path>
+<circle cx="490" cy="590" fill="#fed7aa" r="2.5"></circle>
+<circle cx="478" cy="560" fill="#fed7aa" r="2.5"></circle>
+<circle cx="470" cy="540" fill="#d97706" r="3.5"></circle>
+<!-- Distributed Float Markers -->
+<circle cx="340" cy="580" fill="#0284c7" r="3.5"></circle>
+<circle cx="310" cy="620" fill="#0284c7" r="3.5"></circle>
+<circle cx="380" cy="650" fill="#0284c7" r="3.5"></circle>
+<circle cx="550" cy="580" fill="#0284c7" r="3.5"></circle>
+<circle cx="620" cy="520" fill="#0284c7" r="3.5"></circle>
+<circle cx="670" cy="460" fill="#0284c7" r="3.5"></circle>
+<circle cx="710" cy="350" fill="#0284c7" r="3.5"></circle>
+<circle cx="610" cy="270" fill="#0284c7" r="3.5"></circle>
+<circle cx="520" cy="240" fill="#0284c7" r="3.5"></circle>
+<circle cx="390" cy="280" fill="#0284c7" r="3.5"></circle>
+<circle cx="280" cy="380" fill="#0284c7" r="3.5"></circle>
+<circle cx="230" cy="440" fill="#0284c7" r="3.5"></circle>
+<!-- Amber Gliders -->
+<circle cx="520" cy="480" fill="#f59e0b" r="4"></circle>
+<circle cx="580" cy="450" fill="#f59e0b" r="4"></circle>
+<circle cx="420" cy="640" fill="#f59e0b" r="4"></circle>
+<circle cx="360" cy="530" fill="#f59e0b" r="4"></circle>
+<circle cx="650" cy="320" fill="#f59e0b" r="4"></circle>
+<!-- Geographic Labels -->
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" letter-spacing="1" x="210" y="320">ARABIAN SEA</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="12" font-weight="600" letter-spacing="1" x="590" y="360">BAY OF BENGAL</text>
+<text fill="#64748b" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" letter-spacing="1" x="380" y="685">EQUATORIAL INDIAN OCEAN</text>
+<text fill="#475569" font-family="Plus Jakarta Sans" font-size="13" font-weight="700" letter-spacing="2" x="380" y="240">INDIA</text>
+<text fill="#94a3b8" font-family="Plus Jakarta Sans" font-size="10" x="440" y="535">Chennai</text>
+<circle cx="452" cy="538" fill="#94a3b8" r="2"></circle>
+<text fill="#94a3b8" font-family="Plus Jakarta Sans" font-size="10" x="475" y="445">Visakhapatnam</text>
+<circle cx="490" cy="448" fill="#94a3b8" r="2"></circle>
+</svg>
+<!-- Selected Marker Pin: ARGO_2900004 -->
+<div class="absolute" style="left: 46.5%; top: 54.5%;">
+<div class="absolute -inset-4 w-9 h-9 rounded-full bg-sky-400/30 animate-ping-slow pointer-events-none"></div>
+<div class="absolute -inset-2 w-5 h-5 rounded-full bg-sky-400/50 animate-pulse pointer-events-none"></div>
+<button class="relative w-4 h-4 rounded-full bg-white border-2 border-sky-600 shadow-md flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
+</button>
+<!-- Selected Callout Card -->
+<div class="absolute left-3 top-[-54px] bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-sky-200 shadow-lg flex flex-col pointer-events-auto cursor-pointer hover:border-sky-400 transition-all">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-sky-600 animate-pulse"></span>
+<span class="text-xs font-bold text-slate-900 font-mono">ARGO_2900004</span>
+<span class="text-[9px] px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded font-bold uppercase">PROFILING</span>
+</div>
+<div class="text-[10px] text-slate-500 font-mono flex items-center gap-2 mt-0.5">
+<span class="">12.4°N, 79.1°E</span>
+<span class="">•</span>
+<span class="text-sky-700 font-bold">-2,040m</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- HUD Overlay: Top-Left Zoom & Ruler -->
+<div class="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+<div class="bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-md p-1 flex flex-col">
+<button class="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-sky-700 hover:bg-slate-100 rounded-lg transition-colors" title="Zoom in">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<div class="h-px w-full bg-slate-200 my-0.5"></div>
+<button class="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-sky-700 hover:bg-slate-100 rounded-lg transition-colors" title="Zoom out">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+</div>
+<div class="bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-md p-1 flex flex-col items-center gap-1">
+<button class="w-7 h-7 flex items-center justify-center text-sky-600 hover:bg-slate-100 rounded-lg transition-colors" title="Reset North">
+<span class="material-symbols-outlined text-[20px]">navigation</span>
+</button>
+<div class="h-px w-full bg-slate-200"></div>
+<button class="w-7 h-7 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Geodesic Ruler">
+<span class="material-symbols-outlined text-[16px]">straighten</span>
+</button>
+</div>
+</div>
+<!-- HUD Overlay: Top-Right Active Legend Pill -->
+<div class="absolute top-4 right-4 z-10 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200/90 shadow-md hidden sm:flex items-center gap-3">
+<div class="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
+<span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+<span class="">Argo Float</span>
+</div>
+<div class="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<span class="">Glider</span>
+</div>
+<div class="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
+<span class="w-4 h-0.5 bg-sky-500"></span>
+<span class="">Drift Vector</span>
+</div>
+<div class="h-3 w-px bg-slate-200"></div>
+<span class="text-[11px] text-slate-500 font-mono">GEBCO 2024</span>
+</div>
+<!-- HUD Overlay: Bottom-Left Telemetry Coordinates -->
+<div class="absolute bottom-16 left-4 z-10 flex flex-col gap-1 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200/90 shadow-md font-mono text-xs text-slate-800">
+<div class="flex items-center gap-2">
+<span class="text-sky-700 font-bold">CURSOR:</span>
+<span class="">12.421°N, 79.145°E</span>
+<span class="text-slate-300">|</span>
+<span class="">Depth: <span class="font-bold text-sky-700">-2,450 m</span></span>
+</div>
+<div class="flex items-center justify-between text-slate-500 text-[10px] mt-0.5">
+<span class="">ZOOM: 6.5 (Mercator)</span>
+<div class="flex items-center gap-1">
+<div class="w-12 h-1 bg-slate-800 relative">
+<span class="absolute -top-3.5 left-0 text-[9px] font-sans">0</span>
+<span class="absolute -top-3.5 right-0 text-[9px] font-sans">200km</span>
+</div>
+</div>
+</div>
+</div>
+<!-- HUD Overlay: Bottom-Center Timeline Scrubber -->
+<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 w-[90%] max-w-xl bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/90 shadow-lg flex items-center gap-3">
+<button class="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center hover:bg-sky-700 transition-all shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+</button>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between text-xs mb-1">
+<span class="font-semibold text-slate-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-sky-600">history</span>
+            Trajectory Time Walk
+          </span>
+<span class="font-mono text-sky-700 font-bold text-xs">T - 30 Days ➔ T - 0 (Present)</span>
+</div>
+<div class="relative w-full h-2 bg-slate-100 rounded-full overflow-hidden cursor-pointer">
+<div class="absolute left-0 top-0 h-full w-4/5 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
+<div class="absolute left-[80%] -top-1 w-3.5 h-3.5 bg-white border-2 border-sky-600 rounded-full shadow-sm cursor-pointer"></div>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-lg text-xs font-mono font-semibold text-slate-700">
+<span class="">1x</span>
+<span class="material-symbols-outlined text-[13px] text-slate-400">speed</span>
+</div>
+</div>
+</div>
+<!-- 3C. RIGHT SIDEBAR: Instrument Detail (Matches DeepSync Home LiveMetricsPanel Style) -->
+<aside class="w-[340px] xl:w-[380px] bg-slate-50/70 border-l border-slate-200/80 flex flex-col h-full shrink-0 z-20 shadow-xs overflow-y-auto">
+<!-- Header -->
+<div class="p-4 border-b border-slate-200/80 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100">
+<span class="material-symbols-outlined text-[17px]">sensors</span>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-tight">Instrument Detail</h2>
+<span class="text-[11px] text-slate-500">Real-Time In-Situ Telemetry</span>
+</div>
+</div>
+<span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> LIVE
+      </span>
+</div>
+<div class="p-4 space-y-4">
+<!-- Platform ID Hero Card -->
+<div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">WMO Platform ID</span>
+<span class="text-[10px] px-2 py-0.5 rounded-md bg-sky-50 font-mono text-sky-700 font-bold border border-sky-100">CYCLE #184</span>
+</div>
+<div class="flex items-baseline justify-between">
+<h3 class="text-lg font-black text-sky-900 font-mono tracking-tight">ARGO_2900004</h3>
+<span class="text-xs font-semibold text-slate-500 font-mono">WMO #2900004</span>
+</div>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-slate-100 font-mono text-xs">
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Instrument Model</span>
+<span class="font-semibold text-slate-800">Apex Profiler Mk-IV</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Country / Agency</span>
+<span class="font-semibold text-slate-800">India / INCOIS</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Coordinates</span>
+<span class="font-semibold text-slate-800">12.4°N, 79.1°E</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Transmission</span>
+<span class="font-semibold text-emerald-600">2h ago (04:12 UTC)</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Parking Depth</span>
+<span class="font-semibold text-slate-800">1,000 dbar</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px] uppercase font-sans font-medium">Battery State</span>
+<span class="font-semibold text-emerald-600 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">battery_charging_full</span> 14.2V (94%)
+            </span>
+</div>
+</div>
+</div>
+<!-- Surface & Column Telemetry: 2x2 Bento Tiles -->
+<div class="space-y-2">
+<span class="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">Surface &amp; Column Telemetry</span>
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Tile 1: SST -->
+<div class="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+<div class="flex items-center justify-between text-slate-500 text-[11px]">
+<span class="">Surface Temp</span>
+<span class="material-symbols-outlined text-rose-500 text-[16px]">thermostat</span>
+</div>
+<div class="text-lg font-bold font-mono text-slate-900 mt-1">28.4 <span class="text-xs font-normal text-slate-400">°C</span></div>
+<div class="text-[10px] text-emerald-600 font-mono mt-0.5 font-semibold">▲ +0.3° anomaly</div>
+</div>
+<!-- Tile 2: Salinity -->
+<div class="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+<div class="flex items-center justify-between text-slate-500 text-[11px]">
+<span class="">Salinity</span>
+<span class="material-symbols-outlined text-sky-500 text-[16px]">water</span>
+</div>
+<div class="text-lg font-bold font-mono text-slate-900 mt-1">34.82 <span class="text-xs font-normal text-slate-400">PSU</span></div>
+<div class="text-[10px] text-slate-500 font-mono mt-0.5">Halocline: -48m</div>
+</div>
+<!-- Tile 3: Max Depth -->
+<div class="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+<div class="flex items-center justify-between text-slate-500 text-[11px]">
+<span class="">Max Dive Depth</span>
+<span class="material-symbols-outlined text-teal-600 text-[16px]">vertical_align_bottom</span>
+</div>
+<div class="text-lg font-bold font-mono text-slate-900 mt-1">-2,040 <span class="text-xs font-normal text-slate-400">m</span></div>
+<div class="text-[10px] text-slate-500 font-mono mt-0.5">2,000 dbar pressure</div>
+</div>
+<!-- Tile 4: Drift Velocity -->
+<div class="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+<div class="flex items-center justify-between text-slate-500 text-[11px]">
+<span class="">Drift Velocity</span>
+<span class="material-symbols-outlined text-amber-500 text-[16px]">air</span>
+</div>
+<div class="text-lg font-bold font-mono text-slate-900 mt-1">0.18 <span class="text-xs font-normal text-slate-400">m/s</span></div>
+<div class="text-[10px] text-slate-500 font-mono mt-0.5">Heading: 114° SE</div>
+</div>
+</div>
+</div>
+<!-- Vertical Depth Profile Chart -->
+<div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sky-600 text-[17px]">waterfall_chart</span>
+<span class="text-[11px] uppercase tracking-wider text-slate-700 font-bold">Vertical Depth Profile</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-100">Temp</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-100">Sal</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">Chl-a</span>
+</div>
+</div>
+<div class="w-full h-40 bg-slate-50 rounded-xl p-2 relative flex border border-slate-200/70">
+<div class="w-10 h-full flex flex-col justify-between text-[9px] font-mono text-slate-400 select-none border-r border-slate-200 pr-1">
+<span class="">0m</span>
+<span class="">-500m</span>
+<span class="">-1000m</span>
+<span class="">-1500m</span>
+<span class="">-2000m</span>
+</div>
+<div class="flex-1 h-full relative pl-2">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 200 130">
+<line stroke="#f43f5e" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="200" y1="12" y2="12"></line>
+<text fill="#f43f5e" font-mono="true" font-size="7" x="125" y="10">MLD: -64.2m</text>
+<path d="M 175 0 C 172 15 140 30 75 55 C 50 75 35 100 28 130" fill="none" stroke="#e11d48" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 80 0 C 90 20 120 40 135 65 C 145 90 148 110 150 130" fill="none" stroke="#0284c7" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 20 0 C 35 10 90 18 30 40 C 15 60 10 90 8 130" fill="none" stroke="#10b981" stroke-dasharray="2 1" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+<div class="absolute bottom-0 right-1 text-[8px] font-mono text-slate-400">
+              X: 0 ➔ 35 PSU / 30°C
+            </div>
+</div>
+</div>
+<div class="text-[10px] text-slate-500 flex items-center justify-between font-mono pt-1">
+<span class="">Cycle #184 Ascent Phase</span>
+<span class="text-sky-700 font-bold">CTD Quality: Grade-A</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-2 pt-1">
+<button class="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px]">view_in_ar</span>
+<span class="">Open Full 3D Scene in Dashboard</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+<span class="material-symbols-outlined text-[16px] text-slate-500">download</span>
+<span class="">NetCDF / CSV</span>
+</button>
+<button class="py-2 px-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+<span class="material-symbols-outlined text-[16px] text-slate-500">share</span>
+<span class="">Share Link</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- 4. INSTITUTIONAL FOOTER (Matches DeepSync Home Exactly) -->
+<footer class="w-full px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-slate-200/80 bg-white text-slate-600 shrink-0 z-30 text-xs">
+<div class="flex items-center gap-2">
+<img alt="DeepSync Logo" class="w-4 h-4 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCWPKu5LolBw56mV0-gbYBXYpqVvCukvz_xwxWbIz9bj1BnkZ7XSznAUYswxAR2bCjtison2hWBU2br3r6nA629s1pP3jccVT2AOATAcssOCiU2uAoAfip3msnBX2p5yQ6Zis4p6G8VoK51PPLTrj0gVUoRPzLGk8djB9qJarp8lPhUxhqPjXdr6vXHV-J_-MDT_pH6WXDyPAXvV3-remJ8l4HmpujGq9W3FX18jk6n4HAx8ixX4OcvHeZZNb-YXezk6g">
+<span class="font-bold text-slate-800">DeepSync by Bluegen</span>
+<span class="text-slate-300">•</span>
+<span class="">© 2026 DeepSync</span>
+<span class="text-slate-300">•</span>
+<span class="text-slate-500 hidden md:inline">Team BLUEGEN_606 • PS 26067 INCOIS</span>
+</div>
+<div class="flex items-center gap-4 text-xs">
+<div class="flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-mono text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="">Live Model Feeds: Syncing</span>
+</div>
+<nav class="hidden lg:flex items-center gap-3 text-slate-500">
+<a class="hover:text-sky-700 transition-colors" href="#">Bathymetry Registry</a>
+<a class="hover:text-sky-700 transition-colors" href="#">Security Architecture</a>
+<a class="hover:text-sky-700 transition-colors" href="#">OGC WMS/WCS Services</a>
+</nav>
+</div>
+</footer>
+
+
+</body></html>

@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "graphify hook-guard search"
+            "command": "C:/Users/USER/.local/bin/graphify.EXE hook-guard search"
           }
         ]
       },
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "graphify hook-guard read"
+            "command": "C:/Users/USER/.local/bin/graphify.EXE hook-guard read"
           }
         ]
       }

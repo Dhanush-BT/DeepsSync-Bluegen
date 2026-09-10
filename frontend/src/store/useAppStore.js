@@ -1,6 +1,34 @@
 import { create } from 'zustand'
 
-// Stub store — expand with real app state as features are built.
-const useAppStore = create(() => ({}))
+export const useAppStore = create((set) => ({
+  // Ocean data filter
+  filter: {
+    minDepth: null,
+    maxDepth: null,
+    minLat: null,
+    maxLat: null,
+    minLon: null,
+    maxLon: null,
+    timestamp: null,
+  },
 
-export default useAppStore
+  setFilter: (newFilter) => set((state) => ({
+    filter: { ...state.filter, ...newFilter },
+  })),
+
+  // Dashboard 3D state
+  selectedPoint: null,
+  setSelectedPoint: (point) => set({ selectedPoint: point }),
+
+  // Dashboard 2D state
+  selectedFloat: null,
+  selectedChartType: 'profile',
+  setSelectedFloat: (floatId) => set({ selectedFloat: floatId }),
+  setSelectedChartType: (type) => set({ selectedChartType: type }),
+
+  // Data loading states
+  loading: false,
+  error: null,
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
+}))
