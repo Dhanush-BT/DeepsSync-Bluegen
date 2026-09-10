@@ -8,6 +8,7 @@ import { generateVolumeSurface } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
 import AutoRotateToggle from './AutoRotateToggle'
 import MeasurementSliders from './MeasurementSliders'
+import MeasurementPlanes from './MeasurementPlanes'
 
 function VolumetricSurface({ points, selectedVariable, verticalExaggeration, volumeOpacity }) {
   const meshRef = useRef()
@@ -79,6 +80,7 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
         verticalExaggeration={verticalExaggeration}
         volumeOpacity={volumeOpacity}
       />
+      <MeasurementPlanes />
       <AxisLabels />
       <gridHelper args={[4, 8]} position={[0, 0, -2]} />
     </>

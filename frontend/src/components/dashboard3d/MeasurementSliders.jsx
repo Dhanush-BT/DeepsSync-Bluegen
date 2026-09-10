@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useAppStore } from '../../store/useAppStore'
 
 export default function MeasurementSliders() {
-  const [longitude, setLongitude] = useState(85)
-  const [latitude, setLatitude] = useState(0)
-  const [depth, setDepth] = useState(500)
+  const {
+    measurementLongitude: longitude,
+    measurementLatitude: latitude,
+    measurementDepth: depth,
+    setMeasurementLongitude: setLongitude,
+    setMeasurementLatitude: setLatitude,
+    setMeasurementDepth: setDepth,
+  } = useAppStore()
 
   // Longitude: 75-95
   // Latitude: 10 to -100

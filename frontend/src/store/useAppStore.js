@@ -42,6 +42,14 @@ export const useAppStore = create((set) => ({
   volumeOpacity: 0.85,
   setVolumeOpacity: (opacity) => set({ volumeOpacity: opacity }),
 
+  // Measurement sliders (longitude, latitude, depth)
+  measurementLongitude: 85,
+  measurementLatitude: 0,
+  measurementDepth: 500,
+  setMeasurementLongitude: (lon) => set({ measurementLongitude: lon }),
+  setMeasurementLatitude: (lat) => set({ measurementLatitude: lat }),
+  setMeasurementDepth: (depth) => set({ measurementDepth: depth }),
+
   // Data loading states
   loading: false,
   error: null,
