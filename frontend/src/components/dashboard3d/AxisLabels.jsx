@@ -21,9 +21,9 @@ export default function AxisLabels() {
     const yMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, linewidth: 2 })
     const yLine = new THREE.Line(yGeometry, yMaterial)
 
-    // Z-axis (Depth) - Blue
+    // Z-axis (Depth) - Blue (negative Z direction - going down)
     const zGeometry = new THREE.BufferGeometry()
-    zGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 0, 0, axesLength]), 3))
+    zGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0, 0, 0, -axesLength]), 3))
     const zMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff, linewidth: 2 })
     const zLine = new THREE.Line(zGeometry, zMaterial)
 
@@ -35,7 +35,7 @@ export default function AxisLabels() {
       canvas.width = 256
       canvas.height = 64
       const ctx = canvas.getContext('2d')
-      ctx.fillStyle = '#ffffff'
+      ctx.fillStyle = '#000000'
       ctx.font = 'bold 48px Arial'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
@@ -67,14 +67,14 @@ export default function AxisLabels() {
     yLabel.renderOrder = 100
     scene.add(yLabel)
 
-    // Z-axis (Depth) label
+    // Z-axis (Depth) label - showing negative Z direction
     const zLabelGeometry = new THREE.PlaneGeometry(0.5, 0.2)
     const zLabelMaterial = new THREE.MeshBasicMaterial({
       map: createTextTexture('Depth'),
       transparent: true,
     })
     const zLabel = new THREE.Mesh(zLabelGeometry, zLabelMaterial)
-    zLabel.position.set(0.3, -0.3, 1.3)
+    zLabel.position.set(0.3, -0.3, -1.3)
     zLabel.renderOrder = 100
     scene.add(zLabel)
 
@@ -104,9 +104,9 @@ export default function AxisLabels() {
       scene.add(tick)
     }
 
-    // Ticks on Z-axis (5 ticks)
+    // Ticks on Z-axis (5 ticks) - negative Z direction (depth)
     for (let i = 0; i <= 5; i++) {
-      const z = (i / 5) * axesLength
+      const z = -(i / 5) * axesLength
       const tickGeometry = new THREE.BufferGeometry()
       tickGeometry.setAttribute('position', new THREE.BufferAttribute(
         new Float32Array([0, 0, z, 0, -tickSize, z]), 3
