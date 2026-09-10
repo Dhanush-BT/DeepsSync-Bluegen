@@ -39,4 +39,7 @@ public interface ArgoFloatRepository extends JpaRepository<ArgoFloatEntity, Long
             group by f.id, f.platformId, f.instrumentType, f.latitude, f.longitude
             """)
     Optional<ArgoFloat> findProjectedFloat(@Param("platformId") String platformId);
+
+    @Query("select f.instrumentType, count(f) from ArgoFloatEntity f group by f.instrumentType")
+    List<Object[]> countByInstrumentType();
 }
