@@ -33,6 +33,12 @@ public class ArgoFloatEntity {
     @Column(nullable = false)
     private Double longitude;
 
+    @Column(name = "data_source")
+    private String dataSource;
+
+    @Column(name = "dataset_path", columnDefinition = "TEXT")
+    private String datasetPath;
+
     @OneToMany(mappedBy = "argoFloat", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("timestamp ASC")
     private List<ProfileSampleEntity> profileSamples = new ArrayList<>();
@@ -79,6 +85,22 @@ public class ArgoFloatEntity {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public String getDatasetPath() {
+        return datasetPath;
+    }
+
+    public void setDatasetPath(String datasetPath) {
+        this.datasetPath = datasetPath;
     }
 
     public List<ProfileSampleEntity> getProfileSamples() {

@@ -42,4 +42,6 @@ public interface ArgoFloatRepository extends JpaRepository<ArgoFloatEntity, Long
 
     @Query("select f.instrumentType, count(f) from ArgoFloatEntity f group by f.instrumentType")
     List<Object[]> countByInstrumentType();
+
+    long countByDataSource(String dataSource);
 }

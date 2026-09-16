@@ -19,11 +19,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
+        {/* Standalone Authentication Pages (Dedicated full-screen Stitch layout) */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Main Application Routes (wrapped in unified Layout with single top Navbar) */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/geomap" element={<GeoMap />} />
           <Route path="/assistant" element={<AiAssistant />} />

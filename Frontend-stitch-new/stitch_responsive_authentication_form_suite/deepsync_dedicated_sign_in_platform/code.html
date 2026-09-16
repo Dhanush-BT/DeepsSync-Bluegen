@@ -140,8 +140,8 @@
 </footer>
 <!-- Interactive Script for Tab Switcher and Password Reveal -->
 <script>
-  const tabSignIn = document.getElementById('tabSignIn');
-  const tabSignUp = document.getElementById('tabSignUp');
+  const tabSignIn = document.getElementById('tabResearcher');
+  const tabSignUp = document.getElementById('tabPublic');
   const authHeading = document.getElementById('authHeading');
   const authSubtitle = document.getElementById('authSubtitle');
   const fieldFullName = document.getElementById('fieldFullName');
@@ -152,29 +152,52 @@
   const passwordInput = document.getElementById('passwordInput');
   const passwordIcon = document.getElementById('passwordIcon');
 
-  tabSignIn.addEventListener('click', () => {
+  const submitBtnIcon = submitBtn.querySelector('.material-symbols-outlined');
+  const linkToSignIn = document.getElementById('linkToSignIn');
+  const linkToSignUp = document.getElementById('linkToSignUp'); // if it exists
+
+  const switchToSignIn = () => {
     tabSignIn.setAttribute('aria-selected', 'true');
     tabSignUp.setAttribute('aria-selected', 'false');
-    tabSignIn.className = "flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600";
-    tabSignUp.className = "flex-1 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    tabSignIn.className = "flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5";
+    tabSignUp.className = "flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5";
     authHeading.textContent = "Console Access";
     authSubtitle.textContent = "Authenticate with your researcher or institutional credentials";
-    fieldFullName.classList.add('hidden');
-    forgotPasswordLink.classList.remove('hidden');
+    if (fieldFullName) fieldFullName.classList.add('hidden');
+    if (forgotPasswordLink) forgotPasswordLink.classList.remove('hidden');
     btnText.textContent = "Authenticate DeepSync Session";
-  });
+    if (submitBtnIcon) submitBtnIcon.textContent = "login";
+  };
 
-  tabSignUp.addEventListener('click', () => {
+  const switchToSignUp = () => {
     tabSignUp.setAttribute('aria-selected', 'true');
     tabSignIn.setAttribute('aria-selected', 'false');
-    tabSignUp.className = "flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600";
-    tabSignIn.className = "flex-1 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600";
+    tabSignUp.className = "flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 bg-white text-sky-950 shadow-sm border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5";
+    tabSignIn.className = "flex-1 py-2 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 text-slate-600 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-600 flex items-center justify-center gap-1.5";
     authHeading.textContent = "Register Analyst";
     authSubtitle.textContent = "Provision your INCOIS ocean modeling credential and profile";
-    fieldFullName.classList.remove('hidden');
-    forgotPasswordLink.classList.add('hidden');
+    if (fieldFullName) fieldFullName.classList.remove('hidden');
+    if (forgotPasswordLink) forgotPasswordLink.classList.add('hidden');
     btnText.textContent = "Register Research Account";
-  });
+    if (submitBtnIcon) submitBtnIcon.textContent = "person_add";
+  };
+
+  tabSignIn.addEventListener('click', switchToSignIn);
+  tabSignUp.addEventListener('click', switchToSignUp);
+
+  if (linkToSignIn) {
+    linkToSignIn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchToSignIn();
+    });
+  }
+
+  if (linkToSignUp) {
+    linkToSignUp.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchToSignUp();
+    });
+  }
 
   togglePasswordVisibility.addEventListener('click', () => {
     const isPassword = passwordInput.getAttribute('type') === 'password';

@@ -5,9 +5,9 @@ import 'leaflet/dist/leaflet.css'
 // Fix Leaflet default icon paths
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+  iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+  iconUrl: '/leaflet/marker-icon.png',
+  shadowUrl: '/leaflet/marker-shadow.png',
 })
 
 export default function MapCanvas({ floats = [], focusedFloat = null, onFloatClick = () => {} }) {
@@ -53,22 +53,33 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
       markersRef.current = {}
       trajectoriesRef.current = {}
 
+      const getInstrumentColor = (type) => {
+        if (!type) return '#0284c7'
+        const u = String(type).toUpperCase()
+        if (u.includes('ARGO')) return '#0284c7' // Ocean Blue
+        if (u.includes('GLIDER')) return '#f59e0b' // Amber
+        if (u.includes('CTD')) return '#10b981' // Emerald Green
+        if (u.includes('BUOY') || u.includes('MOOR')) return '#8b5cf6' // Violet
+        if (u.includes('DRIFT')) return '#ec4899' // Pink
+        return '#06b6d4'
+      }
+
       // Add floats to map
       floats.forEach((float) => {
         const lat = float.latitude || float.lastLatitude
         const lon = float.longitude || float.lastLongitude
 
-        if (!lat || !lon) {
+        if (lat == null || lon == null) {
           console.warn('Float missing coordinates:', float.platformId)
           return
         }
 
-        const color = float.instrumentType?.includes('ARGO') ? '#0284c7' : '#f59e0b'
+        const color = getInstrumentColor(float.normalizedType || float.instrumentType)
 
         // Add trajectory polyline
         if (float.positions && float.positions.length > 1) {
           const latLngs = float.positions
-            .filter((p) => p.latitude && p.longitude)
+            .filter((p) => p.latitude != null && p.longitude != null)
             .map((p) => [p.latitude, p.longitude])
 
           if (latLngs.length > 1) {
@@ -117,9 +128,11 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
           className: 'leaflet-custom-icon',
         })
 
+        const displayId = String(float.platformId || '').split(',')[0].trim()
+
         const marker = L.marker([lat, lon], {
           icon: markerIcon,
-          title: float.platformId,
+          title: displayId,
         })
           .on('click', () => onFloatClick(float))
           .addTo(map)
@@ -129,10 +142,11 @@ export default function MapCanvas({ floats = [], focusedFloat = null, onFloatCli
         // Add popup
         const popupContent = `
           <div class="p-2 text-sm">
-            <div class="font-bold text-sky-700">${float.platformId}</div>
+            <div class="font-bold text-sky-700">${displayId}</div>
             <div class="text-xs text-gray-600 mt-1">
               <div>${lat?.toFixed(2) || '?'}°N, ${lon?.toFixed(2) || '?'}°E</div>
-              <div class="mt-0.5">${float.instrumentType || 'UNKNOWN'}</div>
+              <div class="mt-0.5 font-semibold" style="color: ${color};">${float.instrumentType || 'UNKNOWN'}</div>
+              ${float.profileCount ? `<div class="text-[11px] text-gray-500 mt-1">${float.profileCount} profiles</div>` : ''}
             </div>
           </div>
         `

@@ -43,7 +43,7 @@ public class ParserRegistry {
   }
 
   /**
-   * Find the appropriate parser for a file extension.
+   * Find parser for file extension.
    */
   public OceanDataParser getParserForExtension(String extension) {
     String normalized = extension.toLowerCase();

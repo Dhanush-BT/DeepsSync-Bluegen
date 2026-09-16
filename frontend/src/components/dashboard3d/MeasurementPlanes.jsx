@@ -4,26 +4,26 @@ import { useAppStore } from '../../store/useAppStore'
 export default function MeasurementPlanes() {
   const { measurementLongitude: lon, measurementLatitude: lat, measurementDepth: depth } = useAppStore()
 
-  // Normalize values to axis ranges
-  // X = Longitude: 75-95 -> -1 to 1
-  // Y = Depth: 0-1000 -> 1 to -1 (inverted, top is positive)
-  // Z = Latitude: -100 to 10 -> -1 to 1
+  // Standard Normalized Coordinates [-1, 1]:
+  // X = Longitude: 70°E to 95°E (range = 25)
+  // Y = Depth: 0m to 2000m -> surface is +1, 2000m is -1
+  // Z = Latitude: -10°S to 25°N (range = 35)
 
-  const normLon = ((lon - 75) / 20) * 2 - 1
-  const normLat = ((lat + 100) / 110) * 2 - 1
-  const normDepth = -((depth / 1000) * 2 - 1)  // Inverted: 0 at top, -1 at bottom
+  const normLon = Math.max(-1, Math.min(1, ((lon - 70) / 25) * 2 - 1))
+  const normLat = Math.max(-1, Math.min(1, ((lat - (-10)) / 35) * 2 - 1))
+  const normDepth = Math.max(-1, Math.min(1, 1 - (depth / 2000) * 2))
 
   return (
-    <>
-      {/* Longitude plane (YZ plane at selected longitude) - RED - vertical */}
+    <group>
+      {/* Longitude plane (YZ plane at selected longitude) - RED - vertical slice */}
       <mesh position={[normLon, 0, 0]}>
         <planeGeometry args={[2, 2]} />
         <meshBasicMaterial
-          color={0xff0000}
+          color={0xef4444}
           transparent
-          opacity={0.1}
+          opacity={0.12}
           side={THREE.DoubleSide}
-          rotation={[0, 0, 0]}
+          depthWrite={false}
         />
       </mesh>
 
@@ -37,17 +37,18 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0xff0000} linewidth={3} transparent opacity={0.8} />
+        <lineBasicMaterial color={0xef4444} linewidth={3} transparent opacity={0.8} />
       </line>
 
       {/* Latitude plane (XY plane at selected latitude) - GREEN - depth-longitude slice */}
       <mesh position={[0, 0, normLat]}>
         <planeGeometry args={[2, 2]} />
         <meshBasicMaterial
-          color={0x00ff00}
+          color={0x10b981}
           transparent
-          opacity={0.1}
+          opacity={0.12}
           side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
 
@@ -61,22 +62,22 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0x00ff00} linewidth={3} transparent opacity={0.8} />
+        <lineBasicMaterial color={0x10b981} linewidth={3} transparent opacity={0.8} />
       </line>
 
-      {/* Depth plane (XZ plane at selected depth) - BLUE - horizontal */}
-      <mesh position={[0, normDepth, 0]}>
+      {/* Depth plane (XZ plane at selected depth) - BLUE - horizontal slice */}
+      <mesh position={[0, normDepth, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2, 2]} />
         <meshBasicMaterial
-          color={0x0000ff}
+          color={0x0284c7}
           transparent
-          opacity={0.1}
+          opacity={0.15}
           side={THREE.DoubleSide}
-          rotation={[Math.PI / 2, 0, 0]}
+          depthWrite={false}
         />
       </mesh>
 
-      {/* Depth line (vertical going down) */}
+      {/* Depth lines along horizontal plane perimeter */}
       <line position={[0, normDepth, 0]}>
         <bufferGeometry>
           <bufferAttribute
@@ -86,40 +87,11 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0x0000ff} linewidth={3} transparent opacity={0.8} />
+        <lineBasicMaterial color={0x0284c7} linewidth={3} transparent opacity={0.8} />
       </line>
 
-      {/* Intersection point - bright yellow with glow */}
-      <mesh position={[normLon, normDepth, normLat]}>
-        <sphereGeometry args={[0.12, 16, 16]} />
-        <meshPhongMaterial
-          color={0xffff00}
-          emissive={0xffff00}
-          emissiveIntensity={0.8}
-          shininess={100}
-          wireframe={false}
-        />
-      </mesh>
-
-      {/* Outer glow sphere */}
-      <mesh position={[normLon, normDepth, normLat]}>
-        <sphereGeometry args={[0.16, 16, 16]} />
-        <meshBasicMaterial
-          color={0xffff00}
-          transparent
-          opacity={0.3}
-          wireframe={false}
-        />
-      </mesh>
-
-      {/* Crosshair center marker - black outline */}
-      <mesh position={[normLon, normDepth, normLat]}>
-        <sphereGeometry args={[0.06, 8, 8]} />
-        <meshBasicMaterial color={0x000000} />
-      </mesh>
-
-      {/* Crosshair lines at intersection */}
-      {/* Horizontal line (X axis - Longitude) */}
+      {/* Crosshair guide lines intersecting at [normLon, normDepth, normLat] */}
+      {/* Horizontal X axis line */}
       <line position={[0, normDepth, normLat]}>
         <bufferGeometry>
           <bufferAttribute
@@ -129,10 +101,10 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0xffff00} linewidth={2} transparent opacity={0.6} />
+        <lineBasicMaterial color={0xfbbf24} linewidth={2} transparent opacity={0.7} />
       </line>
 
-      {/* Vertical line (Y axis - Depth) */}
+      {/* Vertical Y axis line */}
       <line position={[normLon, 0, normLat]}>
         <bufferGeometry>
           <bufferAttribute
@@ -142,10 +114,10 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0xffff00} linewidth={2} transparent opacity={0.6} />
+        <lineBasicMaterial color={0xfbbf24} linewidth={2} transparent opacity={0.7} />
       </line>
 
-      {/* Front-back line (Z axis - Latitude) */}
+      {/* Front-back Z axis line */}
       <line position={[normLon, normDepth, 0]}>
         <bufferGeometry>
           <bufferAttribute
@@ -155,8 +127,39 @@ export default function MeasurementPlanes() {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={0xffff00} linewidth={2} transparent opacity={0.6} />
+        <lineBasicMaterial color={0xfbbf24} linewidth={2} transparent opacity={0.7} />
       </line>
-    </>
+
+      {/* Intersection Sphere: Vivid, prominent, renderOrder high with depthTest=false so it's always clearly visible */}
+      <mesh position={[normLon, normDepth, normLat]} renderOrder={999}>
+        <sphereGeometry args={[0.07, 24, 24]} />
+        <meshStandardMaterial
+          color="#facc15"
+          emissive="#eab308"
+          emissiveIntensity={1.2}
+          roughness={0.2}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Outer Halo Glow Sphere */}
+      <mesh position={[normLon, normDepth, normLat]} renderOrder={998}>
+        <sphereGeometry args={[0.12, 20, 20]} />
+        <meshBasicMaterial
+          color="#fde047"
+          transparent
+          opacity={0.4}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Center target dot */}
+      <mesh position={[normLon, normDepth, normLat]} renderOrder={1000}>
+        <sphereGeometry args={[0.025, 12, 12]} />
+        <meshBasicMaterial color="#0f172a" depthTest={false} depthWrite={false} />
+      </mesh>
+    </group>
   )
 }

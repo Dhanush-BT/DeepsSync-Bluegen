@@ -49,11 +49,14 @@ public class DataSeeder implements CommandLineRunner {
     private final String adminPassword;
     private final String adminFullName;
 
+    private final EnhancedDataSeeder enhancedDataSeeder;
+
     public DataSeeder(
             OceanGridPointRepository gridPointRepository,
             ArgoFloatRepository argoFloatRepository,
             HazardAdvisoryRepository hazardAdvisoryRepository,
             UserRepository userRepository,
+            EnhancedDataSeeder enhancedDataSeeder,
             @Value("${deepsync.admin.email:admin@deepsync.local}") String adminEmail,
             @Value("${deepsync.admin.password:ChangeMe123!}") String adminPassword,
             @Value("${deepsync.admin.full-name:DEEPSYNC Admin}") String adminFullName) {
@@ -61,6 +64,7 @@ public class DataSeeder implements CommandLineRunner {
         this.argoFloatRepository = argoFloatRepository;
         this.hazardAdvisoryRepository = hazardAdvisoryRepository;
         this.userRepository = userRepository;
+        this.enhancedDataSeeder = enhancedDataSeeder;
         this.adminEmail = adminEmail;
         this.adminPassword = adminPassword;
         this.adminFullName = adminFullName;
@@ -72,6 +76,12 @@ public class DataSeeder implements CommandLineRunner {
         seedArgoFloats();
         seedHazardAdvisories();
         seedAdminUser();
+        seedAllDatasets();
+    }
+
+    private void seedAllDatasets() {
+        log.info("Loading all available datasets...");
+        enhancedDataSeeder.seedAllDatasets();
     }
 
     private void seedOceanGrid() {

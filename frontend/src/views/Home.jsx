@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '../store/useAuthStore'
 import apiClient from '../api/client'
 
 export default function Home() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const { isAuthenticated } = useAuthStore()
 
   useEffect(() => {
     apiClient
@@ -48,6 +51,12 @@ export default function Home() {
           <Link to="/geomap" className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:border-sky-400 rounded-xl transition-all">
             <span>Open Geo Map</span>
           </Link>
+          {isAuthenticated && (
+            <Link to="/datamanager" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 rounded-xl shadow-sm transition-all">
+              <span className="material-symbols-outlined text-base text-sky-700">admin_panel_settings</span>
+              <span>Open Data Manager</span>
+            </Link>
+          )}
         </div>
         <p className="text-xs text-slate-400">Public access · Real-time data without login</p>
       </section>

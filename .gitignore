@@ -36,3 +36,9 @@ build/
 frontend/node_modules/
 frontend/dist/
 .env
+
+### Datasets and heavy binary files (>100MB) ###
+dataset/
+*.nc
+*.log
+graphify-out/

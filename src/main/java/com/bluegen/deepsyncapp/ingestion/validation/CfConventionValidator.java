@@ -66,17 +66,21 @@ public class CfConventionValidator {
   }
 
   private void checkDimensions(NetcdfFile dataset, ValidationResult result) {
+    // Informational only: lat/lon presence is already enforced as a hard error in
+    // checkCoordinateVariables. Profile-indexed files (e.g. Argo N_PROF/N_LEVELS) don't
+    // name dimensions after lat/lon/depth at all, so treating this as an error rejected
+    // valid files.
     List<Dimension> dims = dataset.getDimensions();
     boolean hasSpatialDims = false;
     for (Dimension dim : dims) {
-      String name = dim.getShortName();
-      if (name.matches("(lat|latitude|lon|longitude|x|y|depth|z)")) {
+      String name = dim.getShortName().toLowerCase();
+      if (name.matches("(lat|latitude|lon|longitude|x|y|depth|z|pres|pressure)")) {
         hasSpatialDims = true;
         break;
       }
     }
     if (!hasSpatialDims) {
-      result.addError("Missing spatial dimensions (lat/lon/x/y)");
+      result.addWarning("No conventionally named spatial dimension found (lat/lon/depth)");
     }
   }
 
@@ -98,6 +102,13 @@ public class CfConventionValidator {
     for (String name : names) {
       Variable v = dataset.findVariable(name);
       if (v != null) return v;
+    }
+    // Fall back to case-insensitive match (Argo/INCOIS files commonly use
+    // upper-case names like LATITUDE/LONGITUDE).
+    for (Variable v : dataset.getVariables()) {
+      for (String name : names) {
+        if (v.getShortName().equalsIgnoreCase(name)) return v;
+      }
     }
     return null;
   }

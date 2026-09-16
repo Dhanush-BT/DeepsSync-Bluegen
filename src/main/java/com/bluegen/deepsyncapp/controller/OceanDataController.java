@@ -5,10 +5,7 @@ import com.bluegen.deepsyncapp.model.OceanDataFilter;
 import com.bluegen.deepsyncapp.model.OceanGridPoint;
 import com.bluegen.deepsyncapp.service.OceanDataService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +20,13 @@ public class OceanDataController {
     }
 
     @GetMapping
-    public List<OceanGridPoint> gridPoints(@Valid @ModelAttribute OceanDataFilter filter) {
+    public List<OceanGridPoint> gridPoints(
+            @Valid @ModelAttribute OceanDataFilter filter,
+            @RequestParam(required = false) List<String> dataset) {
+        // Filter by dataset if specified
+        if (dataset != null && !dataset.isEmpty()) {
+            return oceanDataService.findPointsByDatasets(filter, dataset);
+        }
         return oceanDataService.findPoints(filter);
     }
 

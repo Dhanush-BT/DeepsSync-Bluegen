@@ -22,7 +22,10 @@ export default function ProfileChart() {
     apiClient
       .get(`/floats/${selectedFloat.platformId}/profiles`)
       .then((res) => {
-        const sorted = (res.data || []).sort((a, b) => (a.depthMeters || 0) - (b.depthMeters || 0))
+        const valid = (res.data || [])
+          .filter((p) => p && p.depthMeters !== null && p.depthMeters < 9000 && p.depthMeters >= 0)
+          .filter((p) => (p.temperatureC !== null && p.temperatureC < 100 && p.temperatureC > -10) || (p.salinityPsu !== null && p.salinityPsu < 100 && p.salinityPsu >= 0))
+        const sorted = valid.sort((a, b) => (a.depthMeters || 0) - (b.depthMeters || 0))
         setProfiles(sorted)
         setError(null)
       })
@@ -127,8 +130,7 @@ export default function ProfileChart() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-sm font-semibold text-slate-700">Profile Chart</h3>
-      <div className="bg-white p-3 rounded border border-slate-200" style={{ height: '300px' }}>
+      <div className="bg-white p-2 rounded-xl border border-slate-200" style={{ height: '360px' }}>
         <Line data={chartData} options={options} />
       </div>
     </div>

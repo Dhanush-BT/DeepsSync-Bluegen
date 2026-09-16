@@ -23,7 +23,10 @@ public interface OceanGridPointRepository extends JpaRepository<OceanGridPointEn
      */
     @Query("""
             select p from OceanGridPointEntity p
-            where (cast(:minLat as Double) is null or p.latitude >= :minLat)
+            where p.depthMeters is not null and p.depthMeters < 9000 and p.depthMeters >= 0
+              and (p.temperatureC is null or (p.temperatureC < 100 and p.temperatureC > -10))
+              and (p.salinityPsu is null or (p.salinityPsu < 100 and p.salinityPsu >= 0))
+              and (cast(:minLat as Double) is null or p.latitude >= :minLat)
               and (cast(:maxLat as Double) is null or p.latitude <= :maxLat)
               and (cast(:minLon as Double) is null or p.longitude >= :minLon)
               and (cast(:maxLon as Double) is null or p.longitude <= :maxLon)

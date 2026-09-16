@@ -6,6 +6,8 @@ import com.bluegen.deepsyncapp.ingestion.validation.CfConventionValidator;
 import com.bluegen.deepsyncapp.entity.IngestionEntity;
 import com.bluegen.deepsyncapp.entity.OceanGridPointEntity;
 import com.bluegen.deepsyncapp.entity.ArgoFloatEntity;
+import com.bluegen.deepsyncapp.entity.ProfileSampleEntity;
+import com.bluegen.deepsyncapp.entity.FloatPositionEntity;
 import com.bluegen.deepsyncapp.repository.IngestionRepository;
 import com.bluegen.deepsyncapp.repository.OceanGridPointRepository;
 import com.bluegen.deepsyncapp.repository.ArgoFloatRepository;
@@ -22,6 +24,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -114,7 +117,34 @@ public class AdminParserController {
       // Parse float data
       ArgoFloatEntity floatData = parser.parseFloatData(uploadedFile);
       if (floatData != null) {
-        argoFloatRepository.save(floatData);
+        Optional<ArgoFloatEntity> existing = argoFloatRepository.findByPlatformId(floatData.getPlatformId());
+        if (existing.isPresent()) {
+          ArgoFloatEntity cur = existing.get();
+          cur.setLatitude(floatData.getLatitude());
+          cur.setLongitude(floatData.getLongitude());
+          cur.setInstrumentType(floatData.getInstrumentType());
+          cur.setDataSource(floatData.getDataSource());
+          cur.setDatasetPath(floatData.getDatasetPath());
+          
+          // Clear and replace child profiles and positions
+          if (floatData.getProfileSamples() != null) {
+            cur.getProfileSamples().clear();
+            for (ProfileSampleEntity sample : floatData.getProfileSamples()) {
+              sample.setArgoFloat(cur);
+              cur.getProfileSamples().add(sample);
+            }
+          }
+          if (floatData.getPositions() != null) {
+            cur.getPositions().clear();
+            for (FloatPositionEntity pos : floatData.getPositions()) {
+              pos.setArgoFloat(cur);
+              cur.getPositions().add(pos);
+            }
+          }
+          argoFloatRepository.save(cur);
+        } else {
+          argoFloatRepository.save(floatData);
+        }
       }
 
       // Mark ingestion as success

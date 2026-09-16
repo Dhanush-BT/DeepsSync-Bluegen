@@ -3,10 +3,28 @@ import apiClient from '../../api/client'
 
 export default function MapFilterPanel({ onFilterChange, floats = [] }) {
   const [searchId, setSearchId] = useState('')
-  const [selectedInstruments, setSelectedInstruments] = useState({ ARGO: true, GLIDER: true })
+  const [selectedInstruments, setSelectedInstruments] = useState({
+    ARGO: true,
+    GLIDER: true,
+    CTD: true,
+    MOORED_BUOY: true,
+    DRIFTER: true,
+    OTHER: true,
+  })
   const [observationWindow, setObservationWindow] = useState('30days')
   const [depthRange, setDepthRange] = useState([0, 2500])
   const [focusedFloats, setFocusedFloats] = useState([])
+
+  const normalizeType = (type) => {
+    if (!type) return 'OTHER'
+    const u = String(type).toUpperCase()
+    if (u.includes('ARGO')) return 'ARGO'
+    if (u.includes('GLIDER')) return 'GLIDER'
+    if (u.includes('CTD')) return 'CTD'
+    if (u.includes('BUOY') || u.includes('MOOR')) return 'MOORED_BUOY'
+    if (u.includes('DRIFT')) return 'DRIFTER'
+    return u
+  }
 
   const handleInstrumentToggle = (type) => {
     const updated = { ...selectedInstruments, [type]: !selectedInstruments[type] }
@@ -28,18 +46,25 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
     onFilterChange({ focusedFloats: updated })
   }
 
+  // Calculate dynamic counts
   const instrumentCounts = {
-    ARGO: floats.filter(f => f.instrumentType?.includes('ARGO')).length,
-    GLIDER: floats.filter(f => f.instrumentType?.includes('GLIDER')).length,
+    ARGO: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'ARGO').length,
+    GLIDER: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'GLIDER').length,
+    CTD: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'CTD').length,
+    MOORED_BUOY: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'MOORED_BUOY').length,
+    DRIFTER: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'DRIFTER').length,
+    OTHER: floats.filter(f => {
+      const t = f.normalizedType || normalizeType(f.instrumentType)
+      return !['ARGO', 'GLIDER', 'CTD', 'MOORED_BUOY', 'DRIFTER'].includes(t)
+    }).length,
   }
 
   const visibleFloats = floats.filter(f => {
     const search = (searchId || '').trim().toLowerCase()
     if (search && !f.platformId.toLowerCase().includes(search)) return false
 
-    // Check instrument type
-    if (f.instrumentType?.includes('ARGO') && !selectedInstruments.ARGO) return false
-    if (f.instrumentType?.includes('GLIDER') && !selectedInstruments.GLIDER) return false
+    const cat = f.normalizedType || normalizeType(f.instrumentType)
+    if (selectedInstruments[cat] === false) return false
 
     return true
   })
@@ -95,7 +120,7 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
               Instrument Categories
             </span>
             <span className="text-xs text-sky-700 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">
-              {Object.values(selectedInstruments).filter(Boolean).length}/2 Active
+              {Object.values(selectedInstruments).filter(Boolean).length} Active
             </span>
           </div>
 
@@ -129,11 +154,49 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
               />
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
-                <span className="text-xs font-bold text-slate-800">Autonomous Gliders</span>
+                <span className="text-xs font-bold text-slate-800">Gliders</span>
               </div>
             </div>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">
               {instrumentCounts.GLIDER} active
+            </span>
+          </label>
+
+          {/* CTD Profiles / Soundings */}
+          <label className="flex items-center justify-between p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 cursor-pointer transition-colors">
+            <div className="flex items-center gap-2.5">
+              <input
+                type="checkbox"
+                checked={selectedInstruments.CTD}
+                onChange={() => handleInstrumentToggle('CTD')}
+                className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
+              />
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 ring-2 ring-emerald-200"></span>
+                <span className="text-xs font-bold text-slate-800">CTD Profilers</span>
+              </div>
+            </div>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900">
+              {instrumentCounts.CTD} active
+            </span>
+          </label>
+
+          {/* Moored Buoys */}
+          <label className="flex items-center justify-between p-2.5 rounded-xl border border-purple-200 bg-purple-50/50 hover:bg-purple-50 cursor-pointer transition-colors">
+            <div className="flex items-center gap-2.5">
+              <input
+                type="checkbox"
+                checked={selectedInstruments.MOORED_BUOY}
+                onChange={() => handleInstrumentToggle('MOORED_BUOY')}
+                className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-slate-300 cursor-pointer"
+              />
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-600 ring-2 ring-purple-200"></span>
+                <span className="text-xs font-bold text-slate-800">Moored Buoys</span>
+              </div>
+            </div>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-900">
+              {instrumentCounts.MOORED_BUOY} active
             </span>
           </label>
         </div>
@@ -194,41 +257,53 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
             </span>
             <span className="text-[11px] text-slate-500 font-medium">{focusedFloats.length} Focus</span>
           </div>
-          <div className="space-y-1.5 max-h-48 overflow-y-auto">
-            {visibleFloats.slice(0, 5).map((f) => (
-              <div
-                key={f.platformId}
-                onClick={() => handleFocusFloat(f.platformId)}
-                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
-                  focusedFloats.includes(f.platformId)
-                    ? 'border-sky-300 bg-sky-50/70'
-                    : 'border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{
-                          backgroundColor:
-                            f.instrumentType?.includes('ARGO') ? '#0284c7' : '#f59e0b',
-                        }}
-                      ></span>
-                      <span className="text-xs font-bold text-sky-900 font-mono">
-                        {f.platformId}
+          <div className="space-y-1.5 max-h-56 overflow-y-auto">
+            {visibleFloats.map((f) => {
+              const displayId = String(f.platformId || '').split(',')[0].trim()
+              const cat = f.normalizedType || normalizeType(f.instrumentType)
+              const color =
+                cat === 'ARGO'
+                  ? '#0284c7'
+                  : cat === 'GLIDER'
+                  ? '#f59e0b'
+                  : cat === 'CTD'
+                  ? '#10b981'
+                  : cat === 'MOORED_BUOY'
+                  ? '#8b5cf6'
+                  : '#06b6d4'
+
+              return (
+                <div
+                  key={f.platformId}
+                  onClick={() => handleFocusFloat(f.platformId)}
+                  className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                    focusedFloats.includes(f.platformId)
+                      ? 'border-sky-300 bg-sky-50/70'
+                      : 'border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{ backgroundColor: color }}
+                        ></span>
+                        <span className="text-xs font-bold text-sky-900 font-mono truncate max-w-[130px]" title={displayId}>
+                          {displayId}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                        {(f.latitude || f.lastLatitude)?.toFixed(2)}°N, {(f.longitude || f.lastLongitude)?.toFixed(2)}°E
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-500 font-mono mt-0.5">
-                      {(f.latitude || f.lastLatitude)?.toFixed(2)}°N, {(f.longitude || f.lastLongitude)?.toFixed(2)}°E
+                    <span className="material-symbols-outlined text-slate-400 text-[16px]">
+                      gps_fixed
                     </span>
                   </div>
-                  <span className="material-symbols-outlined text-slate-400 text-[16px]">
-                    gps_fixed
-                  </span>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

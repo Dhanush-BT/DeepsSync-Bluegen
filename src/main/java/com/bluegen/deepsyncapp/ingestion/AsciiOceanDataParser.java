@@ -12,15 +12,12 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileReader;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Parses ASCII/CSV files (Argo floats, Gliders, CTD casts, etc.).
  * Supports both grid point data and in-situ float profile data.
- * Expects CSV with headers: latitude, longitude, depth, temperature_c, salinity_psu, etc.
- * For floats: platformId, instrumentType, latitude, longitude, timestamp, depth, temperature_c, salinity_psu
  */
 @Component
 public class AsciiOceanDataParser implements OceanDataParser {
@@ -53,28 +50,25 @@ public class AsciiOceanDataParser implements OceanDataParser {
 
       for (CSVRecord record : csvParser) {
         try {
-          OceanGridPointEntity point = new OceanGridPointEntity();
-
-          Double lat = parseDouble(record, "latitude", "lat", "y");
-          Double lon = parseDouble(record, "longitude", "lon", "x");
-          Double depth = parseDouble(record, "depth_meters", "depthMeters", "depth", "z");
-
+          Double lat = parseDouble(record, "latitude", "lat");
+          Double lon = parseDouble(record, "longitude", "lon");
           if (lat == null || lon == null) continue;
 
+          OceanGridPointEntity point = new OceanGridPointEntity();
           point.setLatitude(lat);
           point.setLongitude(lon);
-          point.setDepthMeters(depth != null ? depth : 0.0);
+          point.setDepthMeters(parseDouble(record, "depth_meters", "depth") != null ?
+              parseDouble(record, "depth_meters", "depth") : 0.0);
           point.setTimestamp(parseTimestamp(record, "timestamp", "time"));
-
-          point.setTemperatureC(parseDouble(record, "temperature_c", "temperature", "temp", "t"));
-          point.setSalinityPsu(parseDouble(record, "salinity_psu", "salinity", "sal", "s"));
-          point.setCurrentU(parseDouble(record, "current_u", "u", "eastward_velocity"));
-          point.setCurrentV(parseDouble(record, "current_v", "v", "northward_velocity"));
-          point.setChlorophyll(parseDouble(record, "chlorophyll", "chl", "fluorescence"));
+          point.setTemperatureC(parseDouble(record, "temperature_c", "temperature"));
+          point.setSalinityPsu(parseDouble(record, "salinity_psu", "salinity"));
+          point.setCurrentU(parseDouble(record, "current_u", "u"));
+          point.setCurrentV(parseDouble(record, "current_v", "v"));
+          point.setChlorophyll(parseDouble(record, "chlorophyll", "chl"));
 
           result.add(point);
         } catch (Exception e) {
-          // Skip malformed rows, continue processing
+          // Skip malformed rows
           continue;
         }
       }
@@ -87,31 +81,31 @@ public class AsciiOceanDataParser implements OceanDataParser {
     try (FileReader reader = new FileReader(file);
          CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)) {
 
-      ArgoFloatEntity float_ = null;
+      ArgoFloatEntity floatEntity = null;
       List<ProfileSampleEntity> profiles = new ArrayList<>();
       List<FloatPositionEntity> positions = new ArrayList<>();
 
       for (CSVRecord record : csvParser) {
         try {
-          String platformId = getField(record, "platformId", "platform_id", "id");
+          String platformId = getField(record, "platformId", "platform_id", "id", "glider_id", "wmo");
           String instrumentType = getField(record, "instrumentType", "instrument_type", "type");
 
           if (platformId == null) continue;
 
-          if (float_ == null) {
-            float_ = new ArgoFloatEntity();
-            float_.setPlatformId(platformId);
-            float_.setInstrumentType(instrumentType != null ? instrumentType : "UNKNOWN");
+          if (floatEntity == null) {
+            floatEntity = new ArgoFloatEntity();
+            floatEntity.setPlatformId(platformId);
+            floatEntity.setInstrumentType(instrumentType != null ? instrumentType : "UNKNOWN");
           }
 
           Double lat = parseDouble(record, "latitude", "lat");
           Double lon = parseDouble(record, "longitude", "lon");
           if (lat != null && lon != null) {
-            float_.setLatitude(lat);
-            float_.setLongitude(lon);
+            floatEntity.setLatitude(lat);
+            floatEntity.setLongitude(lon);
           }
 
-          // Check if this is a profile sample or position fix
+          // Check if profile sample or position fix
           Double depth = parseDouble(record, "depth_meters", "depth");
           if (depth != null && depth > 0) {
             // It's a profile sample
@@ -120,7 +114,7 @@ public class AsciiOceanDataParser implements OceanDataParser {
             profile.setTemperatureC(parseDouble(record, "temperature_c", "temperature"));
             profile.setSalinityPsu(parseDouble(record, "salinity_psu", "salinity"));
             profile.setTimestamp(parseTimestamp(record, "timestamp", "time"));
-            profile.setArgoFloat(float_);
+            profile.setArgoFloat(floatEntity);
             profiles.add(profile);
           } else {
             // It's a position fix
@@ -128,7 +122,7 @@ public class AsciiOceanDataParser implements OceanDataParser {
             pos.setLatitude(lat);
             pos.setLongitude(lon);
             pos.setTimestamp(parseTimestamp(record, "timestamp", "time"));
-            pos.setArgoFloat(float_);
+            pos.setArgoFloat(floatEntity);
             positions.add(pos);
           }
         } catch (Exception e) {
@@ -137,11 +131,12 @@ public class AsciiOceanDataParser implements OceanDataParser {
         }
       }
 
-      if (float_ != null) {
-        float_.setProfileSamples(profiles);
-        float_.setPositions(positions);
+      if (floatEntity != null) {
+        floatEntity.setProfileSamples(profiles);
+        floatEntity.setPositions(positions);
       }
-      return float_;
+
+      return floatEntity;
     }
   }
 
@@ -155,6 +150,7 @@ public class AsciiOceanDataParser implements OceanDataParser {
           }
         }
       } catch (NumberFormatException ignored) {
+        // Try next column
       }
     }
     return null;
@@ -162,11 +158,15 @@ public class AsciiOceanDataParser implements OceanDataParser {
 
   private String getField(CSVRecord record, String... columnNames) {
     for (String col : columnNames) {
-      if (record.isMapped(col)) {
-        String val = record.get(col);
-        if (val != null && !val.isBlank()) {
-          return val;
+      try {
+        if (record.isMapped(col)) {
+          String val = record.get(col);
+          if (val != null && !val.isBlank()) {
+            return val;
+          }
         }
+      } catch (Exception ignored) {
+        // Try next column
       }
     }
     return null;
@@ -184,13 +184,13 @@ public class AsciiOceanDataParser implements OceanDataParser {
               try {
                 return Instant.ofEpochMilli(Long.parseLong(val)); // Unix timestamp
               } catch (Exception e2) {
-                // Try other formats
                 return Instant.now();
               }
             }
           }
         }
       } catch (Exception ignored) {
+        // Try next column
       }
     }
     return Instant.now();

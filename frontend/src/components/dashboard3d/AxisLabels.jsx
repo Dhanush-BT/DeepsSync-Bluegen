@@ -12,11 +12,11 @@ export default function AxisLabels() {
     // Create wireframe bounding box
     const boxGeometry = new THREE.BoxGeometry(size, size, size)
     const edges = new THREE.EdgesGeometry(boxGeometry)
-    const wireframe = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xcccccc }))
+    const wireframe = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x64748b }))
     scene.add(wireframe)
 
     // Add grid lines on faces
-    const gridMaterial = new THREE.LineBasicMaterial({ color: 0xdddddd, transparent: true, opacity: 0.3 })
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.45 })
 
     // Grid on XY plane (longitude-latitude)
     for (let i = 0; i <= 4; i++) {

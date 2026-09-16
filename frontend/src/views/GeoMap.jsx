@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Navbar from '../components/home/Navbar'
 import MapFilterPanel from '../components/geomap/MapFilterPanel'
 import MapCanvas from '../components/geomap/MapCanvas'
 import InstrumentDetailPanel from '../components/geomap/InstrumentDetailPanel'
@@ -11,7 +10,7 @@ export default function GeoMap() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filters, setFilters] = useState({
-    selectedInstruments: { ARGO: true, GLIDER: true },
+    selectedInstruments: { ARGO: true, GLIDER: true, CTD: true, MOORED_BUOY: true, DRIFTER: true, OTHER: true },
     searchId: '',
     focusedFloats: [],
   })
@@ -19,6 +18,17 @@ export default function GeoMap() {
   useEffect(() => {
     fetchFloats()
   }, [])
+
+  const normalizeInstrumentType = (type) => {
+    if (!type) return 'OTHER'
+    const u = String(type).toUpperCase()
+    if (u.includes('ARGO')) return 'ARGO'
+    if (u.includes('GLIDER')) return 'GLIDER'
+    if (u.includes('CTD')) return 'CTD'
+    if (u.includes('BUOY') || u.includes('MOOR')) return 'MOORED_BUOY'
+    if (u.includes('DRIFT')) return 'DRIFTER'
+    return u
+  }
 
   const fetchFloats = async () => {
     try {
@@ -39,15 +49,21 @@ export default function GeoMap() {
       // Fetch position history for each float
       const floatsWithPositions = await Promise.all(
         floatData.map(async (f) => {
+          const encodedId = encodeURIComponent(f.platformId)
           try {
-            const trackResponse = await apiClient.get(`/floats/${f.platformId}/track`)
+            const trackResponse = await apiClient.get(`/floats/${encodedId}/track`)
             return {
               ...f,
+              normalizedType: normalizeInstrumentType(f.instrumentType),
               positions: Array.isArray(trackResponse.data) ? trackResponse.data : [],
             }
           } catch (err) {
             console.warn(`Failed to fetch track for ${f.platformId}:`, err.message)
-            return { ...f, positions: [] }
+            return {
+              ...f,
+              normalizedType: normalizeInstrumentType(f.instrumentType),
+              positions: [],
+            }
           }
         })
       )
@@ -66,7 +82,8 @@ export default function GeoMap() {
     if (filters.searchId && !f.platformId.toLowerCase().includes(filters.searchId.toLowerCase())) {
       return false
     }
-    if (!filters.selectedInstruments[f.instrumentType]) {
+    const category = f.normalizedType || normalizeInstrumentType(f.instrumentType)
+    if (filters.selectedInstruments && filters.selectedInstruments[category] === false) {
       return false
     }
     return true
@@ -86,10 +103,7 @@ export default function GeoMap() {
   }, [loading, error, floats])
 
   return (
-    <div className="flex h-screen flex-col bg-slate-50 overflow-hidden">
-      {/* Navbar */}
-      <Navbar />
-
+    <div className="flex h-[calc(100vh-4rem)] flex-col bg-transparent overflow-hidden">
       {/* Sub-header */}
       <div className="w-full bg-white border-b border-slate-200/80 px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 z-30">
         <div className="flex items-center gap-3">
@@ -109,19 +123,31 @@ export default function GeoMap() {
         <div className="hidden lg:flex items-center gap-2 ml-2">
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-200 font-semibold flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
-            {floats.filter((f) => f.instrumentType?.includes('ARGO')).length} Argo Floats
+            {floats.filter((f) => (f.normalizedType || f.instrumentType)?.includes('ARGO')).length} Argo Floats
           </span>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-semibold flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-            {floats.filter((f) => f.instrumentType?.includes('GLIDER')).length} Gliders
+            {floats.filter((f) => (f.normalizedType || f.instrumentType)?.includes('GLIDER')).length} Gliders
           </span>
-          <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-            Sync: 6h ago
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+            {floats.length} Total Instruments
           </span>
         </div>
 
         {/* Map Controls */}
         <div className="flex items-center gap-2 flex-wrap ml-auto">
+          <button
+            onClick={fetchFloats}
+            disabled={loading}
+            className="text-xs px-3 py-1.5 rounded-lg border border-sky-200 bg-sky-50 hover:bg-sky-100 text-sky-800 font-semibold transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+            title="Fetch latest ingested datasets and float positions"
+          >
+            <span className={`material-symbols-outlined text-[16px] text-sky-600 ${loading ? 'animate-spin' : ''}`}>
+              sync
+            </span>
+            <span>Sync Data</span>
+          </button>
           <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200">
             <button className="text-xs px-3 py-1 rounded-md bg-white text-sky-700 font-semibold shadow-xs flex items-center gap-1">
               <span className="material-symbols-outlined text-[15px] text-sky-600">layers</span>
@@ -281,7 +307,7 @@ export default function GeoMap() {
           <img
             alt="DeepSync Logo"
             className="w-4 h-4 object-contain rounded-full"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCWPKu5LolBw56mV0-gbYBXYpqVvCukvz_xwxWbIz9bj1BnkZ7XSznAUYswxAR2bCjtison2hWBU2br3r6nA629s1pP3jccVT2AOATAcssOCiU2uAoAfip3msnBX2p5yQ6Zis4p6G8VoK51PPLTrj0cVUoRPzLGk8djB9qJarp8lPhUxhqPjXdr6vXHV-J_-MDT_pH6WXDyPAXvV3-remJ8l4HmpujGq9W3FX18jk6n4HAx8ixX4OcvHeZZNb-YXezk6g"
+            src="/images/deepsync-logo.png"
           />
           <span className="font-bold text-slate-800">DeepSync Bluegen</span>
           <span className="text-slate-300">•</span>

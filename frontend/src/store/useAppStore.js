@@ -26,9 +26,19 @@ export const useAppStore = create((set) => ({
   setSelectedFloat: (floatId) => set({ selectedFloat: floatId }),
   setSelectedChartType: (type) => set({ selectedChartType: type }),
 
+  // Dataset selection
+  selectedDatasets: ['argo', 'bgc', 'glider', 'ctd'],
+  setSelectedDatasets: (datasets) => set({ selectedDatasets: datasets }),
+
   // 3D Dashboard visualization controls
   selectedVariable: 'temperatureC',
   setSelectedVariable: (variable) => set({ selectedVariable: variable }),
+
+  colormapPalette: 'turbo', // 'turbo' | 'viridis' | 'spectral' | 'deepsea'
+  setColormapPalette: (palette) => set({ colormapPalette: palette }),
+
+  visualizationStyle: 'triangles', // 'triangles' (triangular mesh) | 'cubes' (cubic voxels) | 'points' (particle dots)
+  setVisualizationStyle: (style) => set({ visualizationStyle: style }),
 
   colorbarAuto: true,
   colorbarMin: null,
