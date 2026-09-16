@@ -9,7 +9,7 @@
 
 > **Smart India Hackathon (SIH) 2025** | Problem Statement: **PS 26067**  
 > **Organization**: Indian National Centre for Ocean Information Services (**INCOIS**), Ministry of Earth Sciences (MoES)  
-> **Team**: BLUEGEN_606 (Team ID: 64585)
+> **Team**: BLUEGEN_606 
 
 ---
 
