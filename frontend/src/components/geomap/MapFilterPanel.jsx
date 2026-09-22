@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import apiClient from '../../api/client'
 
-export default function MapFilterPanel({ onFilterChange, floats = [] }) {
+export default function MapFilterPanel({
+  onFilterChange,
+  floats = [],
+  selectedFloat = null,
+  onSelectFloat = () => {},
+  filters = {},
+}) {
   const [searchId, setSearchId] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedInstruments, setSelectedInstruments] = useState({
     ARGO: true,
     GLIDER: true,
@@ -12,7 +19,6 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
     OTHER: true,
   })
   const [observationWindow, setObservationWindow] = useState('30days')
-  const [depthRange, setDepthRange] = useState([0, 2500])
   const [focusedFloats, setFocusedFloats] = useState([])
 
   const normalizeType = (type) => {
@@ -35,31 +41,80 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
   const handleSearchChange = (e) => {
     const value = e.target.value
     setSearchId(value)
+    setShowSuggestions(true)
     onFilterChange({ searchId: value })
   }
 
-  const handleFocusFloat = (platformId) => {
-    const updated = focusedFloats.includes(platformId)
-      ? focusedFloats.filter(id => id !== platformId)
-      : [...focusedFloats, platformId]
+  const handleSelectSuggestion = (float) => {
+    const cleanId = String(float.platformId).split(',')[0].trim()
+    setSearchId(cleanId)
+    setShowSuggestions(false)
+    onSelectFloat(float)
+    onFilterChange({ searchId: cleanId })
+  }
+
+  const handleClearSearch = () => {
+    setSearchId('')
+    setShowSuggestions(false)
+    onFilterChange({ searchId: '' })
+  }
+
+  const handleResetAll = () => {
+    const allActive = {
+      ARGO: true,
+      GLIDER: true,
+      CTD: true,
+      MOORED_BUOY: true,
+      DRIFTER: true,
+      OTHER: true,
+    }
+    setSearchId('')
+    setShowSuggestions(false)
+    setSelectedInstruments(allActive)
+    setObservationWindow('30days')
+    setFocusedFloats([])
+    onSelectFloat(null)
+    onFilterChange({
+      searchId: '',
+      selectedInstruments: allActive,
+      observationWindow: '30days',
+      focusedFloats: [],
+    })
+  }
+
+  const handleFocusFloat = (float) => {
+    const pid = float.platformId
+    const updated = focusedFloats.includes(pid)
+      ? focusedFloats.filter((id) => id !== pid)
+      : [...focusedFloats, pid]
     setFocusedFloats(updated)
+    onSelectFloat(float)
     onFilterChange({ focusedFloats: updated })
   }
 
-  // Calculate dynamic counts
+  // Filter suggestions while typing
+  const searchSuggestions = searchId.trim()
+    ? floats
+        .filter((f) =>
+          String(f.platformId).toLowerCase().includes(searchId.trim().toLowerCase())
+        )
+        .slice(0, 6)
+    : []
+
+  // Dynamic counts based on instrument category
   const instrumentCounts = {
-    ARGO: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'ARGO').length,
-    GLIDER: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'GLIDER').length,
-    CTD: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'CTD').length,
-    MOORED_BUOY: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'MOORED_BUOY').length,
-    DRIFTER: floats.filter(f => (f.normalizedType || normalizeType(f.instrumentType)) === 'DRIFTER').length,
-    OTHER: floats.filter(f => {
+    ARGO: floats.filter((f) => (f.normalizedType || normalizeType(f.instrumentType)) === 'ARGO').length,
+    GLIDER: floats.filter((f) => (f.normalizedType || normalizeType(f.instrumentType)) === 'GLIDER').length,
+    CTD: floats.filter((f) => (f.normalizedType || normalizeType(f.instrumentType)) === 'CTD').length,
+    MOORED_BUOY: floats.filter((f) => (f.normalizedType || normalizeType(f.instrumentType)) === 'MOORED_BUOY').length,
+    DRIFTER: floats.filter((f) => (f.normalizedType || normalizeType(f.instrumentType)) === 'DRIFTER').length,
+    OTHER: floats.filter((f) => {
       const t = f.normalizedType || normalizeType(f.instrumentType)
       return !['ARGO', 'GLIDER', 'CTD', 'MOORED_BUOY', 'DRIFTER'].includes(t)
     }).length,
   }
 
-  const visibleFloats = floats.filter(f => {
+  const visibleFloats = floats.filter((f) => {
     const search = (searchId || '').trim().toLowerCase()
     if (search && !f.platformId.toLowerCase().includes(search)) return false
 
@@ -82,12 +137,17 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
             <span className="text-xs text-slate-500">Dataset Control</span>
           </div>
         </div>
-        <button className="text-xs text-sky-700 hover:text-sky-800 font-semibold">Reset all</button>
+        <button
+          onClick={handleResetAll}
+          className="text-xs text-sky-700 hover:text-sky-800 font-semibold hover:underline cursor-pointer"
+        >
+          Reset all
+        </button>
       </div>
 
       <div className="p-4 space-y-4">
-        {/* Search */}
-        <div className="bg-white p-3 rounded-xl border border-slate-200">
+        {/* Search with Live Autocomplete Suggestions */}
+        <div className="bg-white p-3 rounded-xl border border-slate-200 relative">
           <label className="text-xs font-semibold text-slate-700 mb-1.5 block">
             Search Platform ID / WMO
           </label>
@@ -99,18 +159,71 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
               type="text"
               value={searchId}
               onChange={handleSearchChange}
+              onFocus={() => {
+                if (searchId.trim()) setShowSuggestions(true)
+              }}
               className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-slate-900 font-mono font-medium placeholder:text-slate-400 transition-all"
-              placeholder="e.g. ARGO_2900004..."
+              placeholder="e.g. 2900227, ARGO..."
             />
             {searchId && (
               <button
-                onClick={() => setSearchId('')}
-                className="absolute right-2 top-2 text-slate-400 hover:text-slate-600"
+                onClick={handleClearSearch}
+                className="absolute right-2 top-2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                title="Clear search"
               >
                 <span className="material-symbols-outlined text-[14px]">cancel</span>
               </button>
             )}
           </div>
+
+          {/* Autocomplete Dropdown List */}
+          {showSuggestions && searchSuggestions.length > 0 && (
+            <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden">
+              <div className="px-3 py-1.5 bg-slate-50 border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400">
+                Matching Instruments ({searchSuggestions.length})
+              </div>
+              <div className="max-h-48 overflow-y-auto divide-y divide-slate-100">
+                {searchSuggestions.map((f) => {
+                  const cleanId = String(f.platformId).split(',')[0].trim()
+                  const type = f.normalizedType || normalizeType(f.instrumentType)
+                  const isArgo = type === 'ARGO'
+                  return (
+                    <div
+                      key={f.platformId}
+                      onClick={() => handleSelectSuggestion(f)}
+                      className="p-2.5 hover:bg-sky-50/70 cursor-pointer transition-colors flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            isArgo ? 'bg-sky-500' : 'bg-amber-500'
+                          }`}
+                        ></span>
+                        <div>
+                          <div className="text-xs font-mono font-bold text-slate-900">
+                            {cleanId}
+                          </div>
+                          <div className="text-[10px] text-slate-500">
+                            {(f.latitude ?? f.lastLatitude)?.toFixed(2)}°N,{' '}
+                            {(f.longitude ?? f.lastLongitude)?.toFixed(2)}°E
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                          isArgo
+                            ? 'bg-sky-100 text-sky-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {type}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Instrument Categories */}
@@ -201,11 +314,14 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
           </label>
         </div>
 
-        {/* Observation Window */}
+        {/* Observation Window - Controls Trajectory Path Time Window */}
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
-          <label className="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">
-            Observation Window
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">
+              Observation Window
+            </label>
+            <span className="text-[10px] text-sky-600 font-semibold font-mono">Trajectory Range</span>
+          </div>
           <select
             value={observationWindow}
             onChange={(e) => {
@@ -214,38 +330,16 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
             }}
             className="w-full pl-3 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-800 appearance-none cursor-pointer focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
           >
-            <option value="24h">Last 24 hours (Real-time)</option>
-            <option value="7d">Last 7 days (Synoptic)</option>
-            <option value="30days">Last 30 days (Default)</option>
-            <option value="custom">Custom Temporal Window...</option>
+            <option value="24h">Last 24 hours (Latest Path)</option>
+            <option value="7d">Last 7 days (Synoptic Track)</option>
+            <option value="30days">Last 30 days (Default Path)</option>
+            <option value="all">Full History / All Tracks</option>
           </select>
-        </div>
-
-        {/* Depth Scope */}
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] uppercase tracking-wider text-slate-500 font-bold">
-              Profile Scope
-            </span>
-            <span className="text-xs font-mono font-bold text-sky-700 bg-sky-50 px-2 py-0.5 border border-sky-100">
-              0 -{depthRange[1]}m
-            </span>
-          </div>
-          <div className="py-2">
-            <div className="h-2 w-full rounded-full bg-gradient-to-r from-sky-400 via-sky-600 to-[#0b192c]"></div>
-            <div
-              className="left-0 top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-500 shadow-xs cursor-pointer"
-              style={{ position: 'relative' }}
-            ></div>
-            <div
-              className="right-10 top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-800 shadow-xs cursor-pointer"
-              style={{ position: 'relative' }}
-            ></div>
-          </div>
-          <div className="flex items-center justify-between text-slate-500 text-xs font-mono">
-            <span>Surface</span>
-            <span>Mesopelagic</span>
-            <span>-2,500m</span>
+          <div className="text-[11px] text-slate-400 font-mono">
+            {observationWindow === '24h' && 'Showing last 24 hours drift points'}
+            {observationWindow === '7d' && 'Showing past 7 days trajectory'}
+            {observationWindow === '30days' && 'Showing past 30 days trajectory'}
+            {observationWindow === 'all' && 'Showing complete recorded history'}
           </div>
         </div>
 
@@ -275,9 +369,9 @@ export default function MapFilterPanel({ onFilterChange, floats = [] }) {
               return (
                 <div
                   key={f.platformId}
-                  onClick={() => handleFocusFloat(f.platformId)}
+                  onClick={() => handleFocusFloat(f)}
                   className={`p-2 rounded-lg border transition-colors cursor-pointer ${
-                    focusedFloats.includes(f.platformId)
+                    focusedFloats.includes(f.platformId) || selectedFloat?.platformId === f.platformId
                       ? 'border-sky-300 bg-sky-50/70'
                       : 'border-slate-200 hover:bg-slate-50'
                   }`}

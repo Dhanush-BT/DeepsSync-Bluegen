@@ -25,37 +25,47 @@ function getInstrumentColor(type) {
 }
 
 // 3D Geodesic Trajectory Line embedded on Earth's rotating surface
-function FloatTrajectory({ positions, color }) {
+function FloatTrajectory({ positions, color, isFocused }) {
   const linePoints = useMemo(() => {
     if (!positions || positions.length < 2) return []
     const pts = []
     for (let i = 0; i < positions.length; i++) {
       const p = positions[i]
       if (p.latitude != null && p.longitude != null) {
-        pts.push(latLonToVector3(p.latitude, p.longitude, 2.008))
+        pts.push(latLonToVector3(p.latitude, p.longitude, isFocused ? 2.012 : 2.008))
       }
     }
     return pts
-  }, [positions])
+  }, [positions, isFocused])
 
   if (linePoints.length < 2) return null
 
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(linePoints)
 
   return (
-    <primitive
-      object={
-        new THREE.Line(
-          lineGeometry,
-          new THREE.LineBasicMaterial({
-            color,
-            linewidth: 3,
-            transparent: true,
-            opacity: 0.9,
-          })
-        )
-      }
-    />
+    <group>
+      <primitive
+        object={
+          new THREE.Line(
+            lineGeometry,
+            new THREE.LineBasicMaterial({
+              color: isFocused ? '#ffffff' : color,
+              linewidth: isFocused ? 4 : 2,
+              transparent: true,
+              opacity: isFocused ? 1.0 : 0.75,
+            })
+          )
+        }
+      />
+      {/* Waypoint beads along focused path */}
+      {isFocused &&
+        linePoints.map((pt, idx) => (
+          <mesh key={idx} position={pt}>
+            <sphereGeometry args={[idx === linePoints.length - 1 ? 0.016 : 0.009, 8, 8]} />
+            <meshBasicMaterial color={idx === linePoints.length - 1 ? '#38bdf8' : color} />
+          </mesh>
+        ))}
+    </group>
   )
 }
 
@@ -208,11 +218,13 @@ function RotatingEarth({
       {floats.map((f) => {
         if (!f.positions || f.positions.length < 2) return null
         const color = getInstrumentColor(f.normalizedType || f.instrumentType)
+        const isFocused = focusedFloat === f.platformId
         return (
           <FloatTrajectory
             key={`track-${f.platformId}`}
             positions={f.positions}
             color={color}
+            isFocused={isFocused}
           />
         )
       })}

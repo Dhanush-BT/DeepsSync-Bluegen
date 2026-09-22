@@ -82,19 +82,65 @@ export default function GeoMap() {
     }
   }
 
-  const filteredFloats = floats.filter((f) => {
-    if (filters.searchId && !f.platformId.toLowerCase().includes(filters.searchId.toLowerCase())) {
-      return false
+  // Filter positions by observation window (24h, 7d, 30days, all)
+  const filterPositionsByWindow = (positions, windowSetting) => {
+    if (!positions || positions.length === 0) return []
+    if (windowSetting === 'all') return positions
+
+    // Compute relative cutoff based on the latest position timestamp in the dataset
+    // (since historical/simulation timestamps may differ from Date.now())
+    let maxTime = 0
+    for (const p of positions) {
+      if (p.timestamp) {
+        const t = new Date(p.timestamp).getTime()
+        if (!isNaN(t) && t > maxTime) maxTime = t
+      }
     }
-    const category = f.normalizedType || normalizeInstrumentType(f.instrumentType)
-    if (filters.selectedInstruments && filters.selectedInstruments[category] === false) {
-      return false
-    }
-    return true
-  })
+    if (maxTime === 0) return positions
+
+    let cutoffMs = 30 * 86400000 // default 30 days
+    if (windowSetting === '24h') cutoffMs = 1 * 86400000
+    if (windowSetting === '7d') cutoffMs = 7 * 86400000
+    if (windowSetting === '30days') cutoffMs = 30 * 86400000
+
+    const cutoffTime = maxTime - cutoffMs
+    return positions.filter((p) => {
+      if (!p.timestamp) return true
+      const t = new Date(p.timestamp).getTime()
+      return isNaN(t) || t >= cutoffTime
+    })
+  }
+
+  const filteredFloats = floats
+    .filter((f) => {
+      if (filters.searchId && !f.platformId.toLowerCase().includes(filters.searchId.toLowerCase())) {
+        return false
+      }
+      const category = f.normalizedType || normalizeInstrumentType(f.instrumentType)
+      if (filters.selectedInstruments && filters.selectedInstruments[category] === false) {
+        return false
+      }
+      return true
+    })
+    .map((f) => {
+      return {
+        ...f,
+        positions: filterPositionsByWindow(f.positions, filters.observationWindow || '30days'),
+      }
+    })
 
   const handleFloatClick = (float) => {
+    // If clicking already selected float, don't lock; allows clicking other or toggling
     setSelectedFloat(float)
+  }
+
+  const handleResetView = () => {
+    setSelectedFloat(null)
+    setFilters((prev) => ({
+      ...prev,
+      searchId: '',
+      focusedFloats: [],
+    }))
   }
 
   const handleFilterChange = (newFilters) => {
@@ -201,9 +247,9 @@ export default function GeoMap() {
           )}
 
           <button
-            onClick={() => setSelectedFloat(null)}
-            className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-colors flex items-center gap-1"
-            title="Reset focus"
+            onClick={handleResetView}
+            className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-colors flex items-center gap-1 cursor-pointer"
+            title="Reset selection and view"
           >
             <span className="material-symbols-outlined text-slate-500 text-[15px]">center_focus_strong</span>
             <span>Reset View</span>
@@ -214,7 +260,13 @@ export default function GeoMap() {
       {/* Main Workspace */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar */}
-        <MapFilterPanel floats={floats} onFilterChange={handleFilterChange} />
+        <MapFilterPanel
+          floats={floats}
+          selectedFloat={selectedFloat}
+          onSelectFloat={handleFloatClick}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
 
         {/* Center: 3D Globe or 2D Map */}
         <div className="flex-1 relative bg-[#010409] overflow-hidden select-none flex flex-col">
@@ -305,7 +357,10 @@ export default function GeoMap() {
         </div>
 
         {/* Right Sidebar */}
-        <InstrumentDetailPanel float={selectedFloat} />
+        <InstrumentDetailPanel
+          float={selectedFloat}
+          onClose={handleResetView}
+        />
       </div>
 
       {/* Footer */}
