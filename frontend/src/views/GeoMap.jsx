@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import MapFilterPanel from '../components/geomap/MapFilterPanel'
+import GlobeCanvas from '../components/geomap/GlobeCanvas'
 import MapCanvas from '../components/geomap/MapCanvas'
 import InstrumentDetailPanel from '../components/geomap/InstrumentDetailPanel'
 import apiClient from '../api/client'
@@ -9,6 +10,9 @@ export default function GeoMap() {
   const [selectedFloat, setSelectedFloat] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [viewMode, setViewMode] = useState('3d') // '3d' (default 3D Earth globe) or '2d' (flat Leaflet)
+  const [autoRotate, setAutoRotate] = useState(true)
+  const [zoomAction, setZoomAction] = useState(0)
   const [filters, setFilters] = useState({
     selectedInstruments: { ARGO: true, GLIDER: true, CTD: true, MOORED_BUOY: true, DRIFTER: true, OTHER: true },
     searchId: '',
@@ -110,12 +114,12 @@ export default function GeoMap() {
           <div className="flex items-center gap-2">
             <span className="text-xs tracking-wider text-slate-400 font-bold">DEEPSYNC</span>
             <span className="text-slate-300">/</span>
-            <h1 className="text-sm font-bold text-slate-900">Geo Map</h1>
+            <h1 className="text-sm font-bold text-slate-900">3D Global Ocean Map</h1>
           </div>
           <div className="h-4 w-px bg-slate-200 hidden sm:block"></div>
           <span className="text-xs text-slate-500 hidden sm:inline-flex items-center gap-1">
-            <span className="material-symbols-outlined text-sky-600">explore</span>
-            Indian Ocean &amp; EEZ In-Situ Tracking
+            <span className="material-symbols-outlined text-sky-600">public</span>
+            Interactive 3D Photorealistic Earth &amp; In-Situ Telemetry
           </span>
         </div>
 
@@ -135,8 +139,9 @@ export default function GeoMap() {
           </span>
         </div>
 
-        {/* Map Controls */}
+        {/* Map Controls & 3D/2D Viewport Switcher */}
         <div className="flex items-center gap-2 flex-wrap ml-auto">
+          {/* Sync Button */}
           <button
             onClick={fetchFloats}
             disabled={loading}
@@ -148,25 +153,60 @@ export default function GeoMap() {
             </span>
             <span>Sync Data</span>
           </button>
+
+          {/* 3D Globe / 2D Map Toggle */}
           <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200">
-            <button className="text-xs px-3 py-1 rounded-md bg-white text-sky-700 font-semibold shadow-xs flex items-center gap-1">
-              <span className="material-symbols-outlined text-[15px] text-sky-600">layers</span>
-              Layer: Hybrid Bathymetry
-              <span className="material-symbols-outlined text-[13px] text-slate-400">
-                expand_more
-              </span>
+            <button
+              onClick={() => setViewMode('3d')}
+              className={`text-xs px-3 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all ${
+                viewMode === '3d'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="Interactive 3D World Globe"
+            >
+              <span className="material-symbols-outlined text-[15px]">globe_asia</span>
+              <span>3D Globe</span>
             </button>
-            <button className="text-xs px-3 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1">
-              <span className="material-symbols-outlined text-[15px] text-slate-500">public</span>
-              EPSG:3857
+            <button
+              onClick={() => setViewMode('2d')}
+              className={`text-xs px-3 py-1 rounded-md font-semibold flex items-center gap-1.5 transition-all ${
+                viewMode === '2d'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="2D Flat Mercator Map"
+            >
+              <span className="material-symbols-outlined text-[15px]">map</span>
+              <span>2D Flat</span>
             </button>
           </div>
-          <button className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-colors flex items-center gap-1">
-            <span className="material-symbols-outlined text-slate-500">center_focus_strong</span>
-            Fit Extents
-          </button>
-          <button className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">
-            <span className="material-symbols-outlined text-[18px]">fullscreen</span>
+
+          {/* Auto-Rotation Toggle for 3D Globe */}
+          {viewMode === '3d' && (
+            <button
+              onClick={() => setAutoRotate((prev) => !prev)}
+              className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors flex items-center gap-1 ${
+                autoRotate
+                  ? 'bg-sky-50 border-sky-300 text-sky-800'
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+              }`}
+              title="Toggle Slow Orbital Rotation"
+            >
+              <span className={`material-symbols-outlined text-[15px] ${autoRotate ? 'text-sky-600' : 'text-slate-400'}`}>
+                autorenew
+              </span>
+              <span>Rotate</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => setSelectedFloat(null)}
+            className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-colors flex items-center gap-1"
+            title="Reset focus"
+          >
+            <span className="material-symbols-outlined text-slate-500 text-[15px]">center_focus_strong</span>
+            <span>Reset View</span>
           </button>
         </div>
       </div>
@@ -176,13 +216,13 @@ export default function GeoMap() {
         {/* Left Sidebar */}
         <MapFilterPanel floats={floats} onFilterChange={handleFilterChange} />
 
-        {/* Center: Map */}
-        <div className="flex-1 relative bg-[#091b2c] overflow-hidden select-none flex flex-col">
+        {/* Center: 3D Globe or 2D Map */}
+        <div className="flex-1 relative bg-[#010409] overflow-hidden select-none flex flex-col">
           {loading ? (
             <div className="flex items-center justify-center h-full text-white">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-sky-400 mx-auto mb-4"></div>
-                <p>Loading float trajectories...</p>
+                <p>Loading 3D globe and ocean telemetry...</p>
               </div>
             </div>
           ) : error ? (
@@ -199,99 +239,66 @@ export default function GeoMap() {
             </div>
           ) : (
             <>
-              {/* Map Container */}
-              <MapCanvas
-                floats={filteredFloats}
-                focusedFloat={selectedFloat?.platformId}
-                onFloatClick={handleFloatClick}
-              />
+              {/* Render 3D Globe or 2D Leaflet Canvas */}
+              {viewMode === '3d' ? (
+                <GlobeCanvas
+                  floats={filteredFloats}
+                  focusedFloat={selectedFloat?.platformId}
+                  onFloatClick={handleFloatClick}
+                  autoRotate={autoRotate}
+                  zoomAction={zoomAction}
+                />
+              ) : (
+                <MapCanvas
+                  floats={filteredFloats}
+                  focusedFloat={selectedFloat?.platformId}
+                  onFloatClick={handleFloatClick}
+                />
+              )}
 
-              {/* HUD Controls - Top Left */}
+              {/* Minimal Clean HUD Controls - Top Left: Only + and - Zoom In / Out */}
               <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
-                <div className="bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-md p-1 flex flex-col">
-                  <button className="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-sky-700 hover:bg-slate-100 rounded-lg transition-colors">
+                <div className="bg-slate-900/90 backdrop-blur-md rounded-xl border border-slate-700/80 shadow-lg p-1 flex flex-col">
+                  <button
+                    onClick={() => setZoomAction((prev) => prev + 1)}
+                    className="w-8 h-8 flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    title="Zoom In"
+                  >
                     <span className="material-symbols-outlined text-[18px]">add</span>
                   </button>
-                  <div className="h-px w-full bg-slate-200 my-0.5"></div>
-                  <button className="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-sky-700 hover:bg-slate-100 rounded-lg transition-colors">
+                  <div className="h-px w-full bg-slate-700/80 my-0.5"></div>
+                  <button
+                    onClick={() => setZoomAction((prev) => prev - 1)}
+                    className="w-8 h-8 flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    title="Zoom Out"
+                  >
                     <span className="material-symbols-outlined text-[18px]">remove</span>
-                  </button>
-                </div>
-                <div className="bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-md p-1 flex flex-col items-center gap-1">
-                  <button className="w-7 h-7 flex items-center justify-center text-sky-600 hover:bg-slate-100 rounded-lg transition-colors">
-                    <span className="material-symbols-outlined text-[20px]">navigation</span>
-                  </button>
-                  <div className="h-px w-full bg-slate-200"></div>
-                  <button className="w-7 h-7 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
-                    <span className="material-symbols-outlined text-[16px]">straighten</span>
                   </button>
                 </div>
               </div>
 
               {/* HUD Legend - Top Right */}
-              <div className="absolute top-4 right-4 z-10 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200/90 shadow-md flex items-center gap-3">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
-                  <span className="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
-                  Argo Float
+              <div className="absolute top-4 right-4 z-10 bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/80 shadow-lg flex items-center gap-3 text-white">
+                <div className="flex items-center gap-1.5 text-xs font-semibold">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00b4d8] ring-1 ring-white/40"></span>
+                  Argo
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <div className="flex items-center gap-1.5 text-xs font-semibold">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#fbbf24] ring-1 ring-white/40"></span>
                   Glider
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
-                  <span className="w-4 h-0.5 bg-sky-500"></span>
-                  Drift Vector
+                <div className="flex items-center gap-1.5 text-xs font-semibold">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] ring-1 ring-white/40"></span>
+                  CTD
                 </div>
-                <div className="h-3 w-px bg-slate-200"></div>
-                <span className="text-[11px] text-slate-500 font-mono">GEBCO 2024</span>
-              </div>
-
-              {/* Coordinates HUD - Bottom Left */}
-              <div className="absolute bottom-24 left-4 z-10 flex flex-col gap-1 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200/90 shadow-md font-mono text-xs text-slate-800">
-                <div className="flex items-center gap-2">
-                  <span className="text-sky-700 font-bold">CURSOR:</span>
-                  <span>12.421°N, 79.145°E</span>
-                  <span className="text-slate-300">|</span>
-                  <span>
-                    Depth: <span className="font-bold text-sky-700">-2,450 m</span>
-                  </span>
+                <div className="flex items-center gap-1.5 text-xs font-semibold">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#a855f7] ring-1 ring-white/40"></span>
+                  Buoy
                 </div>
-                <div className="flex items-center justify-between text-slate-500 text-[10px] mt-0.5">
-                  <span>ZOOM: 6.5 (Mercator)</span>
-                  <div className="flex items-center gap-1">
-                    <div className="w-12 h-1 bg-slate-800 relative">
-                      <span className="absolute -top-3.5 left-0 text-[9px] font-sans">0</span>
-                      <span className="absolute -top-3.5 right-0 text-[9px] font-sans">200km</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Timeline Scrubber - Bottom Center */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 w-[90%] max-w-xl bg-white/95 backdrop-blur-md px-4 py-2.5 border border-slate-200/90 shadow-lg flex items-center gap-3">
-                <button className="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center hover:bg-sky-700 transition-all shrink-0 shadow-xs">
-                  <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-                </button>
-                <div className="flex-1 flex flex-col">
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="font-semibold text-slate-800 flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sky-600">history</span>
-                      Temporal Window
-                    </span>
-                    <span className="font-mono text-sky-700 font-bold text-xs">T=30d (Present)</span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden cursor-pointer">
-                    <div className="left-0 top-0 h-full w-4/5 bg-gradient-to-r from-sky-400 to-sky-600 rounded-full"></div>
-                    <div
-                      className="left-[80%] -top-1 w-3.5 h-3.5 bg-white border-2 border-sky-600 rounded-full shadow-sm cursor-pointer"
-                      style={{ position: 'relative' }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="shrink-0 flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-lg text-xs font-mono font-semibold text-slate-700">
-                  <span>1x</span>
-                  <span className="material-symbols-outlined text-slate-400">speed</span>
-                </div>
+                <div className="h-3 w-px bg-slate-700"></div>
+                <span className="text-[11px] text-sky-400 font-mono font-bold tracking-wider">
+                  {viewMode === '3d' ? '3D EARTH' : '2D MERCATOR'}
+                </span>
               </div>
             </>
           )}
