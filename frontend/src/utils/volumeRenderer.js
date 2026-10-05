@@ -17,6 +17,22 @@ export function toNormalized(lon, lat, depth, vertExag = 1.0) {
   return [x, y, z]
 }
 
+// Safe iterative min/max helper that avoids RangeError: Maximum call stack size exceeded on large arrays
+export function getArrayMinMax(values, defaultMin = 0, defaultMax = 1) {
+  if (!values || values.length === 0) return { min: defaultMin, max: defaultMax }
+  let min = Infinity
+  let max = -Infinity
+  for (let i = 0; i < values.length; i++) {
+    const v = values[i]
+    if (v !== null && v !== undefined && isFinite(v)) {
+      if (v < min) min = v
+      if (v > max) max = v
+    }
+  }
+  if (!isFinite(min) || !isFinite(max)) return { min: defaultMin, max: defaultMax }
+  return { min, max }
+}
+
 /**
  * Generates a SOLID, CONTINUOUS 3D Volumetric Polygonal Mesh with ZERO GAPS.
  * Creates a fully closed, solid 3D tetrahedral/triangular volumetric grid
@@ -29,8 +45,7 @@ export function generateTriangularMesh(points, selectedVariable, palette = 'turb
     .map((p) => getVariableValue(p, selectedVariable))
     .filter((v) => v !== null && v !== undefined && isFinite(v))
 
-  const minVal = values.length > 0 ? Math.min(...values) : 0
-  const maxVal = values.length > 0 ? Math.max(...values) : 1
+  const { min: minVal, max: maxVal } = getArrayMinMax(values, 0, 1)
   const valRange = maxVal - minVal || 1
 
   // Solid 3D volumetric regular grid resolution
@@ -177,8 +192,7 @@ export function generateCubicMesh(points, selectedVariable, palette = 'turbo', v
     .map((p) => getVariableValue(p, selectedVariable))
     .filter((v) => v !== null && v !== undefined && isFinite(v))
 
-  const minVal = values.length > 0 ? Math.min(...values) : 0
-  const maxVal = values.length > 0 ? Math.max(...values) : 1
+  const { min: minVal, max: maxVal } = getArrayMinMax(values, 0, 1)
   const valRange = maxVal - minVal || 1
 
   // Dense contiguous voxel grid filling the entire volume with ZERO gaps
@@ -400,3 +414,96 @@ export function getColorForValue(normalized, palette = 'turbo') {
     }
   }
 }
+
+/**
+ * Generates an interpolated 2D horizontal slice geometry at targetDepth with rich vertex colors
+ * representing the selectedVariable field, isolines, and boundary coordinates.
+ */
+export function generateDepthSliceData(points, selectedVariable, targetDepth = 500, palette = 'turbo') {
+  if (!points || points.length === 0) return null
+
+  const values = points
+    .map((p) => getVariableValue(p, selectedVariable))
+    .filter((v) => v !== null && v !== undefined && isFinite(v))
+
+  const { min: minVal, max: maxVal } = getArrayMinMax(values, 0, 1)
+  const valRange = maxVal - minVal || 1
+
+  const nx = 28
+  const nz = 28
+
+  // Binning for fast spatial sample query
+  const binMap = new Map()
+  for (let p of points) {
+    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / 25) * nx)
+    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / 35) * nz)
+    const key = `${bx}_${bz}`
+    if (!binMap.has(key)) binMap.set(key, [])
+    binMap.get(key).push(p)
+  }
+
+  const sampleValue = (targetLon, targetLat, targetD) => {
+    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / 25) * nx)
+    const bz = Math.floor(((targetLat - DOMAIN.latMin) / 35) * nz)
+    let bestDist = Infinity
+    let bestVal = (minVal + maxVal) / 2
+
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dz = -1; dz <= 1; dz++) {
+        const bucket = binMap.get(`${bx + dx}_${bz + dz}`)
+        if (!bucket) continue
+        for (let pt of bucket) {
+          const dLon = pt.longitude - targetLon
+          const dLat = pt.latitude - targetLat
+          const dDepth = (pt.depthMeters - targetD) / 100
+          const dist = dLon * dLon + dLat * dLat + dDepth * dDepth
+          if (dist < bestDist) {
+            bestDist = dist
+            bestVal = getVariableValue(pt, selectedVariable)
+          }
+        }
+      }
+    }
+    return bestVal
+  }
+
+  const positions = []
+  const colors = []
+
+  // Build regular 2D grid at y = 0 (parent component can position at normDepth)
+  const grid = new Array(nz)
+  for (let iz = 0; iz < nz; iz++) {
+    grid[iz] = new Array(nx)
+    const lat = DOMAIN.latMin + (iz / (nz - 1)) * 35
+    const z = (iz / (nz - 1)) * 2 - 1
+
+    for (let ix = 0; ix < nx; ix++) {
+      const lon = DOMAIN.lonMin + (ix / (nx - 1)) * 25
+      const x = (ix / (nx - 1)) * 2 - 1
+      const val = sampleValue(lon, lat, targetDepth)
+      const norm = (val - minVal) / valRange
+      const rgb = getColorForValue(norm, palette)
+      grid[iz][ix] = { x, y: 0, z, rgb, val }
+    }
+  }
+
+  for (let iz = 0; iz < nz - 1; iz++) {
+    for (let ix = 0; ix < nx - 1; ix++) {
+      const p00 = grid[iz][ix]
+      const p10 = grid[iz][ix + 1]
+      const p11 = grid[iz + 1][ix + 1]
+      const p01 = grid[iz + 1][ix]
+
+      // Tri 1
+      positions.push(p00.x, p00.y, p00.z, p10.x, p10.y, p10.z, p11.x, p11.y, p11.z)
+      colors.push(...p00.rgb, ...p10.rgb, ...p11.rgb)
+
+      // Tri 2
+      positions.push(p00.x, p00.y, p00.z, p11.x, p11.y, p11.z, p01.x, p01.y, p01.z)
+      colors.push(...p00.rgb, ...p11.rgb, ...p01.rgb)
+    }
+  }
+
+  return { positions, colors, minVal, maxVal }
+}
+

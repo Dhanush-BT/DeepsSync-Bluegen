@@ -1,4 +1,4 @@
-﻿# 🌊 DEEPSYNC — Web-Based Interactive 3D Ocean Visualization Platform
+# 🌊 DEEPSYNC — Web-Based Interactive 3D Ocean Visualization Platform
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
@@ -7,7 +7,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5-purple.svg)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC.svg)](https://tailwindcss.com/)
 
-> **Smart India Hackathon (SIH) 2025** | Problem Statement: **PS 26067**  
+> **National Oceanographic Telemetry & 3D Observation Project** | Problem Statement: **PS 26067**  
 > **Organization**: Indian National Centre for Ocean Information Services (**INCOIS**), Ministry of Earth Sciences (MoES)  
 > **Team**: BLUEGEN_606 
 
@@ -173,5 +173,5 @@ DEEPSYNC-APP/
 
 ## 👥 Team BLUEGEN_606
 
-- **Institution**: Smart India Hackathon 2025
+- **Project Statement**: PS 26067 — 3D Ocean Data Visualization Platform
 - **Ministry / Organization**: INCOIS | Ministry of Earth Sciences, Govt. of India

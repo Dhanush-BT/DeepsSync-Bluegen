@@ -4,8 +4,7 @@ Guide for Claude Code sessions working on this repository. Read this before writ
 
 ## Project Context
 
-**DEEPSYNC** is a web-based 3D ocean data visualization platform built for Smart India
-Hackathon 2025, Team BLUEGEN_606 (Team ID 64585), addressing **PS 26067** (INCOIS —
+**DEEPSYNC** is a web-based 3D ocean data visualization platform developed by Team BLUEGEN_606, addressing **PS 26067** (INCOIS —
 "Develop a web-based interactive 3D visualization platform that integrates numerical
 ocean model outputs and in-situ observations").
 

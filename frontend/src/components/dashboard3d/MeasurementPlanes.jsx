@@ -1,8 +1,19 @@
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useAppStore } from '../../store/useAppStore'
+import { generateDepthSliceData } from '../../utils/volumeRenderer'
 
-export default function MeasurementPlanes() {
-  const { measurementLongitude: lon, measurementLatitude: lat, measurementDepth: depth } = useAppStore()
+export default function MeasurementPlanes({ points, selectedVariable }) {
+  const {
+    measurementLongitude: lon,
+    measurementLatitude: lat,
+    measurementDepth: depth,
+    colormapPalette,
+    verticalExaggeration,
+  } = useAppStore()
+
+  const sliceMeshRef = useRef()
+  const sliceWireframeRef = useRef()
 
   // Standard Normalized Coordinates [-1, 1]:
   // X = Longitude: 70°E to 95°E (range = 25)
@@ -11,13 +22,77 @@ export default function MeasurementPlanes() {
 
   const normLon = Math.max(-1, Math.min(1, ((lon - 70) / 25) * 2 - 1))
   const normLat = Math.max(-1, Math.min(1, ((lat - (-10)) / 35) * 2 - 1))
-  const normDepth = Math.max(-1, Math.min(1, 1 - (depth / 2000) * 2))
+  const normDepth = Math.max(-1, Math.min(1, 1 - (depth / 2000) * 2)) * verticalExaggeration
+
+  // Dynamically generate interpolated depth slice mesh
+  useEffect(() => {
+    if (!sliceMeshRef.current || !points || points.length === 0) return
+
+    try {
+      const sliceData = generateDepthSliceData(points, selectedVariable, depth, colormapPalette)
+      if (!sliceData || sliceData.positions.length === 0) return
+
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(sliceData.positions), 3))
+      geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(sliceData.colors), 3))
+      geometry.computeVertexNormals()
+
+      if (sliceMeshRef.current.geometry) sliceMeshRef.current.geometry.dispose()
+      sliceMeshRef.current.geometry = geometry
+
+      if (sliceWireframeRef.current) {
+        if (sliceWireframeRef.current.geometry) sliceWireframeRef.current.geometry.dispose()
+        sliceWireframeRef.current.geometry = new THREE.WireframeGeometry(geometry)
+      }
+    } catch (err) {
+      console.error('Error updating depth slice geometry:', err)
+    }
+  }, [points, selectedVariable, depth, colormapPalette])
 
   return (
     <group>
-      {/* Longitude plane (YZ plane at selected longitude) - RED - vertical slice */}
+      {/* 1. True 3D Interpolated Horizontal Depth Slice with Scalar Heatmap */}
+      <group position={[0, normDepth, 0]}>
+        <mesh ref={sliceMeshRef} renderOrder={200}>
+          <bufferGeometry />
+          <meshStandardMaterial
+            vertexColors
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.88}
+            roughness={0.25}
+            metalness={0.1}
+            depthWrite={false}
+          />
+        </mesh>
+
+        {/* Crisp grid isoline wireframe on depth slice */}
+        <lineSegments ref={sliceWireframeRef} renderOrder={201}>
+          <lineBasicMaterial color="#ffffff" transparent opacity={0.35} depthWrite={false} />
+        </lineSegments>
+
+        {/* Highlight Outer Border of the Depth Slice */}
+        <lineSegments renderOrder={202}>
+          <edgesGeometry args={[new THREE.PlaneGeometry(2, 2)]} />
+          <lineBasicMaterial color="#38bdf8" linewidth={2.5} transparent opacity={0.9} />
+        </lineSegments>
+
+        {/* Ambient Depth Indicator Glow Plane */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} renderOrder={199}>
+          <planeGeometry args={[2.02, 2.02]} />
+          <meshBasicMaterial
+            color="#0284c7"
+            transparent
+            opacity={0.18}
+            side={THREE.DoubleSide}
+            depthWrite={false}
+          />
+        </mesh>
+      </group>
+
+      {/* 2. Longitude vertical slice (YZ plane at selected longitude) - Red indicator */}
       <mesh position={[normLon, 0, 0]}>
-        <planeGeometry args={[2, 2]} />
+        <planeGeometry args={[2, 2 * verticalExaggeration]} />
         <meshBasicMaterial
           color={0xef4444}
           transparent
@@ -33,16 +108,16 @@ export default function MeasurementPlanes() {
           <bufferAttribute
             attach="attributes-position"
             count={2}
-            array={new Float32Array([0, -1, 0, 0, 1, 0])}
+            array={new Float32Array([0, -verticalExaggeration, 0, 0, verticalExaggeration, 0])}
             itemSize={3}
           />
         </bufferGeometry>
         <lineBasicMaterial color={0xef4444} linewidth={3} transparent opacity={0.8} />
       </line>
 
-      {/* Latitude plane (XY plane at selected latitude) - GREEN - depth-longitude slice */}
+      {/* 3. Latitude vertical slice (XY plane at selected latitude) - Green indicator */}
       <mesh position={[0, 0, normLat]}>
-        <planeGeometry args={[2, 2]} />
+        <planeGeometry args={[2, 2 * verticalExaggeration]} />
         <meshBasicMaterial
           color={0x10b981}
           transparent
@@ -65,32 +140,7 @@ export default function MeasurementPlanes() {
         <lineBasicMaterial color={0x10b981} linewidth={3} transparent opacity={0.8} />
       </line>
 
-      {/* Depth plane (XZ plane at selected depth) - BLUE - horizontal slice */}
-      <mesh position={[0, normDepth, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[2, 2]} />
-        <meshBasicMaterial
-          color={0x0284c7}
-          transparent
-          opacity={0.15}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Depth lines along horizontal plane perimeter */}
-      <line position={[0, normDepth, 0]}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={2}
-            array={new Float32Array([0, 0, -1, 0, 0, 1])}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial color={0x0284c7} linewidth={3} transparent opacity={0.8} />
-      </line>
-
-      {/* Crosshair guide lines intersecting at [normLon, normDepth, normLat] */}
+      {/* 4. Crosshair guide lines intersecting at [normLon, normDepth, normLat] */}
       {/* Horizontal X axis line */}
       <line position={[0, normDepth, normLat]}>
         <bufferGeometry>
@@ -110,7 +160,7 @@ export default function MeasurementPlanes() {
           <bufferAttribute
             attach="attributes-position"
             count={2}
-            array={new Float32Array([0, -1, 0, 0, 1, 0])}
+            array={new Float32Array([0, -verticalExaggeration, 0, 0, verticalExaggeration, 0])}
             itemSize={3}
           />
         </bufferGeometry>
@@ -130,7 +180,7 @@ export default function MeasurementPlanes() {
         <lineBasicMaterial color={0xfbbf24} linewidth={2} transparent opacity={0.7} />
       </line>
 
-      {/* Intersection Sphere: Vivid, prominent, renderOrder high with depthTest=false so it's always clearly visible */}
+      {/* 5. Sounding Intersection Target Marker */}
       <mesh position={[normLon, normDepth, normLat]} renderOrder={999}>
         <sphereGeometry args={[0.07, 24, 24]} />
         <meshStandardMaterial

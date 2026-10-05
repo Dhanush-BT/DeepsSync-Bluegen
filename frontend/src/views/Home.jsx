@@ -42,7 +42,7 @@ export default function Home() {
           3D Ocean Data <span className="bg-clip-text text-transparent bg-gradient-to-r from-ocean-700 via-ocean-600 to-cyan-500">Visualization</span>
         </h1>
         <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto mb-8">
-          DEEPSYNC integrates ocean model outputs with in-situ instrument observations — built for Smart India Hackathon 2025 by Team BLUEGEN_606.
+          DEEPSYNC integrates ocean model outputs with in-situ instrument observations — developed for INCOIS Ministry of Earth Sciences (PS 26067) by Team BLUEGEN_606.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
           <Link to="/dashboard" className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
@@ -114,7 +114,7 @@ export default function Home() {
 
       {/* Footer */}
       <section className="border-t border-sky-100 py-8 px-4 text-center text-xs text-slate-500">
-        <p>Team BLUEGEN_606 · Smart India Hackathon 2025 · INCOIS PS 26067</p>
+        <p>Team BLUEGEN_606 · INCOIS Ministry of Earth Sciences · PS 26067</p>
       </section>
     </main>
   )

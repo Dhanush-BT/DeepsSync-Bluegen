@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
-import { getColorForValue, getVariableValue, generateTriangularMesh, generateCubicMesh } from '../../utils/volumeRenderer'
+import { getColorForValue, getVariableValue, generateTriangularMesh, generateCubicMesh, getArrayMinMax } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
 import TextLabels from './TextLabels'
 import AutoRotateToggle from './AutoRotateToggle'
@@ -153,8 +153,7 @@ function OceanPointsVolume({ points, selectedVariable, verticalExaggeration, vol
         .map((p) => getVariableValue(p, selectedVariable))
         .filter((v) => v !== null && v !== undefined && isFinite(v))
 
-      const minVal = values.length > 0 ? Math.min(...values) : 0
-      const maxVal = values.length > 0 ? Math.max(...values) : 1
+      const { min: minVal, max: maxVal } = getArrayMinMax(values, 0, 1)
       const valRange = maxVal - minVal || 1
 
       const positions = []
@@ -273,7 +272,7 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
         />
       )}
 
-      <MeasurementPlanes />
+      <MeasurementPlanes points={points} selectedVariable={selectedVariable} />
       <AxisLabels />
       <TextLabels />
       <gridHelper args={[4, 8, 0x0284c7, 0x94a3b8]} position={[0, -1, 0]} />
@@ -316,7 +315,7 @@ export default function OceanScene() {
 
   useEffect(() => {
     if (points.length > 0) {
-      const getVariableValue = (p) => {
+      const getVal = (p) => {
         switch (selectedVariable) {
           case 'temperatureC':
             return p.temperatureC
@@ -332,11 +331,10 @@ export default function OceanScene() {
       }
 
       const values = points
-        .map((p) => getVariableValue(p))
+        .map((p) => getVal(p))
         .filter((v) => v !== null && v !== undefined && isFinite(v))
       if (values.length > 0) {
-        const valueMin = Math.min(...values)
-        const valueMax = Math.max(...values)
+        const { min: valueMin, max: valueMax } = getArrayMinMax(values)
         if (isFinite(valueMin) && isFinite(valueMax)) {
           setColorbarRange(valueMin, valueMax)
         }
