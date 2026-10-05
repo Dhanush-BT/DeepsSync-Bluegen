@@ -28,7 +28,7 @@ export default function Signup() {
       mixedCase: /[A-Z]/.test(pwd) && /[a-z]/.test(pwd),
       number: /[0-9]/.test(pwd),
       special: /[!@#$%^&*()_+]/.test(pwd),
-      noMatch: pwd.length > 0 && !pwd.toLowerCase().includes('incois') && !pwd.toLowerCase().includes('password'),
+      noMatch: pwd.length > 0 && !pwd.toLowerCase().includes('deepsync') && !pwd.toLowerCase().includes('password'),
     }
   }
 
@@ -106,7 +106,7 @@ export default function Signup() {
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-sky-200/80 text-sky-800 font-medium text-xs shadow-sm backdrop-blur-sm">
                 <span className="material-symbols-outlined text-sky-600 text-base">explore</span>
-                <span>INCOIS Ocean Modeling &amp; Volumetric 3D Engine</span>
+                <span>Ocean Modeling &amp; Volumetric 3D Engine</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-700 font-semibold text-xs shadow-xs">
                 <span className="material-symbols-outlined text-emerald-600 text-sm">school</span>
@@ -117,7 +117,7 @@ export default function Signup() {
               Interactive 3D Ocean Intelligence &amp; Public Discovery Platform.
             </h1>
             <p className="text-slate-600 text-base sm:text-lg max-w-xl leading-relaxed">
-              Bridging state-of-the-art volumetric ocean modeling for INCOIS scientists with intuitive, open-access 3D exploration for university researchers, educators, students, and citizen marine enthusiasts.
+              Bridging state-of-the-art volumetric ocean modeling with intuitive, open-access 3D exploration for marine scientists, university researchers, educators, students, and oceanographers.
             </p>
 
             <div className="flex flex-wrap items-center gap-2.5 pt-1">
@@ -195,7 +195,7 @@ export default function Signup() {
           <div className="relative z-10 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-sky-200/80 shadow-xs space-y-2 text-xs">
             <div className="flex items-center gap-2 text-sky-950 font-semibold">
               <span className="material-symbols-outlined text-base text-sky-700 shrink-0">verified_user</span>
-              <span>Access Governance &amp; INCOIS Directory Policy</span>
+              <span>Access Governance &amp; Directory Policy</span>
             </div>
             <p className="text-slate-600 leading-relaxed">
               <span className="font-semibold text-slate-800">Public &amp; Educational Access:</span> Open 3D ocean exploration and volumetric telemetry are freely available in read-only mode without credentials via{' '}
@@ -204,7 +204,7 @@ export default function Signup() {
               </Link>.
             </p>
             <p className="text-slate-600 leading-relaxed border-t border-sky-100 pt-2">
-              <span className="font-semibold text-slate-800">INCOIS Directory Roster:</span> Full administrative and scientific CRUD permissions are provisioned according to official INCOIS Employee Directory roster (Director Dr. Balakrishnan Nair TM, Scientists-G/F/E/D/C/B, Scientific Assistants, and Officers across divisions ODICT, OMARS, OMDA, OON, OOS, ICT, and Admin, Emp IDs 002–101).
+              <span className="font-semibold text-slate-800">Scientific Directory Roster:</span> Full administrative and scientific CRUD permissions are provisioned according to verified scientific research directory rosters (Scientists, Scientific Assistants, and Officers across ocean modeling and observational divisions).
             </p>
           </div>
 
@@ -294,10 +294,10 @@ export default function Signup() {
                 </div>
               </div>
 
-              {/* INCOIS Institutional Email */}
+              {/* Institutional Email */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700" htmlFor="emailInput">
-                  INCOIS Institutional Email (@incois.gov.in)
+                  Institutional Email
                 </label>
                 <div className="relative">
                   <input
@@ -307,7 +307,7 @@ export default function Signup() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full h-11 px-3.5 pr-11 rounded-xl border border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 text-sm focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-600/20 transition-all outline-none"
-                    placeholder="username@incois.gov.in"
+                    placeholder="scientist@ocean.org"
                     required
                   />
                   <div className="absolute right-3.5 top-2.5 flex items-center pointer-events-none text-sky-700">
@@ -321,7 +321,7 @@ export default function Signup() {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700" htmlFor="instituteIdInput">
-                      Official INCOIS Employee ID (Emp ID)
+                      Official Scientist / Researcher ID (Emp ID)
                     </label>
                   </div>
                   <div className="relative">
@@ -511,9 +511,9 @@ export default function Signup() {
             className="w-5 h-5 object-contain"
             src="/images/deepsync-logo.png"
           />
-          <span className="font-bold text-slate-800">DeepSync by Bluegen</span>
+          <span className="font-bold text-slate-800">DEEPSYNC</span>
           <span className="text-slate-400">•</span>
-          <span>© 2026 DeepSync by Bluegen for INCOIS • OGC WMS &amp; NetCDF Standards.</span>
+          <span>© 2026 DEEPSYNC • OGC WMS &amp; NetCDF Standards.</span>
         </div>
         <nav className="flex flex-wrap items-center gap-5 font-medium">
           <a className="text-slate-600 hover:text-sky-700 transition-colors" href="#">

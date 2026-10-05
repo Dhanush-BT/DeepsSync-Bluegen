@@ -7,21 +7,38 @@ export default function Home() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
   const { isAuthenticated } = useAuthStore()
 
   useEffect(() => {
-    apiClient
-      .get('/stats/summary')
-      .then((res) => {
-        setStats(res.data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error('Failed to fetch stats:', err)
-        setError(err.message)
-        setLoading(false)
-      })
+    let isMounted = true
+
+    const fetchStats = () => {
+      apiClient
+        .get('/stats/summary')
+        .then((res) => {
+          if (isMounted) {
+            setStats(res.data)
+            setLastUpdated(new Date())
+            setLoading(false)
+          }
+        })
+        .catch((err) => {
+          if (isMounted) {
+            console.error('Failed to fetch stats:', err)
+            if (!stats) setError(err.message)
+            setLoading(false)
+          }
+        })
+    }
+
+    fetchStats()
+    const timer = setInterval(fetchStats, 5000)
+    return () => {
+      isMounted = false
+      clearInterval(timer)
+    }
   }, [])
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-600">Loading...</div>
@@ -36,13 +53,14 @@ export default function Home() {
       {/* Hero */}
       <section className="pt-12 pb-8 sm:pt-16 sm:pb-12 text-center max-w-4xl mx-auto px-4 sm:px-6">
         <div className="inline-flex items-center space-x-2 px-3 py-1 mb-5 rounded-full bg-sky-100/80 border border-sky-200 text-sky-900 text-xs font-semibold tracking-wide">
-          <span>PS 26067 · INCOIS | Ministry of Earth Sciences</span>
+          <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+          <span>Volumetric Ocean Intelligence & Observation Platform</span>
         </div>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
           3D Ocean Data <span className="bg-clip-text text-transparent bg-gradient-to-r from-ocean-700 via-ocean-600 to-cyan-500">Visualization</span>
         </h1>
         <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto mb-8">
-          DEEPSYNC integrates ocean model outputs with in-situ instrument observations — developed for INCOIS Ministry of Earth Sciences (PS 26067) by Team BLUEGEN_606.
+          DEEPSYNC integrates global ocean model outputs with in-situ instrument observations into an interactive 4D digital twin ocean environment.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
           <Link to="/dashboard" className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
@@ -58,13 +76,20 @@ export default function Home() {
             </Link>
           )}
         </div>
-        <p className="text-xs text-slate-400">Public access · Real-time data without login</p>
+        <p className="text-xs text-slate-400">Public access · Real-time data telemetry without login</p>
       </section>
 
       {/* Stats Grid */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 mb-16">
-        <div className="text-center mb-6">
-          <h2 className="text-xs uppercase tracking-widest font-bold text-slate-500">Live System Status</h2>
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <h2 className="text-xs uppercase tracking-widest font-bold text-slate-600">Live System Status · Real-Time Telemetry</h2>
+          {lastUpdated && (
+            <span className="text-[10px] text-slate-400 font-mono">({lastUpdated.toLocaleTimeString()})</span>
+          )}
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
           <div className="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm">
@@ -114,7 +139,7 @@ export default function Home() {
 
       {/* Footer */}
       <section className="border-t border-sky-100 py-8 px-4 text-center text-xs text-slate-500">
-        <p>Team BLUEGEN_606 · INCOIS Ministry of Earth Sciences · PS 26067</p>
+        <p>© 2026 DEEPSYNC · Autonomous Oceanographic Observation & Intelligence Network</p>
       </section>
     </main>
   )

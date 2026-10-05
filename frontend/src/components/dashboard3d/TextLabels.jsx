@@ -19,11 +19,12 @@ export default function TextLabels() {
 
   return (
     <>
-      {/* Longitude labels (top) - range 70°E to 95°E (spaced out nicely without clutter) */}
+      {/* Longitude labels (top) - range 55°E to 95°E (spaced out nicely without clutter) */}
       {[
-        { val: 70, norm: -1.0 },
-        { val: 78, norm: -0.36 },
-        { val: 86, norm: 0.28 },
+        { val: 55, norm: -1.0 },
+        { val: 65, norm: -0.5 },
+        { val: 75, norm: 0.0 },
+        { val: 85, norm: 0.5 },
         { val: 95, norm: 1.0 },
       ].map(({ val, norm }, i) => (
         <Billboard key={`lon-top-${i}`} position={[norm, 1.45, 0]}>

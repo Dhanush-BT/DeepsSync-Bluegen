@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useAppStore } from '../../store/useAppStore'
-import { generateDepthSliceData } from '../../utils/volumeRenderer'
+import { generateDepthSliceData, DOMAIN } from '../../utils/volumeRenderer'
 
 export default function MeasurementPlanes({ points, selectedVariable }) {
   const {
@@ -10,26 +10,31 @@ export default function MeasurementPlanes({ points, selectedVariable }) {
     measurementDepth: depth,
     colormapPalette,
     verticalExaggeration,
+    activeFileProfiles,
+    selectedFloat,
   } = useAppStore()
 
   const sliceMeshRef = useRef()
   const sliceWireframeRef = useRef()
 
-  // Standard Normalized Coordinates [-1, 1]:
-  // X = Longitude: 70°E to 95°E (range = 25)
-  // Y = Depth: 0m to 2000m -> surface is +1, 2000m is -1
-  // Z = Latitude: -10°S to 25°N (range = 35)
-
-  const normLon = Math.max(-1, Math.min(1, ((lon - 70) / 25) * 2 - 1))
-  const normLat = Math.max(-1, Math.min(1, ((lat - (-10)) / 35) * 2 - 1))
-  const normDepth = Math.max(-1, Math.min(1, 1 - (depth / 2000) * 2)) * verticalExaggeration
+  // Standard Normalized Coordinates [-1, 1] mapped to full basin DOMAIN
+  const normLon = Math.max(-1, Math.min(1, ((lon - DOMAIN.lonMin) / (DOMAIN.lonMax - DOMAIN.lonMin)) * 2 - 1))
+  const normLat = Math.max(-1, Math.min(1, ((lat - DOMAIN.latMin) / (DOMAIN.latMax - DOMAIN.latMin)) * 2 - 1))
+  const normDepth = Math.max(-1, Math.min(1, 1 - (depth / DOMAIN.depthMax) * 2)) * verticalExaggeration
 
   // Dynamically generate interpolated depth slice mesh
   useEffect(() => {
     if (!sliceMeshRef.current || !points || points.length === 0) return
 
     try {
-      const sliceData = generateDepthSliceData(points, selectedVariable, depth, colormapPalette)
+      const sliceData = generateDepthSliceData(
+        points,
+        selectedVariable,
+        depth,
+        colormapPalette,
+        activeFileProfiles,
+        selectedFloat
+      )
       if (!sliceData || sliceData.positions.length === 0) return
 
       const geometry = new THREE.BufferGeometry()
@@ -47,7 +52,7 @@ export default function MeasurementPlanes({ points, selectedVariable }) {
     } catch (err) {
       console.error('Error updating depth slice geometry:', err)
     }
-  }, [points, selectedVariable, depth, colormapPalette])
+  }, [points, selectedVariable, depth, colormapPalette, activeFileProfiles, selectedFloat])
 
   return (
     <group>
@@ -210,6 +215,29 @@ export default function MeasurementPlanes({ points, selectedVariable }) {
         <sphereGeometry args={[0.025, 12, 12]} />
         <meshBasicMaterial color="#0f172a" depthTest={false} depthWrite={false} />
       </mesh>
+
+      {/* 6. In-situ Sounding Profile Markers from Selected NetCDF Dataset */}
+      {activeFileProfiles && activeFileProfiles.length > 0 && (
+        <group position={[normLon, 0, normLat]}>
+          {activeFileProfiles
+            .filter((_, idx) => idx % Math.max(1, Math.floor(activeFileProfiles.length / 25)) === 0)
+            .map((prof, idx) => {
+              const pDepth = prof.depthMeters ?? 0
+              const pNormY = Math.max(-1, Math.min(1, 1 - (pDepth / DOMAIN.depthMax) * 2)) * verticalExaggeration
+              return (
+                <mesh key={`sounding-${idx}`} position={[0, pNormY, 0]} renderOrder={950}>
+                  <sphereGeometry args={[0.022, 10, 10]} />
+                  <meshStandardMaterial
+                    color="#38bdf8"
+                    emissive="#0284c7"
+                    emissiveIntensity={0.8}
+                    roughness={0.2}
+                  />
+                </mesh>
+              )
+            })}
+        </group>
+      )}
     </group>
   )
 }

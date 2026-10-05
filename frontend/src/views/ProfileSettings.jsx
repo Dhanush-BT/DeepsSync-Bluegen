@@ -10,7 +10,7 @@ export default function ProfileSettings() {
 
   const [profileForm, setProfileForm] = useState({
     fullName: user?.fullName || 'Dr. Balakrishnan Nair TM',
-    email: user?.empIdOrEmail || 'balakrishnan@incois.gov.in',
+    email: user?.empIdOrEmail || 'researcher@deepsync.org',
     employeeId: '002',
     division: 'DIR',
     designation: 'Director & Executive Administration',
@@ -104,7 +104,7 @@ export default function ProfileSettings() {
                 Profile &amp; Operational Settings
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                Manage administrative credentials, INCOIS Early Warning hazard feeds, and upstream sidecar services.
+                Manage administrative credentials, oceanographic early warning hazard feeds, and upstream sidecar services.
               </p>
             </div>
 
@@ -159,7 +159,7 @@ export default function ProfileSettings() {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Institutional Email (@incois.gov.in)
+                    Institutional Email
                   </label>
                   <input
                     type="email"
@@ -253,7 +253,7 @@ export default function ProfileSettings() {
                     <span>Operational Hazard Advisories</span>
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Real-time INCOIS Early Warning and Potential Fishing Zone (PFZ) broadcasts.
+                    Real-time Oceanographic Early Warning and Potential Fishing Zone (PFZ) broadcasts.
                   </p>
                 </div>
                 <span className="px-2.5 py-1 text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 rounded-lg">
@@ -291,7 +291,7 @@ export default function ProfileSettings() {
                 <span>Security Governance Policy</span>
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                DEEPSYNC operates under official INCOIS scientific directory governance. Administrative sessions are signed with cryptographic tokens. Telemetry write access is restricted to verified scientist and officer rosters (002–101).
+                DEEPSYNC operates under verified scientific directory governance. Administrative sessions are signed with cryptographic tokens. Telemetry write access is restricted to verified scientist and officer rosters (002–101).
               </p>
             </div>
           </div>

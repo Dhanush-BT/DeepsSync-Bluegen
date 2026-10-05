@@ -375,7 +375,7 @@ export default function GeoMap() {
           <span className="text-slate-300">•</span>
           <span>© 2026 DeepSync</span>
           <span className="text-slate-300">•</span>
-          <span className="text-slate-500">BLUEGEN_606 PS 26067 INCOIS</span>
+          <span className="text-slate-500">Ocean Intelligence System</span>
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-mono font-semibold">

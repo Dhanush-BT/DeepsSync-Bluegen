@@ -1,6 +1,6 @@
-// Domain bounds
+// Domain bounds (Indian Ocean Basin: Arabian Sea 55°E to Bay of Bengal 95°E)
 export const DOMAIN = {
-  lonMin: 70,
+  lonMin: 55,
   lonMax: 95,
   latMin: -10,
   latMax: 25,
@@ -53,19 +53,22 @@ export function generateTriangularMesh(points, selectedVariable, palette = 'turb
   const ny = 10
   const nz = 14
 
+  const lonSpan = DOMAIN.lonMax - DOMAIN.lonMin
+  const latSpan = DOMAIN.latMax - DOMAIN.latMin
+
   // Spatial binning for ultra-fast sample lookup
   const binMap = new Map()
   for (let p of points) {
-    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / 25) * nx)
-    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / 35) * nz)
+    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / lonSpan) * nx)
+    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / latSpan) * nz)
     const key = `${bx}_${bz}`
     if (!binMap.has(key)) binMap.set(key, [])
     binMap.get(key).push(p)
   }
 
   const sampleValue = (targetLon, targetLat, targetDepth) => {
-    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / 25) * nx)
-    const bz = Math.floor(((targetLat - DOMAIN.latMin) / 35) * nz)
+    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / lonSpan) * nx)
+    const bz = Math.floor(((targetLat - DOMAIN.latMin) / latSpan) * nz)
     
     let bestDist = Infinity
     let bestVal = (minVal + maxVal) / 2
@@ -98,11 +101,11 @@ export function generateTriangularMesh(points, selectedVariable, palette = 'turb
 
     for (let iz = 0; iz < nz; iz++) {
       grid[iy][iz] = new Array(nx)
-      const lat = DOMAIN.latMin + (iz / (nz - 1)) * 35
+      const lat = DOMAIN.latMin + (iz / (nz - 1)) * latSpan
       const z = (iz / (nz - 1)) * 2 - 1
 
       for (let ix = 0; ix < nx; ix++) {
-        const lon = DOMAIN.lonMin + (ix / (nx - 1)) * 25
+        const lon = DOMAIN.lonMin + (ix / (nx - 1)) * lonSpan
         const x = (ix / (nx - 1)) * 2 - 1
         const val = sampleValue(lon, lat, depth)
         const norm = (val - minVal) / valRange
@@ -200,19 +203,22 @@ export function generateCubicMesh(points, selectedVariable, palette = 'turbo', v
   const numY = 10
   const numZ = 12
 
+  const lonSpan = DOMAIN.lonMax - DOMAIN.lonMin
+  const latSpan = DOMAIN.latMax - DOMAIN.latMin
+
   // Binning for fast query
   const binMap = new Map()
   for (let p of points) {
-    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / 25) * numX)
-    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / 35) * numZ)
+    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / lonSpan) * numX)
+    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / latSpan) * numZ)
     const key = `${bx}_${bz}`
     if (!binMap.has(key)) binMap.set(key, [])
     binMap.get(key).push(p)
   }
 
   const sampleValue = (targetLon, targetLat, targetDepth) => {
-    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / 25) * numX)
-    const bz = Math.floor(((targetLat - DOMAIN.latMin) / 35) * numZ)
+    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / lonSpan) * numX)
+    const bz = Math.floor(((targetLat - DOMAIN.latMin) / latSpan) * numZ)
     
     let bestDist = Infinity
     let bestVal = (minVal + maxVal) / 2
@@ -264,11 +270,11 @@ export function generateCubicMesh(points, selectedVariable, palette = 'turbo', v
     const cy = (1 - ((iy + 0.5) / numY) * 2) * vertExag
 
     for (let iz = 0; iz < numZ; iz++) {
-      const lat = DOMAIN.latMin + ((iz + 0.5) / numZ) * 35
+      const lat = DOMAIN.latMin + ((iz + 0.5) / numZ) * latSpan
       const cz = ((iz + 0.5) / numZ) * 2 - 1
 
       for (let ix = 0; ix < numX; ix++) {
-        const lon = DOMAIN.lonMin + ((ix + 0.5) / numX) * 25
+        const lon = DOMAIN.lonMin + ((ix + 0.5) / numX) * lonSpan
         const cx = ((ix + 0.5) / numX) * 2 - 1
 
         const val = sampleValue(lon, lat, depth)
@@ -418,11 +424,59 @@ export function getColorForValue(normalized, palette = 'turbo') {
 /**
  * Generates an interpolated 2D horizontal slice geometry at targetDepth with rich vertex colors
  * representing the selectedVariable field, isolines, and boundary coordinates.
+ * Supports blending high-resolution profiles from the selected NetCDF file / instrument.
  */
-export function generateDepthSliceData(points, selectedVariable, targetDepth = 500, palette = 'turbo') {
+export function generateDepthSliceData(
+  points,
+  selectedVariable,
+  targetDepth = 500,
+  palette = 'turbo',
+  activeFileProfiles = null,
+  selectedFloat = null
+) {
   if (!points || points.length === 0) return null
 
-  const values = points
+  const lonSpan = DOMAIN.lonMax - DOMAIN.lonMin
+  const latSpan = DOMAIN.latMax - DOMAIN.latMin
+
+  // If activeFileProfiles are provided, map them into effective point soundings
+  let allPoints = points
+  let floatTargetVal = null
+
+  if (activeFileProfiles && activeFileProfiles.length > 0 && selectedFloat?.longitude) {
+    const floatLon = selectedFloat.longitude
+    const floatLat = selectedFloat.latitude
+    const validProfs = activeFileProfiles.filter(
+      (p) => p.depthMeters !== null && p.depthMeters !== undefined && isFinite(p.depthMeters)
+    )
+
+    if (validProfs.length > 0) {
+      // Find the closest profile sample to targetDepth
+      let minDiff = Infinity
+      let closestP = validProfs[0]
+      for (const p of validProfs) {
+        const diff = Math.abs(p.depthMeters - targetDepth)
+        if (diff < minDiff) {
+          minDiff = diff
+          closestP = p
+        }
+      }
+      const v = getVariableValue(closestP, selectedVariable)
+      if (v !== null && v !== undefined && isFinite(v)) {
+        floatTargetVal = v
+      }
+
+      // Add profile points to spatial sampling
+      const mappedProfiles = validProfs.map((p) => ({
+        ...p,
+        longitude: floatLon,
+        latitude: floatLat,
+      }))
+      allPoints = [...points, ...mappedProfiles]
+    }
+  }
+
+  const values = allPoints
     .map((p) => getVariableValue(p, selectedVariable))
     .filter((v) => v !== null && v !== undefined && isFinite(v))
 
@@ -434,17 +488,17 @@ export function generateDepthSliceData(points, selectedVariable, targetDepth = 5
 
   // Binning for fast spatial sample query
   const binMap = new Map()
-  for (let p of points) {
-    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / 25) * nx)
-    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / 35) * nz)
+  for (let p of allPoints) {
+    const bx = Math.floor(((p.longitude - DOMAIN.lonMin) / lonSpan) * nx)
+    const bz = Math.floor(((p.latitude - DOMAIN.latMin) / latSpan) * nz)
     const key = `${bx}_${bz}`
     if (!binMap.has(key)) binMap.set(key, [])
     binMap.get(key).push(p)
   }
 
   const sampleValue = (targetLon, targetLat, targetD) => {
-    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / 25) * nx)
-    const bz = Math.floor(((targetLat - DOMAIN.latMin) / 35) * nz)
+    const bx = Math.floor(((targetLon - DOMAIN.lonMin) / lonSpan) * nx)
+    const bz = Math.floor(((targetLat - DOMAIN.latMin) / latSpan) * nz)
     let bestDist = Infinity
     let bestVal = (minVal + maxVal) / 2
 
@@ -464,21 +518,34 @@ export function generateDepthSliceData(points, selectedVariable, targetDepth = 5
         }
       }
     }
+
+    // Blend in the active file/instrument sounding at its exact coordinates
+    if (floatTargetVal !== null && selectedFloat?.longitude) {
+      const dLon = targetLon - selectedFloat.longitude
+      const dLat = targetLat - selectedFloat.latitude
+      const distSq = dLon * dLon + dLat * dLat
+      if (distSq < 100) {
+        // High Gaussian weight local to chosen instrument/file sounding
+        const weight = Math.exp(-distSq / 20)
+        bestVal = (1 - weight) * bestVal + weight * floatTargetVal
+      }
+    }
+
     return bestVal
   }
 
   const positions = []
   const colors = []
 
-  // Build regular 2D grid at y = 0 (parent component can position at normDepth)
+  // Build regular 2D grid at y = 0 (parent component positions at normDepth)
   const grid = new Array(nz)
   for (let iz = 0; iz < nz; iz++) {
     grid[iz] = new Array(nx)
-    const lat = DOMAIN.latMin + (iz / (nz - 1)) * 35
+    const lat = DOMAIN.latMin + (iz / (nz - 1)) * latSpan
     const z = (iz / (nz - 1)) * 2 - 1
 
     for (let ix = 0; ix < nx; ix++) {
-      const lon = DOMAIN.lonMin + (ix / (nx - 1)) * 25
+      const lon = DOMAIN.lonMin + (ix / (nx - 1)) * lonSpan
       const x = (ix / (nx - 1)) * 2 - 1
       const val = sampleValue(lon, lat, targetDepth)
       const norm = (val - minVal) / valRange

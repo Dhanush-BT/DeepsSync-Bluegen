@@ -22,8 +22,12 @@ export const useAppStore = create((set) => ({
 
   // Dashboard 2D state
   selectedFloat: null,
+  selectedFile: null,
+  activeFileProfiles: [],
   selectedChartType: 'profile',
   setSelectedFloat: (floatId) => set({ selectedFloat: floatId }),
+  setSelectedFile: (file) => set({ selectedFile: file }),
+  setActiveFileProfiles: (profiles) => set({ activeFileProfiles: profiles }),
   setSelectedChartType: (type) => set({ selectedChartType: type }),
 
   // Dataset selection

@@ -57,7 +57,7 @@ export default function Navbar() {
               </span>
             </div>
             <span className="text-[10px] font-medium text-slate-400 tracking-tight mt-0.5">
-              INCOIS · MoES
+              Ocean Observation Twin
             </span>
           </div>
         </Link>
@@ -149,7 +149,7 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200/90 shadow-lg py-2 z-50 animate-fade-in">
                   <div className="px-4 py-2 border-b border-slate-100">
                     <p className="text-xs font-bold text-slate-900 truncate">{userName}</p>
-                    <p className="text-[10px] text-slate-500 font-medium">INCOIS Administrator</p>
+                    <p className="text-[10px] text-slate-500 font-medium">Platform Administrator</p>
                   </div>
 
                   <div className="py-1">

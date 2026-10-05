@@ -235,11 +235,11 @@ export default function AiAssistant() {
             platformId: targetId,
           }
         } else if (lower.includes('hazard') || lower.includes('tsunami') || lower.includes('alert')) {
-          reply = `INCOIS Early Warning Systems report ${stats.activeHazardCount || 3} active advisories across Indian EEZ waters: High Wave Warning in the Bay of Bengal, Potential Fishing Zone (PFZ) mapping in the Arabian Sea, and a seismic Tsunami Watch in the Lakshadweep Sea.`
+          reply = `Ocean Early Warning Systems report ${stats.activeHazardCount || 3} active advisories across Indian EEZ waters: High Wave Warning in the Bay of Bengal, Potential Fishing Zone (PFZ) mapping in the Arabian Sea, and a seismic Tsunami Watch in the Lakshadweep Sea.`
           details = [
             { label: 'Active Alerts', value: String(stats.activeHazardCount || 3) },
             { label: 'Watch Level', value: 'Moderate - Severe' },
-            { label: 'Coordination', value: 'INCOIS EWS' },
+            { label: 'Coordination', value: 'Ocean EWS' },
           ]
           // Distribution or time-series of hazard anomalies
           chart = {
@@ -422,7 +422,7 @@ export default function AiAssistant() {
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span className="font-semibold text-slate-800">NetCDF INCOIS Grid</span>
+                  <span className="font-semibold text-slate-800">NetCDF Model Grid</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-500">CF-1.8</span>
               </div>

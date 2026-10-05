@@ -82,7 +82,7 @@ export default function InstrumentDetailPanel({ float = null, onClose = () => {}
               <span className="text-slate-400 block text-[10px] uppercase font-sans font-medium">
                 Country Agency
               </span>
-              <span className="font-semibold text-slate-800">India INCOIS</span>
+              <span className="font-semibold text-slate-800">Ocean Observation Network</span>
             </div>
             <div>
               <span className="text-slate-400 block text-[10px] uppercase font-sans font-medium">

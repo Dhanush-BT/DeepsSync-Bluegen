@@ -4,7 +4,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 import apiClient from '../../api/client'
 import { useAppStore } from '../../store/useAppStore'
-import { getColorForValue, getVariableValue, generateTriangularMesh, generateCubicMesh, getArrayMinMax } from '../../utils/volumeRenderer'
+import { getColorForValue, getVariableValue, generateTriangularMesh, generateCubicMesh, getArrayMinMax, DOMAIN } from '../../utils/volumeRenderer'
 import AxisLabels from './AxisLabels'
 import TextLabels from './TextLabels'
 import AutoRotateToggle from './AutoRotateToggle'
@@ -168,10 +168,10 @@ function OceanPointsVolume({ points, selectedVariable, verticalExaggeration, vol
 
         if (lon === null || lon === undefined || lat === null || lat === undefined) continue
 
-        const x = Math.max(-1, Math.min(1, ((lon - 70) / 25) * 2 - 1))
-        const normY = Math.max(-1, Math.min(1, 1 - (depth / 2000) * 2))
+        const x = Math.max(-1, Math.min(1, ((lon - DOMAIN.lonMin) / (DOMAIN.lonMax - DOMAIN.lonMin)) * 2 - 1))
+        const normY = Math.max(-1, Math.min(1, 1 - (depth / DOMAIN.depthMax) * 2))
         const y = normY * verticalExaggeration
-        const z = Math.max(-1, Math.min(1, ((lat - (-10)) / 35) * 2 - 1))
+        const z = Math.max(-1, Math.min(1, ((lat - DOMAIN.latMin) / (DOMAIN.latMax - DOMAIN.latMin)) * 2 - 1))
 
         positions.push(x, y, z)
 
@@ -217,8 +217,8 @@ function Scene({ points, onPointSelect, selectedVariable, verticalExaggeration, 
   const { measurementLongitude: lon, measurementLatitude: lat, visualizationStyle } = useAppStore()
 
   // Standard normalized coordinates for camera look
-  const normLon = Math.max(-1, Math.min(1, ((lon - 70) / 25) * 2 - 1))
-  const normLat = Math.max(-1, Math.min(1, ((lat + 10) / 35) * 2 - 1))
+  const normLon = Math.max(-1, Math.min(1, ((lon - DOMAIN.lonMin) / (DOMAIN.lonMax - DOMAIN.lonMin)) * 2 - 1))
+  const normLat = Math.max(-1, Math.min(1, ((lat - DOMAIN.latMin) / (DOMAIN.latMax - DOMAIN.latMin)) * 2 - 1))
 
   // Camera positioned to show FRONT face with ample distance and clear perspective
   const cameraPos = [normLon * 0.3, 0.5, 3.8]

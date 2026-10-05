@@ -30,6 +30,10 @@ export default function Dashboard() {
     setMeasurementDepth,
     selectedFloat,
     setSelectedFloat,
+    selectedFile,
+    setSelectedFile,
+    activeFileProfiles,
+    setActiveFileProfiles,
     setFilter,
     colormapPalette,
     setColormapPalette,
@@ -50,11 +54,59 @@ export default function Dashboard() {
   const [floatsList, setFloatsList] = useState([])
   const [ingestionsList, setIngestionsList] = useState([])
   const [activeDataSource, setActiveDataSource] = useState('instruments') // 'instruments' | 'files'
-  const [selectedFile, setSelectedFile] = useState(null)
   const [selectedChartType, setSelectedChartType] = useState('Depth Profile')
   const [selectedRoi, setSelectedRoi] = useState('All Indian Ocean')
   const [autoScale, setAutoScale] = useState(true)
   const [downloading, setDownloading] = useState(false)
+
+  // Helper to fetch vertical profile soundings for a float
+  const fetchProfilesForFloat = async (platformId) => {
+    if (!platformId) return []
+    const cleanId = String(platformId).trim().split(/[\s,]+/)[0]
+    try {
+      const res = await apiClient.get(`/floats/${cleanId}/profiles`)
+      const profiles = res.data || []
+      setActiveFileProfiles(profiles)
+      return profiles
+    } catch (err) {
+      console.warn(`Failed to fetch profiles for ${cleanId}:`, err)
+      setActiveFileProfiles([])
+      return []
+    }
+  }
+
+  // Auto-link selected file to float and fetch profile soundings
+  const syncFileToFloat = async (file, currentFloats = floatsList) => {
+    if (!file || !file.fileName) return
+    const cleanName = file.fileName.replace(/\.[^/.]+$/, '')
+    const wmoMatch = file.fileName.match(/\d{7}/)?.[0]
+
+    const matchedFloat = currentFloats.find((f) => {
+      if (!f.platformId) return false
+      const pid = String(f.platformId).trim()
+      if (wmoMatch && pid.includes(wmoMatch)) return true
+      return cleanName.includes(pid) || pid.includes(cleanName)
+    })
+
+    if (matchedFloat) {
+      setSelectedFloat(matchedFloat)
+      if (matchedFloat.longitude) setMeasurementLongitude(matchedFloat.longitude)
+      if (matchedFloat.latitude) setMeasurementLatitude(matchedFloat.latitude)
+      const profiles = await fetchProfilesForFloat(matchedFloat.platformId)
+      if (profiles && profiles.length > 0) {
+        const depths = profiles
+          .map((p) => p.depthMeters)
+          .filter((d) => d !== null && d !== undefined && isFinite(d))
+        if (depths.length > 0) {
+          const minD = Math.min(...depths)
+          const maxD = Math.max(...depths)
+          if (measurementDepth < minD || measurementDepth > maxD) {
+            setMeasurementDepth(Math.round(depths[Math.floor(depths.length / 2)] || 100))
+          }
+        }
+      }
+    }
+  }
 
   // Fetch live floats and ingested files
   useEffect(() => {
@@ -66,6 +118,7 @@ export default function Dashboard() {
         setFloatsList(list)
         if (list.length > 0 && !selectedFloat) {
           setSelectedFloat(list[0])
+          fetchProfilesForFloat(list[0].platformId)
         }
       })
       .catch((err) => console.error('Failed to load floats:', err))
@@ -76,8 +129,9 @@ export default function Dashboard() {
       .then((res) => {
         const list = res.data || []
         setIngestionsList(list)
-        if (list.length > 0) {
+        if (list.length > 0 && !selectedFile) {
           setSelectedFile(list[0])
+          syncFileToFloat(list[0], floatsList)
         }
       })
       .catch((err) => console.warn('Ingestions endpoint unreachable:', err))
@@ -92,6 +146,7 @@ export default function Dashboard() {
         setFloatsList(list)
         if (list.length > 0 && !selectedFloat) {
           setSelectedFloat(list[0])
+          fetchProfilesForFloat(list[0].platformId)
         }
       })
       .catch((err) => console.error('Failed to load floats:', err))
@@ -103,44 +158,34 @@ export default function Dashboard() {
         setIngestionsList(list)
         if (list.length > 0 && !selectedFile) {
           setSelectedFile(list[0])
+          syncFileToFloat(list[0], floatsList)
         }
       })
       .catch((err) => console.warn('Ingestions endpoint unreachable:', err))
   }
 
-  // Auto-link selected file to float
-  const syncFileToFloat = (file, currentFloats = floatsList) => {
-    if (!file || !file.fileName) return
-    const cleanName = file.fileName.replace(/\.[^/.]+$/, '')
-    // Try matching float by platformId contained in filename or matching platformId directly
-    const matchedFloat = currentFloats.find((f) => {
-      if (!f.platformId) return false
-      return cleanName.includes(f.platformId) || f.platformId.includes(cleanName)
-    })
-
-    if (matchedFloat) {
-      setSelectedFloat(matchedFloat)
-      if (matchedFloat.longitude) setMeasurementLongitude(matchedFloat.longitude)
-      if (matchedFloat.latitude) setMeasurementLatitude(matchedFloat.latitude)
-    }
-  }
-
-  const handleInstrumentChange = (e) => {
+  const handleInstrumentChange = async (e) => {
     const platformId = e.target.value
     const found = floatsList.find((f) => f.platformId === platformId)
     if (found) {
       setSelectedFloat(found)
       if (found.longitude) setMeasurementLongitude(found.longitude)
       if (found.latitude) setMeasurementLatitude(found.latitude)
+      const cleanId = String(found.platformId).trim().split(/[\s,]+/)[0]
+      const matchingIng = ingestionsList.find((ing) => ing.fileName && ing.fileName.includes(cleanId))
+      if (matchingIng) {
+        setSelectedFile(matchingIng)
+      }
+      await fetchProfilesForFloat(found.platformId)
     }
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const fileId = Number(e.target.value)
     const found = ingestionsList.find((item) => item.id === fileId)
     if (found) {
       setSelectedFile(found)
-      syncFileToFloat(found)
+      await syncFileToFloat(found)
     }
   }
 
@@ -260,13 +305,13 @@ export default function Dashboard() {
           <div className="bg-[#0b1329] text-white px-3.5 py-2.5 flex flex-wrap items-center justify-between text-xs font-semibold border-b border-slate-800 gap-2">
             <div className="flex items-center gap-2">
               <span className="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono text-[10px] font-bold border border-sky-400/30">
-                PS 26067
+                OCEAN TWIN
               </span>
               <span className="tracking-wide uppercase font-bold text-slate-100">
                 3D VOLUMETRIC VIEWPORT
               </span>
               <span className="text-slate-400 font-normal hidden lg:inline">
-                — INCOIS MOM4 / HYCOM (0.08° CF-1.8 Mesh) + Indian Ocean In-situ Network
+                — High-Resolution Volumetric Mesh (0.08° CF-1.8) + In-situ Observation Network
               </span>
             </div>
 
@@ -918,8 +963,8 @@ export default function Dashboard() {
       {/* Scientific Web Footer */}
       <footer className="w-full max-w-[1780px] mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500 border-t border-slate-200 mt-4">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-800">DeepSync by Bluegen</span>
-          <span>© 2026 DeepSync Team BLUEGEN_606 · Problem Statement 26067 · INCOIS - MoES Govt. of India</span>
+          <span className="font-bold text-slate-800">DEEPSYNC</span>
+          <span>© 2026 DEEPSYNC · Autonomous Oceanographic Observation & Intelligence Network</span>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-[11px] font-medium">
           <a href="#" className="hover:text-sky-700 transition">Bathymetry Registry</a>
